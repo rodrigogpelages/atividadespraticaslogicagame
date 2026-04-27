@@ -3,31 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aula 10: Caderno de Exercícios - Pensamento Computacional</title>
+    <title>Aula 12: Caderno de Prática - O Desafio do Analista</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        /* SETUP E RESET */
+        /* SETUP E RESET - TEMA ANALISTA/HACKER */
         :root {
-            --primary: #2563eb; /* Azul (Foco/Estudo) */
-            --primary-light: #eff6ff;
-            --secondary: #10b981; /* Verde (Prática/Sucesso) */
+            --primary: #10b981; /* Verde Néon (Hacker/Sucesso) */
+            --primary-light: #d1fae5;
+            --secondary: #3b82f6; /* Azul (Lógica) */
             --accent: #f59e0b; /* Amarelo (Atenção) */
-            --danger: #ef4444; /* Vermelho (Restrição) */
-            --dark: #0f172a;
+            --danger: #ef4444; /* Vermelho (Erro/Reprovado) */
+            --dark: #0f172a; /* Fundo Slate 900 */
             --light: #f8fafc;
             --text: #334155;
             --code-bg: #1e293b;
-            --border: #e2e8f0;
+            --border: #cbd5e1;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
-            background-color: #cbd5e1;
+            background-color: #94a3b8;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -35,40 +35,39 @@
             padding: 40px 0 100px 0;
             font-family: 'Inter', sans-serif;
             
-            /* BLOQUEIO DE CÓPIA DE TEXTO (NÃO PERMITE SELECIONAR) */
-            -webkit-user-select: none; /* Safari */
-            -ms-user-select: none; /* IE 10 and IE 11 */
-            user-select: none; /* Standard syntax */
+            /* BLOQUEIO DE CÓPIA DE TEXTO */
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         /* ESTRUTURA VERTICAL TIPO FOLHA A4 */
         .page {
-            width: 850px; /* Largura padrão para leitura vertical */
-            min-height: 1100px; /* Altura proporcional */
+            width: 850px; 
+            min-height: 1150px; 
             background-color: #ffffff;
             border-radius: 12px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
             padding: 60px 70px;
             display: flex;
             flex-direction: column;
             position: relative;
             overflow: hidden;
-            /* Usado para quebrar páginas corretamente no PDF */
             page-break-after: always;
         }
 
         /* TIPOGRAFIA */
-        h1 { font-family: 'Poppins', sans-serif; font-size: 42px; font-weight: 800; color: var(--dark); line-height: 1.2; text-align: center; margin-bottom: 10px; text-transform: uppercase;}
-        h2 { font-family: 'Poppins', sans-serif; font-size: 26px; font-weight: 700; color: var(--primary); margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 10px;}
+        h1 { font-family: 'Poppins', sans-serif; font-size: 38px; font-weight: 800; color: var(--dark); line-height: 1.2; text-align: center; margin-bottom: 10px; text-transform: uppercase;}
+        h2 { font-family: 'Poppins', sans-serif; font-size: 26px; font-weight: 700; color: var(--secondary); margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 10px;}
         h3 { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 600; color: var(--dark); margin-bottom: 5px; display: flex; align-items: center; gap: 10px;}
         
         p, li { font-size: 16px; line-height: 1.6; color: var(--text); margin-bottom: 15px; }
         
         /* AVISO ANTI-CÓPIA */
         .anti-copy-warning {
-            background-color: #fef2f2;
-            border: 2px dashed var(--danger);
-            color: #991b1b;
+            background-color: #f0fdf4;
+            border: 2px dashed var(--primary);
+            color: #166534;
             padding: 15px;
             border-radius: 8px;
             text-align: center;
@@ -80,6 +79,18 @@
             justify-content: center;
             gap: 10px;
         }
+
+        /* MISSION BOX (Caixa da Questão) */
+        .mission-box {
+            background-color: var(--dark);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 6px solid var(--primary);
+        }
+        .mission-box p { color: #cbd5e1; }
+        .mission-box .highlight { color: var(--primary); font-weight: bold; font-family: 'Fira Code', monospace; }
 
         /* ESTILOS DOS PASSOS (STEPS) */
         .step-container {
@@ -111,16 +122,16 @@
 
         .step-explanation {
             background: #e0f2fe;
-            border-left: 4px solid #0ea5e9;
+            border-left: 4px solid var(--secondary);
             padding: 10px 15px;
             margin-bottom: 15px;
             border-radius: 0 8px 8px 0;
             font-size: 14px;
             color: #0369a1;
-            font-weight: 500;
+            font-weight: 600;
         }
 
-        /* BLOCOS DE CÓDIGO (VISUAIS, MAS INCOPIÁVEIS) */
+        /* BLOCOS DE CÓDIGO */
         .code-block {
             font-family: 'Fira Code', monospace;
             background-color: var(--code-bg);
@@ -129,14 +140,14 @@
             border-radius: 8px;
             font-size: 16px;
             margin-top: 15px;
-            border-left: 4px solid var(--secondary);
-            pointer-events: none; /* Impede qualquer interação do mouse com o código */
+            border-left: 4px solid var(--primary);
+            pointer-events: none; /* Impede cópia */
         }
         .keyword { color: #f472b6; }
         .string { color: #a3e635; }
         .function { color: #60a5fa; }
         .operator { color: #fcd34d; }
-        .comment { color: #64748b; font-style: italic; }
+        .comment { color: #94a3b8; font-style: italic; }
 
         /* DESTAQUE FINAL */
         .final-mission {
@@ -146,14 +157,14 @@
             border-radius: 12px;
             text-align: center;
             margin-top: 20px;
-            border: 3px dashed var(--accent);
+            border: 3px dashed var(--primary);
         }
         .final-mission a {
-            color: var(--accent);
+            color: var(--primary);
             font-weight: bold;
             font-size: 18px;
             text-decoration: underline;
-            pointer-events: auto; /* Permite clicar no link */
+            pointer-events: auto;
         }
 
         /* CONTROLES FLUTUANTES */
@@ -183,8 +194,9 @@
             transition: all 0.3s ease;
         }
 
-        .btn-control:hover { transform: translateY(-3px); background: var(--primary); }
-        .btn-control.pdf { background: #ef4444; }
+        .btn-control:hover { transform: translateY(-3px); background: var(--primary); color: var(--dark); }
+        .btn-control.pdf { background: #ef4444; color: white; }
+        .btn-control.html { background: var(--secondary); color: white;}
         
         /* CABEÇALHO DA PÁGINA */
         .page-header {
@@ -195,7 +207,6 @@
             border-bottom: 2px solid var(--border);
             padding-bottom: 20px;
         }
-        .page-header img { height: 60px; }
         .page-header-info { text-align: right; color: var(--text); font-size: 14px;}
         
         .page-number {
@@ -213,7 +224,8 @@
 
 <!-- CONTROLES -->
 <div class="controls">
-    <button class="btn-control pdf" onclick="downloadPDF()"><i class="fa-solid fa-file-pdf"></i> Baixar Caderno em PDF</button>
+    <button class="btn-control html" onclick="downloadHTML()"><i class="fa-solid fa-download"></i> Baixar HTML</button>
+    <button class="btn-control pdf" onclick="downloadPDF()"><i class="fa-solid fa-file-pdf"></i> Baixar Caderno (PDF)</button>
 </div>
 
 <!-- ==========================================
@@ -222,7 +234,7 @@
 <div class="page" id="page1">
     <div class="page-header">
         <div>
-            <i class="fa-solid fa-laptop-code" style="font-size: 40px; color: var(--primary);"></i>
+            <i class="fa-solid fa-user-secret" style="font-size: 40px; color: var(--primary);"></i>
         </div>
         <div class="page-header-info">
             <strong>Prof. Rodrigo G. Pelages</strong><br>
@@ -230,49 +242,56 @@
         </div>
     </div>
 
-    <h1>Caderno de Exercícios</h1>
-    <h2 style="text-align: center; border: none; color: var(--text); margin-bottom: 30px;">Prática Autoguiada: O Herói da Lógica</h2>
+    <h1>Caderno de Prática</h1>
+    <h2 style="text-align: center; border: none; color: var(--text); margin-bottom: 30px;">O Desafio do Analista de Sistemas</h2>
 
     <div class="anti-copy-warning">
         <i class="fa-solid fa-shield-halved"></i>
-        <span><strong>Modo Treino Ativado:</strong> A cópia de texto está bloqueada. Para aprender, você terá que ler e digitar o código manualmente!</span>
+        <span><strong>Modo Restrito:</strong> Copiar e colar instruções desativado. Um verdadeiro Analista treina digitando o código! Usaremos um compilador online para isso.</span>
+    </div>
+    
+    <p style="text-align: center; font-size: 18px; font-weight: bold; color: var(--secondary); margin-bottom: 20px;">
+        Acesse: <a href="https://www.programiz.com/javascript/online-compiler/" target="_blank" style="color: var(--primary); pointer-events: auto;">programiz.com/javascript/online-compiler</a><br>
+        <span style="font-size: 14px; font-weight: normal; color: var(--text);">Apague o código de exemplo do lado esquerdo. É lá que você vai construir o seu programa!</span>
+    </p>
+
+    <div class="mission-box">
+        <h3 style="color: white; margin-bottom: 10px;"><i class="fa-solid fa-briefcase"></i> A Sua Missão Tripla</h3>
+        <p>A Secretaria Escolar contratou você para desenvolver 3 pequenos sistemas. Eles rodarão juntos em um único programa:</p>
+        <ol style="color: #cbd5e1; margin-left: 20px; margin-bottom: 10px;">
+            <li><strong>O Boletim:</strong> Aprovar ou reprovar por Nota.</li>
+            <li><strong>A Catraca:</strong> Bloquear alunos com excesso de Faltas.</li>
+            <li><strong>O Almoxarifado:</strong> Adicionar novos materiais ao estoque.</li>
+        </ol>
     </div>
 
-    <p>Bem-vindo ao seu teste de fixação! Hoje você vai aplicar os 4 Pilares do Pensamento Computacional (Decomposição, Padrões, Abstração e Algoritmos) criando um pequeno RPG de texto passo a passo no console do seu navegador.</p>
-    
+    <h2 style="color: var(--dark); font-size: 22px;"><i class="fa-solid fa-graduation-cap"></i> TAREFA 1: O Boletim Eletrônico</h2>
+
     <div class="step-container">
         <div class="step-number">1</div>
-        <h3><i class="fa-solid fa-terminal" style="color: var(--primary);"></i> Preparação: Abrir o Laboratório</h3>
+        <h3><i class="fa-solid fa-keyboard" style="color: var(--secondary);"></i> Capturando a Nota (Entrada)</h3>
         <div class="step-explanation">
-            <strong>Para que serve este passo?</strong> Antes de programarmos, precisamos acessar o "cérebro" do navegador. Esta é a nossa área de trabalho.
+            <strong>Lógica:</strong> O sistema precisa saber a nota antes de julgar. Usamos o <code>prompt()</code> para perguntar e guardamos numa variável.
         </div>
-        <p>Abra uma nova aba no seu navegador (Chrome, Edge, etc.).</p>
-        <p>Pressione a tecla <strong>F12</strong> no seu teclado (ou <strong>Ctrl + Shift + J</strong>). Clique na aba que diz <strong>"Console"</strong>. É aqui que você vai digitar todos os comandos a seguir.</p>
+        <p>Digite a primeira linha do seu sistema no <strong>Programiz</strong>:</p>
+        <div class="code-block">
+            <span class="keyword">var</span> notaFinal <span class="operator">=</span> <span class="function">prompt</span>(<span class="string">"Professor, digite a nota final do aluno:"</span>);
+        </div>
     </div>
 
     <div class="step-container">
         <div class="step-number">2</div>
-        <h3><i class="fa-solid fa-box-open" style="color: var(--primary);"></i> Abstração: Criando o Herói</h3>
+        <h3><i class="fa-solid fa-scale-balanced" style="color: var(--secondary);"></i> Estrutura de Decisão (If / Else)</h3>
         <div class="step-explanation">
-            <strong>Para que serve este passo?</strong> Usamos a Abstração para guardar apenas a informação essencial na memória (Variáveis). Não importa a cor do cabelo do herói, apenas o seu nome e energia.
+            <strong>Lógica:</strong> O cérebro do programa. Se (<code>if</code>) a nota for Maior ou Igual (<code>&gt;=</code>) a 70, aprovado. Senão (<code>else</code>), reprovado.
         </div>
-        <p>Digite o código abaixo no seu console e pressione <strong>ENTER</strong> após cada linha:</p>
+        <p>Na linha de baixo do seu código, adicione a estrutura completa (atenção às chaves <code>{ }</code>):</p>
         <div class="code-block">
-            <span class="keyword">var</span> nomeHeroi <span class="operator">=</span> <span class="string">"O seu Nome Aqui"</span>;<br>
-            <span class="keyword">var</span> energia <span class="operator">=</span> 100;
-        </div>
-    </div>
-
-    <div class="step-container">
-        <div class="step-number">3</div>
-        <h3><i class="fa-solid fa-calculator" style="color: var(--primary);"></i> Decomposição: O Dano do Monstro</h3>
-        <div class="step-explanation">
-            <strong>Para que serve este passo?</strong> Estamos dividindo um problema (o combate) em uma operação matemática simples que o computador consegue resolver facilmente.
-        </div>
-        <p>O seu herói levou um golpe! Vamos criar uma variável para o dano e subtrair da energia total. Digite:</p>
-        <div class="code-block">
-            <span class="keyword">var</span> dano <span class="operator">=</span> 30;<br>
-            energia <span class="operator">=</span> energia <span class="operator">-</span> dano;
+            <span class="keyword">if</span> (notaFinal <span class="operator">&gt;=</span> 70) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"Aprovado! Parabéns."</span>);<br>
+            } <span class="keyword">else</span> {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"Reprovado! Precisa estudar mais."</span>);<br>
+            }
         </div>
     </div>
 
@@ -283,52 +302,48 @@
      PÁGINA 2
      ========================================== -->
 <div class="page" id="page2">
+    
+    <h2 style="color: var(--dark); font-size: 22px;"><i class="fa-solid fa-door-closed"></i> TAREFA 2: A Catraca Inteligente</h2>
+
     <div class="step-container">
-        <div class="step-number">4</div>
-        <h3><i class="fa-solid fa-desktop" style="color: var(--primary);"></i> Algoritmo (Saída): O Ponto de Situação</h3>
+        <div class="step-number">3</div>
+        <h3><i class="fa-solid fa-calendar-xmark" style="color: var(--secondary);"></i> Contagem de Faltas</h3>
         <div class="step-explanation">
-            <strong>Para que serve este passo?</strong> Os dados foram processados, mas precisamos que o algoritmo mostre o resultado para o jogador usando um alerta.
+            <strong>Lógica:</strong> Agora vamos avaliar a frequência. Peça ao inspetor o número de faltas do aluno.
         </div>
-        <p>Vamos juntar os textos (Strings) com as variáveis usando o sinal de <code>+</code>. Digite e aperte ENTER para ver o aviso na tela:</p>
+        <p>Não apague o que já fez! Pule uma linha e continue construindo o seu programa:</p>
         <div class="code-block">
-            <span class="function">alert</span>(<span class="string">"Atenção "</span> <span class="operator">+</span> nomeHeroi <span class="operator">+</span> <span class="string">"! Sua energia desceu para: "</span> <span class="operator">+</span> energia);
+            <span class="keyword">var</span> totalFaltas <span class="operator">=</span> <span class="function">prompt</span>(<span class="string">"Quantas faltas o aluno possui?"</span>);
         </div>
     </div>
+
+    <div class="step-container">
+        <div class="step-number">4</div>
+        <h3><i class="fa-solid fa-traffic-light" style="color: var(--secondary);"></i> Barrando o Excesso (Sinal de Maior)</h3>
+        <div class="step-explanation">
+            <strong>Lógica:</strong> A regra mudou! Se as faltas forem ESTRITAMENTE MAIORES (<code>&gt;</code>) que 15, o aluno reprova por falta.
+        </div>
+        <p>Adicione o teste da catraca logo abaixo:</p>
+        <div class="code-block">
+            <span class="keyword">if</span> (totalFaltas <span class="operator">&gt;</span> 15) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"Catraca Bloqueada: Reprovado por Falta!"</span>);<br>
+            } <span class="keyword">else</span> {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"Acesso Liberado: Frequência regular."</span>);<br>
+            }
+        </div>
+    </div>
+
+    <h2 style="color: var(--dark); font-size: 22px;"><i class="fa-solid fa-boxes-stacked"></i> TAREFA 3: O Almoxarifado</h2>
 
     <div class="step-container">
         <div class="step-number">5</div>
-        <h3><i class="fa-solid fa-keyboard" style="color: var(--primary);"></i> Interação: A Escolha do Jogador</h3>
+        <h3><i class="fa-solid fa-list-check" style="color: var(--secondary);"></i> Criando o Estoque (Array)</h3>
         <div class="step-explanation">
-            <strong>Para que serve este passo?</strong> Um bom algoritmo interage com o usuário. Usamos o comando "prompt" para receber uma resposta e guardá-la em uma variável.
+            <strong>Lógica:</strong> O colégio guarda muitos materiais. Para não criar 100 variáveis, usamos um Array (Lista) com colchetes <code>[ ]</code>.
         </div>
-        <p>O jogo precisa de uma decisão sua. Digite o comando abaixo, e quando a caixa aparecer, escreva <strong>sim</strong> ou <strong>nao</strong>.</p>
+        <p>Mais abaixo, inicie o sistema do Almoxarifado com o estoque base:</p>
         <div class="code-block">
-            <span class="keyword">var</span> escolha <span class="operator">=</span> <span class="function">prompt</span>(<span class="string">"Deseja beber uma poção mágica? (sim/nao)"</span>);
-        </div>
-    </div>
-
-    <div class="step-container">
-        <div class="step-number">6</div>
-        <h3><i class="fa-solid fa-layer-group" style="color: var(--primary);"></i> Padrões (Arrays): O Inventário</h3>
-        <div class="step-explanation">
-            <strong>Para que serve este passo?</strong> Quando temos vários itens semelhantes, o padrão nos diz para agrupá-los em uma Lista (Array) em vez de criar dezenas de variáveis separadas.
-        </div>
-        <p>Vamos verificar o que você tem na mochila. Digite a seguinte lista (use os colchetes):</p>
-        <div class="code-block">
-            <span class="keyword">var</span> inventario <span class="operator">=</span> [<span class="string">"Mapa"</span>, <span class="string">"Corda"</span>, <span class="string">"Bússola"</span>];
-        </div>
-    </div>
-
-    <div class="step-container">
-        <div class="step-number">7</div>
-        <h3><i class="fa-solid fa-plus" style="color: var(--primary);"></i> Alterando a Lista (Push)</h3>
-        <div class="step-explanation">
-            <strong>Para que serve este passo?</strong> As listas não são fixas. Usamos ferramentas específicas da linguagem (neste caso, "push") para adicionar dados no final do padrão criado.
-        </div>
-        <p>Você encontrou uma chave escondida! Adicione-a ao inventário e veja o resultado no console:</p>
-        <div class="code-block">
-            inventario.<span class="function">push</span>(<span class="string">"Chave de Ouro"</span>);<br>
-            <span class="function">console.log</span>(inventario);
+            <span class="keyword">var</span> materiais <span class="operator">=</span> [<span class="string">"Papel A4"</span>, <span class="string">"Caneta Azul"</span>];
         </div>
     </div>
 
@@ -339,57 +354,39 @@
      PÁGINA 3
      ========================================== -->
 <div class="page" id="page3">
+    
     <div class="step-container">
-        <div class="step-number">8</div>
-        <h3><i class="fa-solid fa-code-branch" style="color: var(--primary);"></i> Decisão Lógica: IF e ELSE</h3>
+        <div class="step-number">6</div>
+        <h3><i class="fa-solid fa-truck-ramp-box" style="color: var(--secondary);"></i> Recebendo Nova Encomenda (Push)</h3>
         <div class="step-explanation">
-            <strong>Para que serve este passo?</strong> O núcleo da programação. O computador avalia a sua "escolha" (Passo 5) e decide qual caminho seguir com base em uma condição verdadeira ou falsa.
+            <strong>Lógica:</strong> Primeiro, perguntamos qual é o item novo. Depois, usamos o poder do <code>.push()</code> para empurrar esse item novo para dentro do Array antigo.
         </div>
-        <p>Escreva a estrutura abaixo exatamente com os parênteses e chaves. Cuidado com o duplo igual <code>==</code> que serve para comparar coisas!</p>
+        <p>Finalize o seu código com a entrada do novo material:</p>
         <div class="code-block">
-            <span class="keyword">if</span> (escolha <span class="operator">==</span> <span class="string">"sim"</span>) {<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;energia <span class="operator">=</span> energia <span class="operator">+</span> 50;<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"Você bebeu a poção! Energia recuperada: "</span> <span class="operator">+</span> energia);<br>
-            } <span class="keyword">else</span> {<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"Você guardou a poção. Energia continua sendo: "</span> <span class="operator">+</span> energia);<br>
-            }
+            <span class="comment">// Pede o nome do item novo</span><br>
+            <span class="keyword">var</span> itemNovo <span class="operator">=</span> <span class="function">prompt</span>(<span class="string">"Qual material acabou de chegar?"</span>);<br><br>
+            <span class="comment">// Empurra para dentro da lista</span><br>
+            materiais.<span class="function">push</span>(itemNovo);<br><br>
+            <span class="comment">// Mostra a lista atualizada</span><br>
+            <span class="function">alert</span>(<span class="string">"Estoque atualizado: "</span> <span class="operator">+</span> materiais);
         </div>
-    </div>
-
-    <div class="step-container">
-        <div class="step-number">9</div>
-        <h3><i class="fa-solid fa-check-double" style="color: var(--primary);"></i> Compreendendo o Seu Algoritmo</h3>
-        <div class="step-explanation">
-            <strong>Para que serve este passo?</strong> O pensamento computacional exige validação. Você precisa olhar para tudo o que escreveu e entender o fluxo completo da história.
-        </div>
-        <p>Se você fez tudo corretamente até aqui, você construiu um <strong>Algoritmo Completo</strong>. Reflita sobre isso:</p>
-        <ul style="margin-left: 20px;">
-            <li>Você definiu os dados de entrada (Nome, Energia, Inventário).</li>
-            <li>Você processou informações (Dano, Escolha do usuário).</li>
-            <li>Você estabeleceu regras lógicas (If/Else) para alterar o resultado.</li>
-            <li>Você gerou uma saída (Alert).</li>
-        </ul>
     </div>
 
     <div class="step-container final-mission">
-        <div class="step-number" style="background: var(--accent); color: var(--dark);">10</div>
-        <h3 style="color: var(--accent); justify-content: center; font-size: 26px;"><i class="fa-solid fa-flag-checkered"></i> Missão Final: Reportar Resultados</h3>
-        <p style="font-size: 18px; margin-top: 15px;">Agora que você concluiu com sucesso o seu teste prático, é hora de entregar a sua tarefa para o professor!</p>
+        <div class="step-number" style="background: var(--primary); color: var(--dark);">7</div>
+        <h3 style="color: var(--primary); justify-content: center; font-size: 26px;"><i class="fa-solid fa-flag-checkered"></i> Teste Final e Entrega no PDA</h3>
+        <p style="font-size: 18px; margin-top: 15px;">Agora clique no botão azul <strong>Run</strong> no Programiz! O seu programa vai executar de cima para baixo. Responda às 3 perguntas que ele fizer.</p>
         
         <p style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: left;">
-            1. Acesse o portal da disciplina através deste link:<br>
-            <a href="https://rodrigogpelages.github.io/aulasinformatica/" target="_blank">https://rodrigogpelages.github.io/aulasinformatica/</a>
+            1. O programa rodou perfeitamente sem erros vermelhos? Parabéns, você é oficialmente um Analista!
         </p>
         <p style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: left;">
-            2. Procure pela seção de entregas ou comentários da <strong>Aula 10</strong>.
+            2. Selecione <strong>todo o código</strong> que você digitou no Programiz e copie.
         </p>
         <p style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: left; margin-bottom: 0;">
-            3. Publique exatamente o seguinte texto, preenchendo com os seus resultados:<br><br>
-            <span style="color: #cbd5e1; font-family: monospace;">
-            "Missão Concluída! O herói [Seu Nome] chegou ao fim do algoritmo.<br>
-            - Itens no Inventário: [O que apareceu no seu console.log?]<br>
-            - Ação final: [Escreva a mensagem que o seu Alert mostrou no Passo 8]"
-            </span>
+            3. Acesse o <strong>PDA</strong> clicando no link abaixo:<br>
+            <a href="https://rodrigogpelages.github.io/aulasinformatica/" target="_blank">https://rodrigogpelages.github.io/aulasinformatica/</a><br><br>
+            Lá, cole o seu código completo na atividade da Aula 12 para garantir a sua nota!
         </p>
     </div>
 
@@ -401,75 +398,77 @@
     // SCRIPTS DE BLOQUEIO ANTI-CÓPIA / SEGURANÇA
     // ==========================================
 
-    // Desativa o botão direito do mouse (Menu de Contexto)
     document.addEventListener('contextmenu', function(event) {
         event.preventDefault();
-        alert('Ação bloqueada! Você precisa digitar o código para praticar e aprender.');
+        alert('Ação bloqueada! Um verdadeiro Analista digita seu próprio código.');
     });
 
-    // Desativa o atalho de Copiar (Ctrl+C)
     document.addEventListener('copy', function(event) {
         event.preventDefault();
-        alert('Copiar e colar está desativado nesta atividade. Exercite a sua lógica digitando os comandos no Console!');
+        alert('O atalho de copiar foi desativado. Digite o código no Console!');
     });
 
-    // Desativa atalhos de teclado de desenvolvedor/seleção básica na página para dificultar (Opcional, mas útil)
     document.addEventListener('keydown', function(event) {
-        // Bloqueia Ctrl+A (Selecionar Tudo), Ctrl+C (Copiar) e Ctrl+S (Salvar)
         if (event.ctrlKey && (event.key === 'a' || event.key === 'c' || event.key === 's')) {
             event.preventDefault();
-            alert('Atalhos de seleção e cópia desativados!');
+            alert('Atalhos de texto bloqueados. Foco no código!');
         }
     });
 
     // ==========================================
-    // GERAÇÃO DE PDF (FORMATO A4 RETRATO)
+    // DOWNLOAD DE HTML E PDF
     // ==========================================
+    function downloadHTML() {
+        const htmlContent = document.documentElement.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'aula12_desafio_analista.html';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => { document.body.removeChild(a); window.URL.revokeObjectURL(url); }, 100);
+    }
+
     async function downloadPDF() {
         const btn = document.querySelector('.btn-control.pdf');
         const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando PDF...';
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando Documento...';
         btn.disabled = true;
 
         try {
-            // Cria um container para agregar todas as páginas verticalmente
             const container = document.createElement('div');
             
-            // Clona todas as páginas para não afetar o DOM original
             const pages = document.querySelectorAll('.page');
             pages.forEach(page => {
                 const clone = page.cloneNode(true);
-                // Força os estilos de impressão para o clone
                 clone.style.margin = '0';
-                clone.style.width = '800px'; 
-                clone.style.borderRadius = '0'; // Tira bordas arredondadas no PDF
-                clone.style.boxShadow = 'none'; // Tira sombras no PDF
+                clone.style.width = '850px'; 
+                clone.style.borderRadius = '0'; 
+                clone.style.boxShadow = 'none'; 
                 container.appendChild(clone);
             });
 
-            // Adiciona o container invisível ao body
             const wrapper = document.createElement('div');
             wrapper.style.position = 'absolute';
             wrapper.style.top = '-9999px';
             wrapper.appendChild(container);
             document.body.appendChild(wrapper);
 
-            // Opções do HTML2PDF para formato A4 Vertical (Portrait)
             const opt = {
                 margin: 0,
-                filename: 'aula10_caderno_exercicios.pdf',
+                filename: 'aula12_desafio_analista.pdf',
                 image: { type: 'jpeg', quality: 1 },
-                html2canvas: { scale: 2, useCORS: true, width: 800, windowWidth: 800 },
-                jsPDF: { unit: 'px', format: [800, 1130], orientation: 'portrait' } // Formato retrato A4 adaptado para pixels
+                html2canvas: { scale: 2, useCORS: true, width: 850, windowWidth: 850 },
+                jsPDF: { unit: 'px', format: [850, 1150], orientation: 'portrait' }
             };
 
             await html2pdf().set(opt).from(container).save();
             
-            // Limpa o container fantasma
             document.body.removeChild(wrapper);
         } catch (error) {
             console.error(error);
-            alert("Erro ao gerar o PDF. Verifique sua conexão com a internet.");
+            alert("Erro ao gerar o PDF. Verifique a internet e tente novamente!");
         } finally {
             btn.innerHTML = originalText;
             btn.disabled = false;
