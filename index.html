@@ -3,31 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aula 12: Caderno de Prática - O Desafio do Analista</title>
+    <title>Aula 13: O Desafio do Zoológico (Revisão Geral)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        /* SETUP E RESET - TEMA ANALISTA/HACKER */
+        /* SETUP E RESET - TEMA ZOOLÓGICO/SAFARI */
         :root {
-            --primary: #10b981; /* Verde Néon (Hacker/Sucesso) */
-            --primary-light: #d1fae5;
-            --secondary: #3b82f6; /* Azul (Lógica) */
-            --accent: #f59e0b; /* Amarelo (Atenção) */
-            --danger: #ef4444; /* Vermelho (Erro/Reprovado) */
-            --dark: #0f172a; /* Fundo Slate 900 */
+            --primary: #15803d; /* Verde Floresta */
+            --primary-light: #dcfce7;
+            --secondary: #d97706; /* Âmbar/Laranja Safari */
+            --accent: #0284c7; /* Azul Água/Céu */
+            --danger: #b91c1c; /* Vermelho Alerta */
+            --dark: #1c1917; /* Marrom Pedra Escuro */
+            --brown: #78350f; /* Madeira/Terra */
             --light: #f8fafc;
             --text: #334155;
-            --code-bg: #1e293b;
-            --border: #cbd5e1;
+            --code-bg: #1c1917; /* Console Escuro */
+            --border: #d6d3d1;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
-            background-color: #94a3b8;
+            background-color: #a8a29e;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -47,7 +48,7 @@
             min-height: 1150px; 
             background-color: #ffffff;
             border-radius: 12px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
             padding: 60px 70px;
             display: flex;
             flex-direction: column;
@@ -58,29 +59,28 @@
 
         /* TIPOGRAFIA */
         h1 { font-family: 'Poppins', sans-serif; font-size: 38px; font-weight: 800; color: var(--dark); line-height: 1.2; text-align: center; margin-bottom: 10px; text-transform: uppercase;}
-        h2 { font-family: 'Poppins', sans-serif; font-size: 26px; font-weight: 700; color: var(--secondary); margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 10px;}
+        h2 { font-family: 'Poppins', sans-serif; font-size: 26px; font-weight: 700; color: var(--primary); margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 10px;}
         h3 { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 600; color: var(--dark); margin-bottom: 5px; display: flex; align-items: center; gap: 10px;}
         
         p, li { font-size: 16px; line-height: 1.6; color: var(--text); margin-bottom: 15px; }
         
-        /* AVISO ANTI-CÓPIA */
-        .anti-copy-warning {
-            background-color: #f0fdf4;
-            border: 2px dashed var(--primary);
-            color: #166534;
+        /* AVISOS */
+        .alert-box {
+            background-color: #fef2f2;
+            border: 2px dashed var(--danger);
+            color: #991b1b;
             padding: 15px;
             border-radius: 8px;
             text-align: center;
             font-weight: 600;
             font-size: 16px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
         }
 
-        /* MISSION BOX (Caixa da Questão) */
         .mission-box {
             background-color: var(--dark);
             color: white;
@@ -88,14 +88,15 @@
             border-radius: 12px;
             margin-bottom: 30px;
             border-left: 6px solid var(--primary);
+            border-right: 6px solid var(--secondary);
         }
         .mission-box p { color: #cbd5e1; }
-        .mission-box .highlight { color: var(--primary); font-weight: bold; font-family: 'Fira Code', monospace; }
+        .mission-box .highlight { color: var(--secondary); font-weight: bold; font-family: 'Fira Code', monospace; }
 
         /* ESTILOS DOS PASSOS (STEPS) */
         .step-container {
             background: var(--light);
-            border: 1px solid var(--border);
+            border: 2px solid var(--border);
             border-radius: 10px;
             padding: 25px;
             margin-bottom: 30px;
@@ -110,24 +111,24 @@
             color: white;
             width: 40px;
             height: 40px;
-            border-radius: 50%;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Fira Code', monospace;
             font-weight: 800;
             font-size: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 2px 2px 0px var(--dark);
         }
 
         .step-explanation {
-            background: #e0f2fe;
+            background: #fff7ed;
             border-left: 4px solid var(--secondary);
             padding: 10px 15px;
             margin-bottom: 15px;
             border-radius: 0 8px 8px 0;
             font-size: 14px;
-            color: #0369a1;
+            color: #9a3412;
             font-weight: 600;
         }
 
@@ -143,11 +144,11 @@
             border-left: 4px solid var(--primary);
             pointer-events: none; /* Impede cópia */
         }
-        .keyword { color: #f472b6; }
-        .string { color: #a3e635; }
-        .function { color: #60a5fa; }
-        .operator { color: #fcd34d; }
-        .comment { color: #94a3b8; font-style: italic; }
+        .keyword { color: #f472b6; } 
+        .string { color: #a3e635; } 
+        .function { color: #60a5fa; } 
+        .operator { color: #fcd34d; } 
+        .comment { color: #a8a29e; font-style: italic; }
 
         /* DESTAQUE FINAL */
         .final-mission {
@@ -157,10 +158,10 @@
             border-radius: 12px;
             text-align: center;
             margin-top: 20px;
-            border: 3px dashed var(--primary);
+            border: 4px solid var(--secondary);
         }
         .final-mission a {
-            color: var(--primary);
+            color: var(--secondary);
             font-weight: bold;
             font-size: 18px;
             text-decoration: underline;
@@ -182,21 +183,21 @@
             color: white;
             border: none;
             padding: 12px 20px;
-            border-radius: 50px;
-            font-family: 'Poppins', sans-serif;
+            border-radius: 5px;
+            font-family: 'Fira Code', monospace;
             font-weight: 600;
             font-size: 14px;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
+            box-shadow: 3px 3px 0px #000;
+            transition: all 0.1s ease;
         }
 
-        .btn-control:hover { transform: translateY(-3px); background: var(--primary); color: var(--dark); }
+        .btn-control:hover { transform: translate(2px, 2px); box-shadow: 1px 1px 0px #000; }
         .btn-control.pdf { background: #ef4444; color: white; }
-        .btn-control.html { background: var(--secondary); color: white;}
+        .btn-control.html { background: var(--primary); color: white;}
         
         /* CABEÇALHO DA PÁGINA */
         .page-header {
@@ -204,7 +205,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
-            border-bottom: 2px solid var(--border);
+            border-bottom: 4px solid var(--dark);
             padding-bottom: 20px;
         }
         .page-header-info { text-align: right; color: var(--text); font-size: 14px;}
@@ -234,7 +235,7 @@
 <div class="page" id="page1">
     <div class="page-header">
         <div>
-            <i class="fa-solid fa-user-secret" style="font-size: 40px; color: var(--primary);"></i>
+            <i class="fa-solid fa-paw" style="font-size: 45px; color: var(--primary);"></i>
         </div>
         <div class="page-header-info">
             <strong>Prof. Rodrigo G. Pelages</strong><br>
@@ -242,56 +243,51 @@
         </div>
     </div>
 
-    <h1>Caderno de Prática</h1>
-    <h2 style="text-align: center; border: none; color: var(--text); margin-bottom: 30px;">O Desafio do Analista de Sistemas</h2>
+    <h1>A Grande Revisão</h1>
+    <h2 style="text-align: center; border: none; color: var(--text); margin-bottom: 30px;">O Sistema do Zoológico</h2>
 
-    <div class="anti-copy-warning">
-        <i class="fa-solid fa-shield-halved"></i>
-        <span><strong>Modo Restrito:</strong> Copiar e colar instruções desativado. Um verdadeiro Analista treina digitando o código! Usaremos um compilador online para isso.</span>
+    <div class="alert-box">
+        <i class="fa-solid fa-lock"></i>
+        <span><strong>Modo Restrito:</strong> Copiar e colar está bloqueado! O verdadeiro programador cria memória muscular digitando o código linha por linha.</span>
     </div>
     
-    <p style="text-align: center; font-size: 18px; font-weight: bold; color: var(--secondary); margin-bottom: 20px;">
-        Acesse: <a href="https://www.programiz.com/javascript/online-compiler/" target="_blank" style="color: var(--primary); pointer-events: auto;">programiz.com/javascript/online-compiler</a><br>
-        <span style="font-size: 14px; font-weight: normal; color: var(--text);">Apague o código de exemplo do lado esquerdo. É lá que você vai construir o seu programa!</span>
+    <p style="text-align: center; font-size: 18px; font-weight: bold; color: var(--dark); margin-bottom: 20px;">
+        Acesse o nosso Servidor Oficial (Laboratório Virtual) para programar:<br>
+        <a href="https://rodrigogpelages.github.io/laboratoriovirtual/" target="_blank" style="color: var(--secondary); font-size: 22px; pointer-events: auto;">Abrir Laboratório de Código</a>
     </p>
 
     <div class="mission-box">
-        <h3 style="color: white; margin-bottom: 10px;"><i class="fa-solid fa-briefcase"></i> A Sua Missão Tripla</h3>
-        <p>A Secretaria Escolar contratou você para desenvolver 3 pequenos sistemas. Eles rodarão juntos em um único programa:</p>
-        <ol style="color: #cbd5e1; margin-left: 20px; margin-bottom: 10px;">
-            <li><strong>O Boletim:</strong> Aprovar ou reprovar por Nota.</li>
-            <li><strong>A Catraca:</strong> Bloquear alunos com excesso de Faltas.</li>
-            <li><strong>O Almoxarifado:</strong> Adicionar novos materiais ao estoque.</li>
-        </ol>
+        <h3 style="color: var(--secondary); margin-bottom: 10px;"><i class="fa-solid fa-map-location-dot"></i> Objetivo da Missão</h3>
+        <p>Você é o novo Biólogo Chefe do <strong>Zoo Safári</strong>. Para manter o parque funcionando sem erros, você vai precisar codificar <strong>um único superprograma</strong> de gestão contendo 10 passos seguidos.</p>
+        <p style="margin-top: 10px; color: white;">Digite cada etapa abaixo da outra no Laboratório Virtual. Não apague as fases anteriores!</p>
     </div>
 
-    <h2 style="color: var(--dark); font-size: 22px;"><i class="fa-solid fa-graduation-cap"></i> TAREFA 1: O Boletim Eletrônico</h2>
+    <h2 style="color: var(--dark); font-size: 22px;"><i class="fa-solid fa-leaf"></i> FASE 1: O Início do Turno</h2>
 
     <div class="step-container">
         <div class="step-number">1</div>
-        <h3><i class="fa-solid fa-keyboard" style="color: var(--secondary);"></i> Capturando a Nota (Entrada)</h3>
+        <h3><i class="fa-solid fa-keyboard" style="color: var(--primary);"></i> Identificação do Biólogo</h3>
         <div class="step-explanation">
-            <strong>Lógica:</strong> O sistema precisa saber a nota antes de julgar. Usamos o <code>prompt()</code> para perguntar e guardamos numa variável.
+            <strong>Lógica:</strong> (Variáveis e Entradas) O sistema usa o <code>prompt()</code> para perguntar algo e guarda a resposta numa variável.
         </div>
-        <p>Digite a primeira linha do seu sistema no <strong>Programiz</strong>:</p>
+        <p>No editor de texto, inicie o seu programa perguntando o nome do Biólogo e dando boas-vindas:</p>
         <div class="code-block">
-            <span class="keyword">var</span> notaFinal <span class="operator">=</span> <span class="function">prompt</span>(<span class="string">"Professor, digite a nota final do aluno:"</span>);
+            <span class="comment">// --- PASSO 1: BATE PONTO ---</span><br>
+            <span class="keyword">var</span> biologo <span class="operator">=</span> <span class="function">prompt</span>(<span class="string">"Bom dia! Qual o seu nome de Biólogo?"</span>);<br>
+            <span class="function">alert</span>(<span class="string">"Bem-vindo ao Zoo Central, "</span> <span class="operator">+</span> biologo <span class="operator">+</span> <span class="string">"!"</span>);
         </div>
     </div>
 
     <div class="step-container">
         <div class="step-number">2</div>
-        <h3><i class="fa-solid fa-scale-balanced" style="color: var(--secondary);"></i> Estrutura de Decisão (If / Else)</h3>
+        <h3><i class="fa-solid fa-wheat-awn" style="color: var(--secondary);"></i> Estoque de Ração</h3>
         <div class="step-explanation">
-            <strong>Lógica:</strong> O cérebro do programa. Se (<code>if</code>) a nota for Maior ou Igual (<code>&gt;=</code>) a 70, aprovado. Senão (<code>else</code>), reprovado.
+            <strong>Lógica:</strong> (Números) Variáveis numéricas não usam aspas. Servem para guardar quantidades.
         </div>
-        <p>Na linha de baixo do seu código, adicione a estrutura completa (atenção às chaves <code>{ }</code>):</p>
+        <p>O zoológico começa o dia com 100kg de ração. Crie a variável abaixo:</p>
         <div class="code-block">
-            <span class="keyword">if</span> (notaFinal <span class="operator">&gt;=</span> 70) {<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"Aprovado! Parabéns."</span>);<br>
-            } <span class="keyword">else</span> {<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"Reprovado! Precisa estudar mais."</span>);<br>
-            }
+            <span class="comment">// --- PASSO 2: ESTOQUE INICIAL ---</span><br>
+            <span class="keyword">var</span> racao <span class="operator">=</span> 100;
         </div>
     </div>
 
@@ -303,47 +299,48 @@
      ========================================== -->
 <div class="page" id="page2">
     
-    <h2 style="color: var(--dark); font-size: 22px;"><i class="fa-solid fa-door-closed"></i> TAREFA 2: A Catraca Inteligente</h2>
+    <h2 style="color: var(--dark); font-size: 22px;"><i class="fa-solid fa-hippo"></i> FASE 2: A Fauna</h2>
 
     <div class="step-container">
         <div class="step-number">3</div>
-        <h3><i class="fa-solid fa-calendar-xmark" style="color: var(--secondary);"></i> Contagem de Faltas</h3>
+        <h3><i class="fa-solid fa-list-ul" style="color: var(--brown);"></i> Mapeando os Recintos (Array)</h3>
         <div class="step-explanation">
-            <strong>Lógica:</strong> Agora vamos avaliar a frequência. Peça ao inspetor o número de faltas do aluno.
+            <strong>Lógica:</strong> (Arrays) Para listar os animais sem criar dezenas de variáveis, agrupamos tudo numa Lista (Array) usando colchetes <code>[ ]</code>.
         </div>
-        <p>Não apague o que já fez! Pule uma linha e continue construindo o seu programa:</p>
+        <p>Registre os animais que já estão no safári principal:</p>
         <div class="code-block">
-            <span class="keyword">var</span> totalFaltas <span class="operator">=</span> <span class="function">prompt</span>(<span class="string">"Quantas faltas o aluno possui?"</span>);
+            <span class="comment">// --- PASSO 3: RECINTOS ---</span><br>
+            <span class="keyword">var</span> animais <span class="operator">=</span> [<span class="string">"Leão"</span>, <span class="string">"Zebra"</span>];
         </div>
     </div>
 
     <div class="step-container">
         <div class="step-number">4</div>
-        <h3><i class="fa-solid fa-traffic-light" style="color: var(--secondary);"></i> Barrando o Excesso (Sinal de Maior)</h3>
+        <h3><i class="fa-solid fa-truck-moving" style="color: var(--accent);"></i> Chegada de Transporte (Push)</h3>
         <div class="step-explanation">
-            <strong>Lógica:</strong> A regra mudou! Se as faltas forem ESTRITAMENTE MAIORES (<code>&gt;</code>) que 15, o aluno reprova por falta.
+            <strong>Lógica:</strong> (Método Push) Listas podem crescer. O comando <code>.push()</code> empurra um novo dado para o final do seu Array.
         </div>
-        <p>Adicione o teste da catraca logo abaixo:</p>
+        <p>Um caminhão chegou com um novo habitante! Adicione a "Girafa" aos recintos e mostre a lista:</p>
         <div class="code-block">
-            <span class="keyword">if</span> (totalFaltas <span class="operator">&gt;</span> 15) {<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"Catraca Bloqueada: Reprovado por Falta!"</span>);<br>
-            } <span class="keyword">else</span> {<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"Acesso Liberado: Frequência regular."</span>);<br>
-            }
+            <span class="comment">// --- PASSO 4: NOVO ANIMAL ---</span><br>
+            animais.<span class="function">push</span>(<span class="string">"Girafa"</span>);<br>
+            <span class="function">alert</span>(<span class="string">"Novos moradores! Animais no parque: "</span> <span class="operator">+</span> animais);
         </div>
     </div>
 
-    <h2 style="color: var(--dark); font-size: 22px;"><i class="fa-solid fa-boxes-stacked"></i> TAREFA 3: O Almoxarifado</h2>
+    <h2 style="color: var(--dark); font-size: 22px;"><i class="fa-solid fa-bone"></i> FASE 3: Alimentação</h2>
 
     <div class="step-container">
         <div class="step-number">5</div>
-        <h3><i class="fa-solid fa-list-check" style="color: var(--secondary);"></i> Criando o Estoque (Array)</h3>
+        <h3><i class="fa-solid fa-drumstick-bite" style="color: var(--danger);"></i> Consumo de Ração (Matemática)</h3>
         <div class="step-explanation">
-            <strong>Lógica:</strong> O colégio guarda muitos materiais. Para não criar 100 variáveis, usamos um Array (Lista) com colchetes <code>[ ]</code>.
+            <strong>Lógica:</strong> (Processamento) O computador pega o valor da variável de ração, subtrai um número (consumo) e salva o novo resultado.
         </div>
-        <p>Mais abaixo, inicie o sistema do Almoxarifado com o estoque base:</p>
+        <p>A hora do almoço dos carnívoros chegou. Desconte 30kg de ração do estoque:</p>
         <div class="code-block">
-            <span class="keyword">var</span> materiais <span class="operator">=</span> [<span class="string">"Papel A4"</span>, <span class="string">"Caneta Azul"</span>];
+            <span class="comment">// --- PASSO 5: ALMOÇO ---</span><br>
+            racao <span class="operator">=</span> racao <span class="operator">-</span> 30;<br>
+            <span class="function">alert</span>(<span class="string">"Os animais comeram! Ração restante: "</span> <span class="operator">+</span> racao <span class="operator">+</span> <span class="string">"kg"</span>);
         </div>
     </div>
 
@@ -357,40 +354,102 @@
     
     <div class="step-container">
         <div class="step-number">6</div>
-        <h3><i class="fa-solid fa-truck-ramp-box" style="color: var(--secondary);"></i> Recebendo Nova Encomenda (Push)</h3>
+        <h3><i class="fa-solid fa-scale-unbalanced" style="color: var(--danger);"></i> Checagem de Fome (If/Else)</h3>
         <div class="step-explanation">
-            <strong>Lógica:</strong> Primeiro, perguntamos qual é o item novo. Depois, usamos o poder do <code>.push()</code> para empurrar esse item novo para dentro do Array antigo.
+            <strong>Lógica:</strong> (Decisão Simples) SE a ração for MAIOR que zero, está tudo bem. SENÃO, é alerta de fome.
         </div>
-        <p>Finalize o seu código com a entrada do novo material:</p>
+        <p>O sistema do zoológico deve checar automaticamente se ainda temos suprimentos:</p>
         <div class="code-block">
-            <span class="comment">// Pede o nome do item novo</span><br>
-            <span class="keyword">var</span> itemNovo <span class="operator">=</span> <span class="function">prompt</span>(<span class="string">"Qual material acabou de chegar?"</span>);<br><br>
-            <span class="comment">// Empurra para dentro da lista</span><br>
-            materiais.<span class="function">push</span>(itemNovo);<br><br>
-            <span class="comment">// Mostra a lista atualizada</span><br>
-            <span class="function">alert</span>(<span class="string">"Estoque atualizado: "</span> <span class="operator">+</span> materiais);
+            <span class="comment">// --- PASSO 6: ALERTA DE ESTOQUE ---</span><br>
+            <span class="keyword">if</span> (racao <span class="operator">&gt;</span> 0) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"Tudo sob controle. Temos comida suficiente."</span>);<br>
+            } <span class="keyword">else</span> {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"ALERTA VERMELHO! O zoológico está sem ração!"</span>);<br>
+            }
+        </div>
+    </div>
+
+    <h2 style="color: var(--dark); font-size: 22px;"><i class="fa-solid fa-users"></i> FASE 4: Abertura dos Portões</h2>
+
+    <div class="step-container">
+        <div class="step-number">7</div>
+        <h3><i class="fa-solid fa-bus" style="color: var(--primary);"></i> Lotação do Safári (Prompt Numérico)</h3>
+        <div class="step-explanation">
+            <strong>Lógica:</strong> Combinar interação com avaliação. Vamos receber a quantidade de turistas do dia.
+        </div>
+        <p>Um ônibus escolar acaba de chegar. Pergunte ao segurança quantas pessoas estão querendo entrar:</p>
+        <div class="code-block">
+            <span class="comment">// --- PASSO 7: BILHETERIA ---</span><br>
+            <span class="keyword">var</span> visitantes <span class="operator">=</span> <span class="function">prompt</span>(<span class="string">"Quantos visitantes chegaram no ônibus?"</span>);
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">8</div>
+        <h3><i class="fa-solid fa-person-chalkboard" style="color: var(--secondary);"></i> Precisamos de mais guias? (If >=)</h3>
+        <div class="step-explanation">
+            <strong>Lógica:</strong> (Comparação) O código decide o plano de ação baseando-se no número digitado acima.
+        </div>
+        <p>Se a excursão tiver 50 ou mais visitantes, precisamos acionar guias extras:</p>
+        <div class="code-block">
+            <span class="comment">// --- PASSO 8: CAPACIDADE ---</span><br>
+            <span class="keyword">if</span> (visitantes <span class="operator">&gt;=</span> 50) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"Excursão grande! Acionar Guias e Biólogos extras."</span>);<br>
+            } <span class="keyword">else</span> {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"Lotação tranquila. Catracas liberadas."</span>);<br>
+            }
+        </div>
+    </div>
+
+    <div class="page-number">Página 3</div>
+</div>
+
+<!-- ==========================================
+     PÁGINA 4
+     ========================================== -->
+<div class="page" id="page4">
+    
+    <h2 style="color: var(--dark); font-size: 22px;"><i class="fa-solid fa-clipboard-check"></i> FASE 5: Encerramento</h2>
+
+    <div class="step-container">
+        <div class="step-number">9</div>
+        <h3><i class="fa-solid fa-notes-medical" style="color: var(--primary);"></i> Resgate Surpresa</h3>
+        <div class="step-explanation">
+            <strong>Lógica:</strong> (Interação Avançada) Perguntamos o nome do animal resgatado, e jogamos essa variável diretamente para dentro do <code>push()</code>.
+        </div>
+        <p>No fim do dia, a patrulha ambiental trouxe um animal machucado. Adicione ele ao parque!</p>
+        <div class="code-block">
+            <span class="comment">// --- PASSO 9: CENTRO DE RESGATE ---</span><br>
+            <span class="keyword">var</span> resgate <span class="operator">=</span> <span class="function">prompt</span>(<span class="string">"Qual animal acabou de chegar do resgate?"</span>);<br>
+            animais.<span class="function">push</span>(resgate);
         </div>
     </div>
 
     <div class="step-container final-mission">
-        <div class="step-number" style="background: var(--primary); color: var(--dark);">7</div>
-        <h3 style="color: var(--primary); justify-content: center; font-size: 26px;"><i class="fa-solid fa-flag-checkered"></i> Teste Final e Entrega no PDA</h3>
-        <p style="font-size: 18px; margin-top: 15px;">Agora clique no botão azul <strong>Run</strong> no Programiz! O seu programa vai executar de cima para baixo. Responda às 3 perguntas que ele fizer.</p>
+        <div class="step-number" style="background: var(--secondary); color: white;">10</div>
+        <h3 style="color: var(--secondary); justify-content: center; font-size: 26px;"><i class="fa-solid fa-server"></i> Relatório Final e Execução!</h3>
+        <div class="step-explanation" style="background: #e0f2fe; color: #0369a1; border-color: var(--secondary); text-align: left;">
+            <strong>Última linha de código:</strong> Resuma todas as variáveis finais num único alerta para encerrar o expediente do Zoo.
+        </div>
         
-        <p style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: left;">
-            1. O programa rodou perfeitamente sem erros vermelhos? Parabéns, você é oficialmente um Analista!
+        <p style="margin-bottom: 20px; font-weight: normal; font-size: 16px; color: white;">Finalize o seu superprograma digitando isto e depois <strong>CLIQUE EM RUN</strong> (Executar) no Laboratório!</p>
+        <div class="code-block" style="text-align: left; font-size: 14px; margin-bottom: 30px;">
+            <span class="comment">// --- PASSO 10: TELA DE STATUS ---</span><br>
+            <span class="function">alert</span>(<span class="string">"RELATÓRIO DO ZOO\nBiólogo: "</span> + biologo + <span class="string">"\nRação: "</span> + racao + <span class="string">"kg\nAnimais: "</span> + animais);
+        </div>
+
+        <p style="font-size: 18px; margin-top: 15px; border-top: 1px solid #475569; padding-top: 20px;">Você rodou o programa, respondeu às perguntas e não deu tela vermelha de erro? Parabéns!</p>
+        
+        <p style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; text-align: left;">
+            1. No Laboratório Virtual, aperte <code>Ctrl + A</code> para selecionar TODO o seu código e depois <code>Ctrl + C</code> para copiar.
         </p>
-        <p style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: left;">
-            2. Selecione <strong>todo o código</strong> que você digitou no Programiz e copie.
-        </p>
-        <p style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: left; margin-bottom: 0;">
-            3. Acesse o <strong>PDA</strong> clicando no link abaixo:<br>
-            <a href="https://rodrigogpelages.github.io/aulasinformatica/" target="_blank">https://rodrigogpelages.github.io/aulasinformatica/</a><br><br>
-            Lá, cole o seu código completo na atividade da Aula 12 para garantir a sua nota!
+        <p style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; text-align: left; margin-bottom: 0;">
+            2. Acesse o <strong>PDA (Site da Escola)</strong> no link abaixo e cole seu código e o que apareceu no seu Relatório Final (Passo 10) na Aula 13!<br><br>
+            <a href="https://rodrigogpelages.github.io/aulasinformatica/" target="_blank"><i class="fa-solid fa-link"></i> rodrigogpelages.github.io/aulasinformatica/</a>
         </p>
     </div>
 
-    <div class="page-number">Página 3</div>
+    <div class="page-number">Página 4</div>
 </div>
 
 <script>
@@ -400,18 +459,18 @@
 
     document.addEventListener('contextmenu', function(event) {
         event.preventDefault();
-        alert('Ação bloqueada! Um verdadeiro Analista digita seu próprio código.');
+        alert('Acesso negado! Um verdadeiro Biólogo digita seus próprios relatórios.');
     });
 
     document.addEventListener('copy', function(event) {
         event.preventDefault();
-        alert('O atalho de copiar foi desativado. Digite o código no Console!');
+        alert('Cópia bloqueada. Desenvolva a memória muscular escrevendo o código linha por linha!');
     });
 
     document.addEventListener('keydown', function(event) {
         if (event.ctrlKey && (event.key === 'a' || event.key === 'c' || event.key === 's')) {
             event.preventDefault();
-            alert('Atalhos de texto bloqueados. Foco no código!');
+            alert('Atalhos desativados no Modo Simulado.');
         }
     });
 
@@ -424,7 +483,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'aula12_desafio_analista.html';
+        a.download = 'aula13_projeto_zoologico.html';
         document.body.appendChild(a);
         a.click();
         setTimeout(() => { document.body.removeChild(a); window.URL.revokeObjectURL(url); }, 100);
@@ -457,7 +516,7 @@
 
             const opt = {
                 margin: 0,
-                filename: 'aula12_desafio_analista.pdf',
+                filename: 'aula13_projeto_zoologico.pdf',
                 image: { type: 'jpeg', quality: 1 },
                 html2canvas: { scale: 2, useCORS: true, width: 850, windowWidth: 850 },
                 jsPDF: { unit: 'px', format: [850, 1150], orientation: 'portrait' }
