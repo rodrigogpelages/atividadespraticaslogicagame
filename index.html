@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aula 14 - Parte 2: Prática JS (Marvel vs DC)</title>
+    <title>Treinamento: Domínio das Variáveis</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        /* SETUP E RESET - TEMA MARVEL VS DC */
+        /* SETUP E RESET - TEMA TERMINAL / LAB */
         :root {
-            --primary: #e11d48; /* Vermelho Marvel */
-            --primary-light: #ffe4e6;
-            --secondary: #2563eb; /* Azul DC */
-            --secondary-light: #dbeafe;
-            --accent: #facc15; /* Amarelo HQ/Poder */
-            --danger: #9f1239; /* Vermelho Escuro (Dano) */
-            --dark: #0f172a; /* Fundo Espaço/Noturno */
+            --primary: #10b981; /* Verde Terminal */
+            --primary-light: #d1fae5;
+            --secondary: #0ea5e9; /* Azul (Dados) */
+            --accent: #f43f5e; /* Rosa/Vermelho (Ação) */
+            --warning: #f59e0b; /* Amarelo (Destaque) */
+            --dark: #0f172a; /* Slate 900 */
             --light: #f8fafc;
             --text: #334155;
             --code-bg: #1e293b;
@@ -28,7 +27,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
-            background-color: #64748b;
+            background-color: #94a3b8;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -48,7 +47,7 @@
             min-height: 1150px; 
             background-color: #ffffff;
             border-radius: 12px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
             padding: 60px 70px;
             display: flex;
             flex-direction: column;
@@ -59,16 +58,16 @@
 
         /* TIPOGRAFIA */
         h1 { font-family: 'Poppins', sans-serif; font-size: 38px; font-weight: 800; color: var(--dark); line-height: 1.2; text-align: center; margin-bottom: 10px; text-transform: uppercase;}
-        h2 { font-family: 'Poppins', sans-serif; font-size: 26px; font-weight: 700; color: var(--primary); margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 10px;}
+        h2 { font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 700; color: var(--primary); margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 10px; display: flex; align-items: center; gap: 10px;}
         h3 { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 600; color: var(--dark); margin-bottom: 5px; display: flex; align-items: center; gap: 10px;}
         
         p, li { font-size: 16px; line-height: 1.6; color: var(--text); margin-bottom: 15px; }
         
         /* AVISOS */
         .alert-box {
-            background-color: #fef2f2;
+            background-color: var(--dark);
             border: 2px dashed var(--primary);
-            color: #9f1239;
+            color: var(--primary);
             padding: 15px;
             border-radius: 8px;
             text-align: center;
@@ -81,25 +80,34 @@
             gap: 10px;
         }
 
-        .mission-box {
-            background-color: var(--dark);
-            color: white;
-            padding: 25px;
+        /* CAIXA DE LINK DO LABORATÓRIO */
+        .lab-link-box {
+            background: var(--primary-light);
+            border: 2px solid var(--primary);
+            padding: 20px;
             border-radius: 12px;
+            text-align: center;
             margin-bottom: 30px;
-            border-left: 6px solid var(--primary);
-            border-right: 6px solid var(--secondary);
         }
-        .mission-box p { color: #cbd5e1; }
-        .mission-box .highlight { color: var(--accent); font-weight: bold; font-family: 'Fira Code', monospace; }
+        .lab-link-box a {
+            color: var(--dark);
+            font-size: 22px;
+            font-weight: 800;
+            text-decoration: none;
+            pointer-events: auto; /* Permite clique */
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .lab-link-box a:hover { color: var(--primary); text-decoration: underline; }
 
         /* ESTILOS DOS PASSOS (STEPS) */
         .step-container {
             background: var(--light);
-            border: 2px solid var(--border);
+            border: 1px solid var(--border);
             border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 30px;
+            padding: 20px;
+            margin-bottom: 25px;
             position: relative;
         }
         
@@ -107,29 +115,28 @@
             position: absolute;
             top: -15px;
             left: -15px;
-            background: var(--dark);
-            color: var(--accent);
-            width: 40px;
-            height: 40px;
+            background: var(--primary);
+            color: white;
+            width: 35px;
+            height: 35px;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Fira Code', monospace;
             font-weight: 800;
-            font-size: 20px;
-            box-shadow: 2px 2px 0px var(--accent);
-            border: 2px solid var(--accent);
+            font-size: 18px;
+            box-shadow: 2px 2px 0px var(--dark);
         }
 
         .step-explanation {
-            background: var(--secondary-light);
+            background: white;
             border-left: 4px solid var(--secondary);
-            padding: 10px 15px;
-            margin-bottom: 15px;
+            padding: 8px 12px;
+            margin-bottom: 10px;
             border-radius: 0 8px 8px 0;
             font-size: 14px;
-            color: #1e3a8a;
+            color: #0369a1;
             font-weight: 600;
         }
 
@@ -138,11 +145,11 @@
             font-family: 'Fira Code', monospace;
             background-color: var(--code-bg);
             color: #e2e8f0;
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
             font-size: 15px;
-            margin-top: 15px;
-            border-left: 4px solid var(--accent);
+            margin-top: 10px;
+            border-left: 4px solid var(--primary);
             pointer-events: none; /* Impede cópia */
             box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
         }
@@ -151,24 +158,6 @@
         .function { color: #60a5fa; } 
         .operator { color: #fcd34d; } 
         .comment { color: #94a3b8; font-style: italic; }
-
-        /* DESTAQUE FINAL */
-        .final-mission {
-            background: var(--dark);
-            color: white;
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            margin-top: 20px;
-            border: 4px solid var(--accent);
-        }
-        .final-mission a {
-            color: var(--accent);
-            font-weight: bold;
-            font-size: 18px;
-            text-decoration: underline;
-            pointer-events: auto;
-        }
 
         /* CONTROLES FLUTUANTES */
         .controls {
@@ -199,16 +188,16 @@
 
         .btn-control:hover { transform: translate(2px, 2px); box-shadow: 1px 1px 0px #000; }
         .btn-control.pdf { background: #ef4444; color: white; }
-        .btn-control.html { background: var(--secondary); color: white;}
+        .btn-control.html { background: var(--primary); color: white;}
         
         /* CABEÇALHO DA PÁGINA */
         .page-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             border-bottom: 4px solid var(--dark);
-            padding-bottom: 20px;
+            padding-bottom: 15px;
         }
         .page-header-info { text-align: right; color: var(--text); font-size: 14px;}
         
@@ -237,9 +226,8 @@
 <div class="page" id="page1">
     <div class="page-header">
         <div style="display: flex; gap: 10px; align-items: center;">
-            <i class="fa-solid fa-shield-halved" style="font-size: 40px; color: var(--secondary);"></i>
-            <i class="fa-solid fa-bolt" style="font-size: 30px; color: var(--accent);"></i>
-            <i class="fa-solid fa-mask" style="font-size: 40px; color: var(--primary);"></i>
+            <i class="fa-solid fa-microchip" style="font-size: 40px; color: var(--primary);"></i>
+            <i class="fa-solid fa-code" style="font-size: 30px; color: var(--dark);"></i>
         </div>
         <div class="page-header-info">
             <strong>Prof. Rodrigo G. Pelages</strong><br>
@@ -247,56 +235,58 @@
         </div>
     </div>
 
-    <h1>Prática JavaScript</h1>
-    <h2 style="text-align: center; border: none; color: var(--text); margin-bottom: 30px;">O Simulador do Multiverso</h2>
+    <h1>Treinamento: Variáveis</h1>
+    <p style="text-align: center; color: var(--text); margin-bottom: 20px;">Construção de Memória Muscular na Digitação de Código</p>
 
     <div class="alert-box">
         <i class="fa-solid fa-lock"></i>
-        <span><strong>Modo Restrito:</strong> Copiar e colar desativado! Treine sua memória muscular digitando os comandos linha a linha.</span>
+        <span><strong>Bloqueio de Cópia Ativado:</strong> Para dominar as variáveis, você precisa digitar. Construa os 10 passos sequencialmente!</span>
     </div>
 
-    <p style="text-align: center; font-size: 18px; font-weight: bold; color: var(--dark); margin-bottom: 20px;">
-        Acesse o nosso Servidor Oficial (Laboratório Virtual) para programar:<br>
-        <a href="https://rodrigogpelages.github.io/laboratoriovirtual/" target="_blank" style="color: var(--secondary); font-size: 22px; pointer-events: auto;">Abrir Laboratório de Código</a>
-    </p>
-
-    <div class="mission-box">
-        <h3 style="color: var(--accent); margin-bottom: 10px;"><i class="fa-solid fa-hand-fist"></i> O Desafio Heróico</h3>
-        <p>Os universos colidiram! Você vai codificar <strong>um único superprograma de 10 passos</strong> onde o jogador escolhe sua liga, convoca aliados e enfrenta o ataque de um supervilão.</p>
-        <p style="margin-top: 10px; color: white;">Digite o código passo a passo. Não apague os blocos anteriores, construa o programa de cima para baixo!</p>
+    <div class="lab-link-box">
+        <p style="margin-bottom: 5px; color: var(--text);">Abra o seu ambiente de desenvolvimento clicando abaixo:</p>
+        <a href="https://rodrigogpelages.github.io/laboratoriovirtual/" target="_blank">
+            <i class="fa-solid fa-laptop-code"></i> Acessar Laboratório Virtual
+        </a>
     </div>
 
-    <h2 style="color: var(--dark); font-size: 22px;"><i class="fa-solid fa-user-astronaut"></i> FASE 1: O Ponto de Ignição</h2>
+    <h2><i class="fa-solid fa-box-open"></i> Fase 1: Os Tipos Primitivos</h2>
+    <p style="font-size: 14px;">Inicie o seu código no Laboratório Virtual declarando os dados básicos do seu personagem usando <code>let</code>. Não apague os códigos de um passo para o outro!</p>
 
     <div class="step-container">
         <div class="step-number">1</div>
-        <h3><i class="fa-solid fa-keyboard" style="color: var(--primary);"></i> Escolhendo o Universo (Input)</h3>
+        <h3><i class="fa-solid fa-quote-right" style="color: var(--secondary);"></i> Criando uma String (Texto)</h3>
         <div class="step-explanation">
-            <strong>Lógica:</strong> O sistema precisa saber de qual lado o jogador está. Usamos <code>prompt</code> para perguntar.
+            As Strings armazenam textos e sempre exigem o uso de aspas.
         </div>
-        <p>No editor do Laboratório Virtual, inicie o simulador:</p>
         <div class="code-block">
-            <span class="comment">// --- PASSO 1: INÍCIO ---</span><br>
-            <span class="keyword">var</span> universo <span class="operator">=</span> <span class="function">prompt</span>(<span class="string">"Escolha seu lado: digite Marvel ou DC"</span>);
+            <span class="comment">// 1. Nome do Jogador</span><br>
+            <span class="keyword">let</span> nomeJogador <span class="operator">=</span> <span class="string">"Comandante Shepard"</span>;
         </div>
     </div>
 
     <div class="step-container">
         <div class="step-number">2</div>
-        <h3><i class="fa-solid fa-code-branch" style="color: var(--secondary);"></i> A Convocação (If / Else)</h3>
+        <h3><i class="fa-solid fa-hashtag" style="color: var(--secondary);"></i> Criando um Number (Número)</h3>
         <div class="step-explanation">
-            <strong>Lógica:</strong> Se (<code>if</code>) a escolha foi Marvel, ganha um herói. Senão (<code>else</code>), ganha outro!
+            Numbers não levam aspas. Eles servem para realizar cálculos matemáticos depois.
         </div>
-        <p>Digite a estrutura lógica abaixo (muita atenção aos parênteses e chaves):</p>
         <div class="code-block">
-            <span class="comment">// --- PASSO 2: O HERÓI ---</span><br>
-            <span class="keyword">var</span> heroi <span class="operator">=</span> <span class="string">""</span>;<br><br>
-            <span class="keyword">if</span> (universo <span class="operator">==</span> <span class="string">"Marvel"</span>) {<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;heroi <span class="operator">=</span> <span class="string">"Homem de Ferro"</span>;<br>
-            } <span class="keyword">else</span> {<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;heroi <span class="operator">=</span> <span class="string">"Batman"</span>;<br>
-            }<br>
-            <span class="function">alert</span>(<span class="string">"Comandante selecionado: "</span> <span class="operator">+</span> heroi);
+            <span class="comment">// 2. Nível Inicial</span><br>
+            <span class="keyword">let</span> nivel <span class="operator">=</span> 1;<br>
+            <span class="keyword">let</span> moedas <span class="operator">=</span> 50;
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">3</div>
+        <h3><i class="fa-solid fa-toggle-on" style="color: var(--secondary);"></i> Criando um Boolean (Lógico)</h3>
+        <div class="step-explanation">
+            Booleans representam estados binários (Verdadeiro ou Falso). Digite sem aspas.
+        </div>
+        <div class="code-block">
+            <span class="comment">// 3. Status do Escudo</span><br>
+            <span class="keyword">let</span> escudoAtivo <span class="operator">=</span> <span class="keyword">true</span>;
         </div>
     </div>
 
@@ -308,47 +298,47 @@
      ========================================== -->
 <div class="page" id="page2">
     
-    <h2 style="color: var(--dark); font-size: 22px;"><i class="fa-solid fa-users-viewfinder"></i> FASE 2: Formando a Equipe</h2>
-
-    <div class="step-container">
-        <div class="step-number">3</div>
-        <h3><i class="fa-solid fa-battery-full" style="color: var(--accent);"></i> Carregando a Energia</h3>
-        <div class="step-explanation" style="border-left-color: var(--accent); background: #fef9c3; color: #b45309;">
-            <strong>Lógica:</strong> Variáveis numéricas não usam aspas. Elas guardam os pontos de vida da equipe inteira.
-        </div>
-        <p>Toda equipe começa com a vida no máximo. Configure a energia inicial:</p>
-        <div class="code-block">
-            <span class="comment">// --- PASSO 3: VIDA INICIAL ---</span><br>
-            <span class="keyword">var</span> energia <span class="operator">=</span> 100;
-        </div>
-    </div>
+    <h2><i class="fa-solid fa-calculator"></i> Fase 2: Manipulando a Memória</h2>
+    <p style="font-size: 14px;">As variáveis podem sofrer alterações e interagir umas com as outras.</p>
 
     <div class="step-container">
         <div class="step-number">4</div>
-        <h3><i class="fa-solid fa-layer-group" style="color: var(--primary);"></i> Vingadores ou Liga? (Arrays)</h3>
+        <h3><i class="fa-solid fa-rotate" style="color: var(--accent);"></i> Atualizando um Valor (Reatribuição)</h3>
         <div class="step-explanation">
-            <strong>Lógica:</strong> Usamos Arrays (Listas com <code>[ ]</code>) para agrupar o Herói e um novo Aliado em uma equipe só.
+            Quando a "caixa" (variável) já foi criada com <code>let</code>, não precisamos usar a palavra <code>let</code> novamente para trocar o que tem dentro dela.
         </div>
-        <p>Pule uma linha e adicione o primeiro recruta usando um Prompt e a criação do Array:</p>
+        <p style="font-size: 14px;">Seu personagem subiu de nível! Atualize o número na memória:</p>
         <div class="code-block">
-            <span class="comment">// --- PASSO 4: A EQUIPE ---</span><br>
-            <span class="keyword">var</span> aliado <span class="operator">=</span> <span class="function">prompt</span>(<span class="string">"Digite o nome do seu braço direito:"</span>);<br>
-            <span class="keyword">var</span> equipe <span class="operator">=</span> [heroi, aliado];
+            <span class="comment">// 4. Subindo de Nível (não use 'let' aqui!)</span><br>
+            nivel <span class="operator">=</span> 2;
         </div>
     </div>
 
     <div class="step-container">
         <div class="step-number">5</div>
-        <h3><i class="fa-solid fa-plus" style="color: var(--secondary);"></i> Reforços de Última Hora (Push)</h3>
+        <h3><i class="fa-solid fa-plus-minus" style="color: var(--accent);"></i> Operações Matemáticas Simples</h3>
         <div class="step-explanation">
-            <strong>Lógica:</strong> O comando <code>.push()</code> serve para injetar um dado novo diretamente no final do Array.
+            O computador resolve o cálculo matemático à direita do sinal de <code>=</code> e guarda o resultado final na variável à esquerda.
         </div>
-        <p>A batalha será dura, convoque mais um herói surpresa para a lista:</p>
+        <p style="font-size: 14px;">Você encontrou um baú de tesouro com 30 moedas extras. Vamos somar!</p>
         <div class="code-block">
-            <span class="comment">// --- PASSO 5: REFORÇOS ---</span><br>
-            <span class="keyword">var</span> recrutaExtra <span class="operator">=</span> <span class="function">prompt</span>(<span class="string">"Convoque mais um herói urgente:"</span>);<br>
-            equipe.<span class="function">push</span>(recrutaExtra);<br>
-            <span class="function">alert</span>(<span class="string">"Equipe Final: "</span> <span class="operator">+</span> equipe);
+            <span class="comment">// 5. Somando moedas</span><br>
+            <span class="keyword">let</span> bonus <span class="operator">=</span> 30;<br>
+            moedas <span class="operator">=</span> moedas <span class="operator">+</span> bonus;
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">6</div>
+        <h3><i class="fa-solid fa-link" style="color: var(--accent);"></i> Juntando Textos (Concatenação)</h3>
+        <div class="step-explanation">
+            Quando usamos o sinal de <code>+</code> junto com uma <i>String</i>, o computador para de fazer matemática e "cola" os textos lado a lado.
+        </div>
+        <p style="font-size: 14px;">Crie uma mensagem dinâmica que muda de acordo com o nome do jogador:</p>
+        <div class="code-block">
+            <span class="comment">// 6. Mensagem de Boas-Vindas</span><br>
+            <span class="keyword">let</span> saudacao <span class="operator">=</span> <span class="string">"Bem-vindo de volta, "</span> <span class="operator">+</span> nomeJogador <span class="operator">+</span> <span class="string">"!"</span>;<br>
+            <span class="function">alert</span>(saudacao);
         </div>
     </div>
 
@@ -360,47 +350,46 @@
      ========================================== -->
 <div class="page" id="page3">
     
-    <h2 style="color: var(--dark); font-size: 22px;"><i class="fa-solid fa-burst"></i> FASE 3: A Guerra</h2>
-
-    <div class="step-container">
-        <div class="step-number">6</div>
-        <h3><i class="fa-solid fa-meteor" style="color: var(--danger);"></i> O Estalo do Vilão (Matemática)</h3>
-        <div class="step-explanation" style="border-left-color: var(--danger); background: var(--primary-light); color: var(--danger);">
-            <strong>Lógica:</strong> O computador vai processar uma subtração tirando a vida da variável <code>energia</code>.
-        </div>
-        <p>Thanos ou Darkseid acabou de usar seu poder máximo! Sua equipe tomou muito dano:</p>
-        <div class="code-block">
-            <span class="comment">// --- PASSO 6: O ATAQUE ---</span><br>
-            energia <span class="operator">=</span> energia <span class="operator">-</span> 60;
-        </div>
-    </div>
+    <h2><i class="fa-solid fa-keyboard"></i> Fase 3: Entrada e Saída (I/O)</h2>
+    <p style="font-size: 14px;">A verdadeira utilidade das variáveis é armazenar dados que vêm do mundo exterior (do usuário).</p>
 
     <div class="step-container">
         <div class="step-number">7</div>
-        <h3><i class="fa-solid fa-bullhorn" style="color: var(--primary);"></i> Alerta de Dano (Concatenação)</h3>
+        <h3><i class="fa-regular fa-comment-dots" style="color: var(--warning);"></i> Recebendo Dados (Prompt)</h3>
         <div class="step-explanation">
-            <strong>Lógica:</strong> Mostrar o resultado juntando texto (String) com a variável atualizada usando o <code>+</code>.
+            O <code>prompt</code> abre uma caixa de pergunta. O que o usuário digitar será capturado pelo sinal de <code>=</code> e jogado dentro da nossa variável.
         </div>
-        <p>Avise ao jogador como estão as coisas após o impacto colossal:</p>
+        <p style="font-size: 14px;">O sistema precisa da sua confirmação de qual classe você deseja jogar (Ex: Mago, Guerreiro):</p>
         <div class="code-block">
-            <span class="comment">// --- PASSO 7: STATUS ---</span><br>
-            <span class="function">alert</span>(<span class="string">"Ataque Crítico! A energia da equipe caiu para: "</span> <span class="operator">+</span> energia);
+            <span class="comment">// 7. Escolhendo a Classe</span><br>
+            <span class="keyword">let</span> classe <span class="operator">=</span> <span class="function">prompt</span>(<span class="string">"Qual classe você escolhe?"</span>);
         </div>
     </div>
 
     <div class="step-container">
         <div class="step-number">8</div>
-        <h3><i class="fa-solid fa-briefcase-medical" style="color: var(--accent);"></i> Semente dos Deuses (If Extra)</h3>
-        <div class="step-explanation" style="border-left-color: var(--accent); background: #fef9c3; color: #b45309;">
-            <strong>Lógica:</strong> Se a energia estiver abaixo de 50, usamos um item de cura para adicionar (+ 30) de vida.
+        <h3><i class="fa-solid fa-terminal" style="color: var(--warning);"></i> Verificação Silenciosa (Console.log)</h3>
+        <div class="step-explanation">
+            O <code>console.log()</code> não mostra janelas na tela. Ele envia mensagens discretas para a aba "Console" do desenvolvedor. Excelente para caçar bugs!
         </div>
-        <p>A equipe possui uma cura de emergência! Digite a lógica abaixo:</p>
+        <p style="font-size: 14px;">Mande um log das suas variáveis ativas para a máquina registrar:</p>
         <div class="code-block">
-            <span class="comment">// --- PASSO 8: CURA ---</span><br>
-            <span class="keyword">if</span> (energia <span class="operator">&lt;</span> 50) {<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;energia <span class="operator">=</span> energia <span class="operator">+</span> 30;<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"Item de cura usado! Energia subiu para: "</span> <span class="operator">+</span> energia);<br>
-            }
+            <span class="comment">// 8. Inspecionando variáveis no F12</span><br>
+            <span class="function">console.log</span>(<span class="string">"Classe escolhida:"</span>, classe);<br>
+            <span class="function">console.log</span>(<span class="string">"Escudo está ativo?"</span>, escudoAtivo);
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">9</div>
+        <h3><i class="fa-solid fa-layer-group" style="color: var(--warning);"></i> Unindo Múltiplas Variáveis</h3>
+        <div class="step-explanation">
+            Você pode concatenar (juntar com +) várias variáveis e vários textos de uma vez só!
+        </div>
+        <p style="font-size: 14px;">Crie a mensagem do perfil que junta todos os seus dados:</p>
+        <div class="code-block">
+            <span class="comment">// 9. O Perfil Completo</span><br>
+            <span class="keyword">let</span> perfil <span class="operator">=</span> nomeJogador <span class="operator">+</span> <span class="string">" | Nível: "</span> <span class="operator">+</span> nivel <span class="operator">+</span> <span class="string">" | Moedas: "</span> <span class="operator">+</span> moedas;<br>
         </div>
     </div>
 
@@ -412,53 +401,38 @@
      ========================================== -->
 <div class="page" id="page4">
     
-    <h2 style="color: var(--dark); font-size: 22px;"><i class="fa-solid fa-crown"></i> FASE 4: O Fim de Jogo</h2>
+    <h2><i class="fa-solid fa-power-off"></i> Fase 4: O Relatório Final</h2>
 
     <div class="step-container">
-        <div class="step-number">9</div>
-        <h3><i class="fa-solid fa-scale-unbalanced" style="color: var(--secondary);"></i> O Julgamento Final (If/Else)</h3>
-        <div class="step-explanation">
-            <strong>Lógica:</strong> O teste que define quem ganha. Se a energia aguentou o tranco, vitória. Senão, Game Over.
+        <div class="step-number" style="background: var(--dark); border: 2px solid var(--primary);">10</div>
+        <h3><i class="fa-solid fa-desktop" style="color: var(--primary);"></i> Saída de Dados Completa</h3>
+        <div class="step-explanation" style="border-color: var(--dark); color: var(--dark);">
+            O último comando executa tudo. O <code>\n</code> dentro do texto é um truque ninja que significa "Nova Linha" (como dar um ENTER no texto).
         </div>
-        <p>A fumaça abaixou. Verifique quem sobreviveu à batalha do multiverso:</p>
+        <p style="font-size: 14px;">Para encerrar o seu programa, dispare o alerta final que exibe o seu Perfil e a sua Classe:</p>
         <div class="code-block">
-            <span class="comment">// --- PASSO 9: O RESULTADO ---</span><br>
-            <span class="keyword">if</span> (energia <span class="operator">&gt;=</span> 50) {<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"VITÓRIA ÉPICA! O universo está a salvo!"</span>);<br>
-            } <span class="keyword">else</span> {<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"GAME OVER... Os heróis tombaram."</span>);<br>
-            }
+            <span class="comment">// 10. O Resultado Final</span><br>
+            <span class="function">alert</span>(<span class="string">"=== SISTEMA INICIADO ===\n"</span> <span class="operator">+</span> perfil <span class="operator">+</span> <span class="string">"\nClasse de Combate: "</span> <span class="operator">+</span> classe);
         </div>
     </div>
 
-    <div class="step-container final-mission">
-        <div class="step-number" style="background: var(--accent); color: var(--dark); border-color: white;">10</div>
-        <h3 style="color: var(--accent); justify-content: center; font-size: 26px;"><i class="fa-solid fa-play"></i> Tela de Status & Relatório S.H.I.E.L.D.</h3>
+    <div class="step-container" style="background: var(--dark); color: white; border: 4px solid var(--primary); text-align: center; margin-top: 40px; padding: 40px;">
+        <i class="fa-solid fa-play" style="font-size: 60px; color: var(--primary); margin-bottom: 20px;"></i>
+        <h3 style="color: var(--primary); font-size: 32px; justify-content: center;">Executando a Missão!</h3>
         
-        <p style="font-size: 16px; margin-top: 15px; text-align: left; border-bottom: 1px solid #475569; padding-bottom: 15px;">
-            Digite a sua última linha de código mostrando todos os dados agrupados num único Alerta:
-        </p>
-        
-        <div class="code-block" style="text-align: left; font-size: 14px; margin-bottom: 20px;">
-            <span class="comment">// --- PASSO 10: TELA FINAL ---</span><br>
-            <span class="function">alert</span>(<span class="string">"STATUS: Universo "</span> + universo + <span class="string">" | Equipe: "</span> + equipe + <span class="string">" | Energia Restante: "</span> + energia);
-        </div>
-
-        <p style="font-size: 18px; margin-top: 15px; text-align: left; color: white;">
-            Chegou a hora! Clique no botão <strong>RUN (Executar)</strong> no seu Laboratório Virtual. Responda às perguntas que o sistema fizer. Funcionou perfeitamente sem erros?
+        <p style="font-size: 18px; margin-top: 20px; text-align: left; color: #cbd5e1;">
+            O seu código tem 10 passos. Agora, no <strong>Laboratório Virtual</strong>, faça o seguinte:
         </p>
 
-        <p style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; text-align: left; margin-bottom: 15px;">
-            1. Selecione TODO o código que você construiu, copie (Ctrl+C).
-        </p>
-        
-        <p style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: left;">
-            2. Acesse o PDA (Sistema da Escola) clicando no link oficial abaixo:<br>
-            <a href="https://rodrigogpelages.github.io/aulasinformatica/" target="_blank"><i class="fa-solid fa-link"></i> rodrigogpelages.github.io/aulasinformatica/</a>
-        </p>
+        <ul style="font-size: 18px; text-align: left; color: #f8fafc; margin-left: 20px; line-height: 1.8; margin-top: 15px;">
+            <li>Clique no botão azul <strong>"Run" (Executar)</strong>.</li>
+            <li>O sistema vai mostrar o seu "Bem-vindo de volta". Clique em OK.</li>
+            <li>A seguir, ele vai perguntar a sua classe (prompt). <strong>Escreva "Guerreiro" ou "Mago"</strong> e dê OK.</li>
+            <li>Por fim, a janela do Relatório (Passo 10) deve aparecer mostrando que você está no <strong>Nível 2</strong> e possui <strong>80 Moedas</strong>.</li>
+        </ul>
 
-        <p style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; text-align: left; margin-bottom: 0;">
-            3. Na área de entrega da <strong>Aula 14</strong>, cole o seu código completo e diga nos comentários qual foi o seu status final (Vitória ou Derrota?).
+        <p style="font-size: 18px; margin-top: 20px; color: var(--primary-light); font-weight: bold;">
+            Tudo funcionou? Copie todo o código do seu laboratório (Ctrl+A e Ctrl+C) e cole na atividade do PDA para garantir a sua nota!
         </p>
     </div>
 
@@ -472,18 +446,19 @@
 
     document.addEventListener('contextmenu', function(event) {
         event.preventDefault();
-        alert('Acesso negado pela Oráculo/Sexta-Feira! O treinamento exige digitação manual do código.');
+        alert('Terminal Bloqueado: O uso do botão direito não é permitido no campo de treinamento. Digite o código!');
     });
 
     document.addEventListener('copy', function(event) {
         event.preventDefault();
-        alert('Cópia bloqueada. Desenvolva a memória muscular escrevendo o código linha por linha!');
+        alert('Operação Negada: Cópias não geram memória muscular. Digite o seu código linha a linha no Laboratório Virtual!');
     });
 
     document.addEventListener('keydown', function(event) {
+        // Bloqueia Ctrl+C, Ctrl+A, Ctrl+S
         if (event.ctrlKey && (event.key === 'a' || event.key === 'c' || event.key === 's')) {
             event.preventDefault();
-            alert('Protocolos de segurança ativados. Atalhos bloqueados no Modo Prática.');
+            alert('Atalhos de texto desativados. Mantenha o foco e construa o seu código do zero.');
         }
     });
 
@@ -496,7 +471,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'aula14_parte2_pratica_js.html';
+        a.download = 'treinamento_pratico_variaveis.html';
         document.body.appendChild(a);
         a.click();
         setTimeout(() => { document.body.removeChild(a); window.URL.revokeObjectURL(url); }, 100);
@@ -529,7 +504,7 @@
 
             const opt = {
                 margin: 0,
-                filename: 'aula14_parte2_pratica_js.pdf',
+                filename: 'treinamento_pratico_variaveis.pdf',
                 image: { type: 'jpeg', quality: 1 },
                 html2canvas: { scale: 2, useCORS: true, width: 850, windowWidth: 850 },
                 jsPDF: { unit: 'px', format: [850, 1150], orientation: 'portrait' }
