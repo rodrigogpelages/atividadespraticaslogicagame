@@ -3,31 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treinamento: Domínio das Variáveis</title>
+    <title>Desafio 30 Passos: Aventura em Muqui</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        /* SETUP E RESET - TEMA TERMINAL / LAB */
         :root {
-            --primary: #10b981; /* Verde Terminal */
-            --primary-light: #d1fae5;
-            --secondary: #0ea5e9; /* Azul (Dados) */
-            --accent: #f43f5e; /* Rosa/Vermelho (Ação) */
-            --warning: #f59e0b; /* Amarelo (Destaque) */
-            --dark: #0f172a; /* Slate 900 */
-            --light: #f8fafc;
+            --primary: #16a34a; /* Verde Natureza/Montanhas */
+            --primary-light: #dcfce7;
+            --secondary: #d97706; /* Café/Histórico */
+            --accent: #ef4444; /* Vermelho Boi Pintadinho */
+            --danger: #b91c1c; 
+            --dark: #451a03; /* Marrom escuro */
+            --light: #fefce8;
             --text: #334155;
-            --code-bg: #1e293b;
-            --border: #cbd5e1;
+            --code-bg: #1c1917;
+            --border: #d6d3d1;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
-            background-color: #94a3b8;
+            background-color: #a8a29e;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -41,14 +40,13 @@
             user-select: none;
         }
 
-        /* ESTRUTURA VERTICAL TIPO FOLHA A4 */
         .page {
             width: 850px; 
             min-height: 1150px; 
             background-color: #ffffff;
             border-radius: 12px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            padding: 60px 70px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            padding: 50px 60px;
             display: flex;
             flex-direction: column;
             position: relative;
@@ -56,23 +54,21 @@
             page-break-after: always;
         }
 
-        /* TIPOGRAFIA */
-        h1 { font-family: 'Poppins', sans-serif; font-size: 38px; font-weight: 800; color: var(--dark); line-height: 1.2; text-align: center; margin-bottom: 10px; text-transform: uppercase;}
-        h2 { font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 700; color: var(--primary); margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 10px; display: flex; align-items: center; gap: 10px;}
-        h3 { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 600; color: var(--dark); margin-bottom: 5px; display: flex; align-items: center; gap: 10px;}
+        h1 { font-family: 'Poppins', sans-serif; font-size: 34px; font-weight: 800; color: var(--dark); line-height: 1.2; text-align: center; margin-bottom: 10px; text-transform: uppercase;}
+        h2 { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 700; color: var(--primary); margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 8px; display: flex; align-items: center; gap: 10px; margin-top: 20px;}
+        h3 { font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 600; color: var(--dark); margin-bottom: 5px; display: flex; align-items: center; gap: 10px;}
         
-        p, li { font-size: 16px; line-height: 1.6; color: var(--text); margin-bottom: 15px; }
+        p, li { font-size: 15px; line-height: 1.5; color: var(--text); margin-bottom: 10px; }
         
-        /* AVISOS */
         .alert-box {
-            background-color: var(--dark);
-            border: 2px dashed var(--primary);
-            color: var(--primary);
+            background-color: #fef2f2;
+            border: 2px dashed var(--accent);
+            color: #991b1b;
             padding: 15px;
             border-radius: 8px;
             text-align: center;
             font-weight: 600;
-            font-size: 16px;
+            font-size: 15px;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
@@ -80,398 +76,506 @@
             gap: 10px;
         }
 
-        /* CAIXA DE LINK DO LABORATÓRIO */
         .lab-link-box {
-            background: var(--primary-light);
-            border: 2px solid var(--primary);
-            padding: 20px;
+            background: var(--dark);
+            color: white;
+            padding: 15px;
             border-radius: 12px;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+            border-bottom: 4px solid var(--secondary);
         }
         .lab-link-box a {
-            color: var(--dark);
-            font-size: 22px;
+            color: var(--secondary);
+            font-size: 18px;
             font-weight: 800;
             text-decoration: none;
-            pointer-events: auto; /* Permite clique */
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
+            pointer-events: auto;
         }
-        .lab-link-box a:hover { color: var(--primary); text-decoration: underline; }
 
-        /* ESTILOS DOS PASSOS (STEPS) */
         .step-container {
             background: var(--light);
             border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 25px;
+            border-radius: 8px;
+            padding: 15px 15px 15px 35px;
+            margin-bottom: 15px;
             position: relative;
         }
         
         .step-number {
             position: absolute;
-            top: -15px;
+            top: 15px;
             left: -15px;
-            background: var(--primary);
+            background: var(--secondary);
             color: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 8px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Fira Code', monospace;
             font-weight: 800;
-            font-size: 18px;
+            font-size: 14px;
             box-shadow: 2px 2px 0px var(--dark);
         }
 
-        .step-explanation {
-            background: white;
-            border-left: 4px solid var(--secondary);
-            padding: 8px 12px;
-            margin-bottom: 10px;
-            border-radius: 0 8px 8px 0;
-            font-size: 14px;
-            color: #0369a1;
-            font-weight: 600;
-        }
-
-        /* BLOCOS DE CÓDIGO JS */
         .code-block {
             font-family: 'Fira Code', monospace;
             background-color: var(--code-bg);
             color: #e2e8f0;
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
-            font-size: 15px;
-            margin-top: 10px;
+            font-size: 14px;
+            margin-top: 8px;
             border-left: 4px solid var(--primary);
-            pointer-events: none; /* Impede cópia */
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            pointer-events: none;
         }
+        
+        /* COR BRANCA NO EXEMPLO PARA VISIBILIDADE MAXIMA */
+        .example-line { 
+            color: #ffffff; 
+            font-weight: bold; 
+            background: rgba(255,255,255,0.1); 
+            display: block; 
+            border-bottom: 1px dashed #64748b; 
+            padding: 6px 10px; 
+            border-radius: 4px;
+            margin-bottom: 8px; 
+        }
+        
+        .action-line { color: #a3e635; font-weight: bold; padding-left: 10px; display: block; }
         .keyword { color: #f472b6; } 
         .string { color: #a3e635; } 
-        .function { color: #60a5fa; } 
         .operator { color: #fcd34d; } 
-        .comment { color: #94a3b8; font-style: italic; }
 
-        /* CONTROLES FLUTUANTES */
-        .controls {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            display: flex;
-            gap: 15px;
-            z-index: 1000;
-        }
-
-        .btn-control {
-            background: var(--dark);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 5px;
-            font-family: 'Fira Code', monospace;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 3px 3px 0px #000;
-            transition: all 0.1s ease;
-        }
-
+        .controls { position: fixed; bottom: 30px; right: 30px; display: flex; gap: 15px; z-index: 1000; }
+        .btn-control { background: var(--dark); color: white; border: none; padding: 12px 20px; border-radius: 5px; font-family: 'Fira Code', monospace; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 3px 3px 0px #000; transition: all 0.1s ease; }
         .btn-control:hover { transform: translate(2px, 2px); box-shadow: 1px 1px 0px #000; }
         .btn-control.pdf { background: #ef4444; color: white; }
         .btn-control.html { background: var(--primary); color: white;}
         
-        /* CABEÇALHO DA PÁGINA */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 4px solid var(--dark);
-            padding-bottom: 15px;
-        }
-        .page-header-info { text-align: right; color: var(--text); font-size: 14px;}
-        
-        .page-number {
-            position: absolute;
-            bottom: 30px;
-            right: 70px;
-            font-size: 14px;
-            color: #94a3b8;
-            font-weight: bold;
-        }
-
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 3px solid var(--dark); padding-bottom: 10px; }
+        .page-number { position: absolute; bottom: 20px; right: 50px; font-size: 12px; color: #94a3b8; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<!-- CONTROLES -->
 <div class="controls">
     <button class="btn-control html" onclick="downloadHTML()"><i class="fa-solid fa-download"></i> Baixar HTML</button>
-    <button class="btn-control pdf" onclick="downloadPDF()"><i class="fa-solid fa-file-pdf"></i> Baixar Caderno (PDF)</button>
+    <button class="btn-control pdf" onclick="downloadPDF()"><i class="fa-solid fa-file-pdf"></i> Baixar PDF</button>
 </div>
 
-<!-- ==========================================
-     PÁGINA 1
-     ========================================== -->
 <div class="page" id="page1">
     <div class="page-header">
         <div style="display: flex; gap: 10px; align-items: center;">
-            <i class="fa-solid fa-microchip" style="font-size: 40px; color: var(--primary);"></i>
-            <i class="fa-solid fa-code" style="font-size: 30px; color: var(--dark);"></i>
+            <i class="fa-solid fa-map-location-dot" style="font-size: 30px; color: var(--secondary);"></i>
+            <i class="fa-solid fa-laptop-code" style="font-size: 24px; color: var(--dark);"></i>
         </div>
-        <div class="page-header-info">
-            <strong>Prof. Rodrigo G. Pelages</strong><br>
-            Tecnologia & Inovação
+        <div style="text-align: right; color: var(--text); font-size: 12px;">
+            <strong>Prof. Rodrigo G. Pelages</strong><br>Tecnologia & Inovação
         </div>
     </div>
 
-    <h1>Treinamento: Variáveis</h1>
-    <p style="text-align: center; color: var(--text); margin-bottom: 20px;">Construção de Memória Muscular na Digitação de Código</p>
+    <h1>O Desafio de 30 Passos</h1>
+    <p style="text-align: center; color: var(--text); margin-bottom: 15px; font-weight: bold;">Desenvolva o diário de uma Aventura em Muqui!</p>
 
     <div class="alert-box">
-        <i class="fa-solid fa-lock"></i>
-        <span><strong>Bloqueio de Cópia Ativado:</strong> Para dominar as variáveis, você precisa digitar. Construa os 10 passos sequencialmente!</span>
+        <i class="fa-solid fa-brain"></i>
+        <span><strong>Modo Desenvolvedor:</strong> Não vou lhe dar o código pronto. Vou lhe dar um EXEMPLO, e você terá que DEDUZIR e digitar a resposta correta no Laboratório!</span>
     </div>
 
     <div class="lab-link-box">
-        <p style="margin-bottom: 5px; color: var(--text);">Abra o seu ambiente de desenvolvimento clicando abaixo:</p>
-        <a href="https://rodrigogpelages.github.io/laboratoriovirtual/" target="_blank">
-            <i class="fa-solid fa-laptop-code"></i> Acessar Laboratório Virtual
-        </a>
+        <p style="margin-bottom: 5px; font-size: 14px;">Mantenha o laboratório aberto em outra aba e faça os 30 passos juntos:</p>
+        <a href="https://rodrigogpelages.github.io/laboratoriovirtual/" target="_blank">Acessar Laboratório Virtual</a>
     </div>
 
-    <h2><i class="fa-solid fa-box-open"></i> Fase 1: Os Tipos Primitivos</h2>
-    <p style="font-size: 14px;">Inicie o seu código no Laboratório Virtual declarando os dados básicos do seu personagem usando <code>let</code>. Não apague os códigos de um passo para o outro!</p>
+    <h2><i class="fa-solid fa-location-dot"></i> Fase 1: Chegada a Muqui (Strings)</h2>
 
     <div class="step-container">
         <div class="step-number">1</div>
-        <h3><i class="fa-solid fa-quote-right" style="color: var(--secondary);"></i> Criando uma String (Texto)</h3>
-        <div class="step-explanation">
-            As Strings armazenam textos e sempre exigem o uso de aspas.
-        </div>
+        <h3>O Destino</h3>
+        <p>A primeira coisa é definir o nome da cidade usando uma <strong>String (Texto com aspas)</strong>.</p>
         <div class="code-block">
-            <span class="comment">// 1. Nome do Jogador</span><br>
-            <span class="keyword">let</span> nomeJogador <span class="operator">=</span> <span class="string">"Comandante Shepard"</span>;
+            <span class="example-line">EXEMPLO: var estado = "Espírito Santo";</span>
+            <span class="action-line">AGORA VOCÊ: Crie uma variável chamada 'cidade' e guarde a palavra "Muqui".</span>
         </div>
     </div>
 
     <div class="step-container">
         <div class="step-number">2</div>
-        <h3><i class="fa-solid fa-hashtag" style="color: var(--secondary);"></i> Criando um Number (Número)</h3>
-        <div class="step-explanation">
-            Numbers não levam aspas. Eles servem para realizar cálculos matemáticos depois.
-        </div>
+        <h3>Turista na Área</h3>
+        <p>Peça ao jogador para digitar o nome dele usando o comando <strong>prompt</strong>.</p>
         <div class="code-block">
-            <span class="comment">// 2. Nível Inicial</span><br>
-            <span class="keyword">let</span> nivel <span class="operator">=</span> 1;<br>
-            <span class="keyword">let</span> moedas <span class="operator">=</span> 50;
+            <span class="example-line">EXEMPLO: var pessoa = prompt("Qual o seu nome?");</span>
+            <span class="action-line">AGORA VOCÊ: Crie a variável 'turista' e faça um prompt perguntando "Como você se chama, viajante?".</span>
         </div>
     </div>
 
     <div class="step-container">
         <div class="step-number">3</div>
-        <h3><i class="fa-solid fa-toggle-on" style="color: var(--secondary);"></i> Criando um Boolean (Lógico)</h3>
-        <div class="step-explanation">
-            Booleans representam estados binários (Verdadeiro ou Falso). Digite sem aspas.
-        </div>
+        <h3>O Ponto de Partida</h3>
+        <p>Muqui é famosa pela sua arquitetura histórica e antigos casarões.</p>
         <div class="code-block">
-            <span class="comment">// 3. Status do Escudo</span><br>
-            <span class="keyword">let</span> escudoAtivo <span class="operator">=</span> <span class="keyword">true</span>;
+            <span class="example-line">EXEMPLO: var praia = "Copacabana";</span>
+            <span class="action-line">AGORA VOCÊ: Crie a variável 'atracao' e guarde o texto "Sítio Histórico".</span>
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">4</div>
+        <h3>Mensagem de Boas-Vindas</h3>
+        <p>O sistema deve cumprimentar o turista usando o <strong>alert</strong>. Use o sinal <strong>+</strong> para juntar o texto com a variável!</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: alert("Olá " + pessoa);</span>
+            <span class="action-line">AGORA VOCÊ: Faça um alert dizendo "Bem-vindo a Muqui, " e junte com a variável turista.</span>
         </div>
     </div>
 
     <div class="page-number">Página 1</div>
 </div>
 
-<!-- ==========================================
-     PÁGINA 2
-     ========================================== -->
 <div class="page" id="page2">
     
-    <h2><i class="fa-solid fa-calculator"></i> Fase 2: Manipulando a Memória</h2>
-    <p style="font-size: 14px;">As variáveis podem sofrer alterações e interagir umas com as outras.</p>
-
-    <div class="step-container">
-        <div class="step-number">4</div>
-        <h3><i class="fa-solid fa-rotate" style="color: var(--accent);"></i> Atualizando um Valor (Reatribuição)</h3>
-        <div class="step-explanation">
-            Quando a "caixa" (variável) já foi criada com <code>let</code>, não precisamos usar a palavra <code>let</code> novamente para trocar o que tem dentro dela.
-        </div>
-        <p style="font-size: 14px;">Seu personagem subiu de nível! Atualize o número na memória:</p>
-        <div class="code-block">
-            <span class="comment">// 4. Subindo de Nível (não use 'let' aqui!)</span><br>
-            nivel <span class="operator">=</span> 2;
-        </div>
-    </div>
-
     <div class="step-container">
         <div class="step-number">5</div>
-        <h3><i class="fa-solid fa-plus-minus" style="color: var(--accent);"></i> Operações Matemáticas Simples</h3>
-        <div class="step-explanation">
-            O computador resolve o cálculo matemático à direita do sinal de <code>=</code> e guarda o resultado final na variável à esquerda.
-        </div>
-        <p style="font-size: 14px;">Você encontrou um baú de tesouro com 30 moedas extras. Vamos somar!</p>
+        <h3>Registro Silencioso</h3>
+        <p>Envie uma mensagem apenas para os desenvolvedores verem usando o <strong>console.log</strong>.</p>
         <div class="code-block">
-            <span class="comment">// 5. Somando moedas</span><br>
-            <span class="keyword">let</span> bonus <span class="operator">=</span> 30;<br>
-            moedas <span class="operator">=</span> moedas <span class="operator">+</span> bonus;
+            <span class="example-line">EXEMPLO: console.log("Teste de sistema");</span>
+            <span class="action-line">AGORA VOCÊ: Faça um console.log com o texto "Turista chegou à cidade de Muqui.".</span>
         </div>
     </div>
+
+    <h2><i class="fa-solid fa-mug-hot"></i> Fase 2: Economia e Energia (Números)</h2>
 
     <div class="step-container">
         <div class="step-number">6</div>
-        <h3><i class="fa-solid fa-link" style="color: var(--accent);"></i> Juntando Textos (Concatenação)</h3>
-        <div class="step-explanation">
-            Quando usamos o sinal de <code>+</code> junto com uma <i>String</i>, o computador para de fazer matemática e "cola" os textos lado a lado.
-        </div>
-        <p style="font-size: 14px;">Crie uma mensagem dinâmica que muda de acordo com o nome do jogador:</p>
+        <h3>Fazendas de Café</h3>
+        <p>Números não usam aspas! Vamos registrar a colheita de uma fazenda histórica.</p>
         <div class="code-block">
-            <span class="comment">// 6. Mensagem de Boas-Vindas</span><br>
-            <span class="keyword">let</span> saudacao <span class="operator">=</span> <span class="string">"Bem-vindo de volta, "</span> <span class="operator">+</span> nomeJogador <span class="operator">+</span> <span class="string">"!"</span>;<br>
-            <span class="function">alert</span>(saudacao);
+            <span class="example-line">EXEMPLO: var dinheiro = 500;</span>
+            <span class="action-line">AGORA VOCÊ: Crie a variável 'sacasCafe' recebendo o número 100.</span>
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">7</div>
+        <h3>Disposição para o Passeio</h3>
+        <p>O turista começa o passeio com a energia no máximo.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: var hp = 100;</span>
+            <span class="action-line">AGORA VOCÊ: Crie a variável 'energia' recebendo o número 100.</span>
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">8</div>
+        <h3>Venda de Café</h3>
+        <p>A fazenda vendeu algumas sacas de café hoje. Precisamos <strong>atualizar (subtrair)</strong> o valor antigo.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: ouro = ouro - 15;</span>
+            <span class="action-line">AGORA VOCÊ: Atualize a variável 'sacasCafe' sendo igual a ela mesma menos 25.</span>
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">9</div>
+        <h3>Mostrando o Estoque</h3>
+        <p>Avise ao fazendeiro como ficou o estoque de café.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: alert("Sua vida é " + hp);</span>
+            <span class="action-line">AGORA VOCÊ: Dê um alert avisando "Sacas de café no estoque: " juntando com a variável sacasCafe.</span>
         </div>
     </div>
 
     <div class="page-number">Página 2</div>
 </div>
 
-<!-- ==========================================
-     PÁGINA 3
-     ========================================== -->
 <div class="page" id="page3">
     
-    <h2><i class="fa-solid fa-keyboard"></i> Fase 3: Entrada e Saída (I/O)</h2>
-    <p style="font-size: 14px;">A verdadeira utilidade das variáveis é armazenar dados que vêm do mundo exterior (do usuário).</p>
+    <div class="step-container">
+        <div class="step-number">10</div>
+        <h3>Pausa para o Café</h3>
+        <p>O turista tomou um café fresquinho da roça. Vamos <strong>somar</strong> mais energia!</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: mana = mana + 50;</span>
+            <span class="action-line">AGORA VOCÊ: Atualize a variável 'energia' sendo ela mesma mais 30.</span>
+        </div>
+    </div>
+
+    <h2><i class="fa-solid fa-masks-theater"></i> Fase 3: O Boi Pintadinho (Booleanos)</h2>
 
     <div class="step-container">
-        <div class="step-number">7</div>
-        <h3><i class="fa-regular fa-comment-dots" style="color: var(--warning);"></i> Recebendo Dados (Prompt)</h3>
-        <div class="step-explanation">
-            O <code>prompt</code> abre uma caixa de pergunta. O que o usuário digitar será capturado pelo sinal de <code>=</code> e jogado dentro da nossa variável.
-        </div>
-        <p style="font-size: 14px;">O sistema precisa da sua confirmação de qual classe você deseja jogar (Ex: Mago, Guerreiro):</p>
+        <div class="step-number">11</div>
+        <h3>Época de Folclore</h3>
+        <p>Valores lógicos ativam e desativam funções (true / false).</p>
         <div class="code-block">
-            <span class="comment">// 7. Escolhendo a Classe</span><br>
-            <span class="keyword">let</span> classe <span class="operator">=</span> <span class="function">prompt</span>(<span class="string">"Qual classe você escolhe?"</span>);
+            <span class="example-line">EXEMPLO: var chovendo = true;</span>
+            <span class="action-line">AGORA VOCÊ: Crie a variável 'carnavalChegou' recebendo true (sem aspas!).</span>
         </div>
     </div>
 
     <div class="step-container">
-        <div class="step-number">8</div>
-        <h3><i class="fa-solid fa-terminal" style="color: var(--warning);"></i> Verificação Silenciosa (Console.log)</h3>
-        <div class="step-explanation">
-            O <code>console.log()</code> não mostra janelas na tela. Ele envia mensagens discretas para a aba "Console" do desenvolvedor. Excelente para caçar bugs!
-        </div>
-        <p style="font-size: 14px;">Mande um log das suas variáveis ativas para a máquina registrar:</p>
+        <div class="step-number">12</div>
+        <h3>Preparação</h3>
+        <p>A fantasia ainda não está vestida.</p>
         <div class="code-block">
-            <span class="comment">// 8. Inspecionando variáveis no F12</span><br>
-            <span class="function">console.log</span>(<span class="string">"Classe escolhida:"</span>, classe);<br>
-            <span class="function">console.log</span>(<span class="string">"Escudo está ativo?"</span>, escudoAtivo);
+            <span class="example-line">EXEMPLO: var luz = false;</span>
+            <span class="action-line">AGORA VOCÊ: Crie a variável 'fantasiaPronta' recebendo false.</span>
         </div>
     </div>
 
     <div class="step-container">
-        <div class="step-number">9</div>
-        <h3><i class="fa-solid fa-layer-group" style="color: var(--warning);"></i> Unindo Múltiplas Variáveis</h3>
-        <div class="step-explanation">
-            Você pode concatenar (juntar com +) várias variáveis e vários textos de uma vez só!
-        </div>
-        <p style="font-size: 14px;">Crie a mensagem do perfil que junta todos os seus dados:</p>
+        <div class="step-number">13</div>
+        <h3>O Boi está na Rua!</h3>
+        <p>Como a fantasia está em <strong>false</strong>, avise o turista para correr e se preparar.</p>
         <div class="code-block">
-            <span class="comment">// 9. O Perfil Completo</span><br>
-            <span class="keyword">let</span> perfil <span class="operator">=</span> nomeJogador <span class="operator">+</span> <span class="string">" | Nível: "</span> <span class="operator">+</span> nivel <span class="operator">+</span> <span class="string">" | Moedas: "</span> <span class="operator">+</span> moedas;<br>
+            <span class="example-line">EXEMPLO: alert("A porta está aberta!");</span>
+            <span class="action-line">AGORA VOCÊ: Faça um alert com o texto "Ouvimos os tambores! O Boi Pintadinho está vindo!".</span>
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">14</div>
+        <h3>Entrando na Festa</h3>
+        <p>O turista vestiu a fantasia. Altere a variável para verdadeiro!</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: luz = true;</span>
+            <span class="action-line">AGORA VOCÊ: Atualize (não use var/let) a variável 'fantasiaPronta' para true.</span>
         </div>
     </div>
 
     <div class="page-number">Página 3</div>
 </div>
 
-<!-- ==========================================
-     PÁGINA 4
-     ========================================== -->
 <div class="page" id="page4">
-    
-    <h2><i class="fa-solid fa-power-off"></i> Fase 4: O Relatório Final</h2>
 
     <div class="step-container">
-        <div class="step-number" style="background: var(--dark); border: 2px solid var(--primary);">10</div>
-        <h3><i class="fa-solid fa-desktop" style="color: var(--primary);"></i> Saída de Dados Completa</h3>
-        <div class="step-explanation" style="border-color: var(--dark); color: var(--dark);">
-            O último comando executa tudo. O <code>\n</code> dentro do texto é um truque ninja que significa "Nova Linha" (como dar um ENTER no texto).
-        </div>
-        <p style="font-size: 14px;">Para encerrar o seu programa, dispare o alerta final que exibe o seu Perfil e a sua Classe:</p>
+        <div class="step-number">15</div>
+        <h3>Status da Fantasia (Log)</h3>
+        <p>Registre no console o status da preparação do turista.</p>
         <div class="code-block">
-            <span class="comment">// 10. O Resultado Final</span><br>
-            <span class="function">alert</span>(<span class="string">"=== SISTEMA INICIADO ===\n"</span> <span class="operator">+</span> perfil <span class="operator">+</span> <span class="string">"\nClasse de Combate: "</span> <span class="operator">+</span> classe);
+            <span class="example-line">EXEMPLO: console.log("Luz: " + luz);</span>
+            <span class="action-line">AGORA VOCÊ: Dê um console.log dizendo "Fantasia pronta: " + fantasiaPronta.</span>
         </div>
     </div>
 
-    <div class="step-container" style="background: var(--dark); color: white; border: 4px solid var(--primary); text-align: center; margin-top: 40px; padding: 40px;">
-        <i class="fa-solid fa-play" style="font-size: 60px; color: var(--primary); margin-bottom: 20px;"></i>
-        <h3 style="color: var(--primary); font-size: 32px; justify-content: center;">Executando a Missão!</h3>
-        
-        <p style="font-size: 18px; margin-top: 20px; text-align: left; color: #cbd5e1;">
-            O seu código tem 10 passos. Agora, no <strong>Laboratório Virtual</strong>, faça o seguinte:
-        </p>
+    <h2><i class="fa-solid fa-backpack"></i> Fase 4: A Mochila do Turista (Arrays)</h2>
 
-        <ul style="font-size: 18px; text-align: left; color: #f8fafc; margin-left: 20px; line-height: 1.8; margin-top: 15px;">
-            <li>Clique no botão azul <strong>"Run" (Executar)</strong>.</li>
-            <li>O sistema vai mostrar o seu "Bem-vindo de volta". Clique em OK.</li>
-            <li>A seguir, ele vai perguntar a sua classe (prompt). <strong>Escreva "Guerreiro" ou "Mago"</strong> e dê OK.</li>
-            <li>Por fim, a janela do Relatório (Passo 10) deve aparecer mostrando que você está no <strong>Nível 2</strong> e possui <strong>80 Moedas</strong>.</li>
-        </ul>
+    <div class="step-container">
+        <div class="step-number">16</div>
+        <h3>Equipamento Básico</h3>
+        <p>Para levar vários itens no passeio, criamos um <strong>Array (Lista)</strong> com colchetes.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: var bolsa = ["Ouro", "Chave"];</span>
+            <span class="action-line">AGORA VOCÊ: Crie a variável 'mochila' sendo uma lista com "Câmera" e "Água".</span>
+        </div>
+    </div>
 
-        <p style="font-size: 18px; margin-top: 20px; color: var(--primary-light); font-weight: bold;">
-            Tudo funcionou? Copie todo o código do seu laboratório (Ctrl+A e Ctrl+C) e cole na atividade do PDA para garantir a sua nota!
-        </p>
+    <div class="step-container">
+        <div class="step-number">17</div>
+        <h3>O Lanche da Tarde</h3>
+        <p>Pergunte ao turista qual lanche ele quer comprar na praça.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: var item = prompt("Qual item?");</span>
+            <span class="action-line">AGORA VOCÊ: Crie a variável 'lanche' com um prompt "Qual lanche vai levar para o Morro?".</span>
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">18</div>
+        <h3>Colocando na Mochila (Push)</h3>
+        <p>O comando <strong>.push()</strong> empurra um novo item para dentro da nossa lista.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: bolsa.push(item);</span>
+            <span class="action-line">AGORA VOCÊ: Use o comando push na variável 'mochila', colocando o 'lanche' lá dentro.</span>
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">19</div>
+        <h3>Visualizando os Itens</h3>
+        <p>Confirme se tudo está guardado antes de subir a montanha.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: alert("Bolsa: " + bolsa);</span>
+            <span class="action-line">AGORA VOCÊ: Dê um alert com "Itens na mochila: " e junte a variável 'mochila'.</span>
+        </div>
     </div>
 
     <div class="page-number">Página 4</div>
 </div>
 
-<script>
-    // ==========================================
-    // SCRIPTS DE BLOQUEIO ANTI-CÓPIA / SEGURANÇA
-    // ==========================================
+<div class="page" id="page5">
 
+    <div class="step-container">
+        <div class="step-number">20</div>
+        <h3>Prevenção</h3>
+        <p>Podemos fazer um <strong>push direto</strong> escrevendo um texto em vez de variável.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: bolsa.push("Espada");</span>
+            <span class="action-line">AGORA VOCÊ: Dê um push na 'mochila' injetando o texto "Protetor Solar".</span>
+        </div>
+    </div>
+
+    <h2><i class="fa-solid fa-mountain-sun"></i> Fase 5: Subindo o Morro (If/Else)</h2>
+
+    <div class="step-container">
+        <div class="step-number">21</div>
+        <h3>Rumo ao Cristo</h3>
+        <p>O turista quer ver Muqui de cima (Morro do Fortunato). Peça a altitude atual em metros.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: var peso = prompt("Quantos Kg?");</span>
+            <span class="action-line">AGORA VOCÊ: Crie a var 'altitude' recebendo um prompt "Quantos metros você já subiu?".</span>
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">22</div>
+        <h3>Avaliando a Trilha (Maior/Menor)</h3>
+        <p>O sistema deve tomar uma decisão com o If/Else baseado na altitude.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO:<br>if (peso < 50) { alert("Leve!"); }<br>else { alert("Pesado!"); }</span>
+            <span class="action-line">AGORA VOCÊ: SE (if) a altitude for MENOR que 400, dê um alert "Continue subindo a trilha!". SENÃO (else), alert "Uau! Que vista maravilhosa de Muqui."</span>
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">23</div>
+        <h3>O Clima Virou</h3>
+        <p>Vamos perguntar ao turista como está o tempo lá em cima.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: var frio = prompt("Está frio? (sim/nao)");</span>
+            <span class="action-line">AGORA VOCÊ: Crie a var 'chovendo' perguntando num prompt: "Começou a chover? (sim/nao)".</span>
+        </div>
+    </div>
+
+    <div class="page-number">Página 5</div>
+</div>
+
+<div class="page" id="page6">
+    
+    <div class="step-container">
+        <div class="step-number">24</div>
+        <h3>Descer com Cuidado (Comparação Exata ==)</h3>
+        <p>Dependendo da resposta anterior ("sim" ou "nao"), uma dica de segurança é dada.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO:<br>if (frio == "sim") { alert("Leve blusa!"); }<br>else { alert("Vá de regata!"); }</span>
+            <span class="action-line">AGORA VOCÊ: SE 'chovendo' for IGUAL (==) a "sim", dê alert "Desça devagar, as pedras escorregam!". SENÃO, alert "Tire muitas fotos!".</span>
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">25</div>
+        <h3>Cansaço Acumulado</h3>
+        <p>A trilha exigiu bastante do corpo do turista. Hora de reduzir a bateria.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: ouro = ouro - 10;</span>
+            <span class="action-line">AGORA VOCÊ: Atualize a variável 'energia' sendo ela mesma menos 40.</span>
+        </div>
+    </div>
+
+    <h2><i class="fa-solid fa-flag-checkered"></i> Fase 6: O Fim de Tarde na Praça</h2>
+
+    <div class="step-container">
+        <div class="step-number">26</div>
+        <h3>Descanso no Centro Histórico</h3>
+        <p>O turista está na pracinha perto do Jardim. Qual a temperatura por lá?</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: var temp = prompt("Qual a temperatura?");</span>
+            <span class="action-line">AGORA VOCÊ: Crie a var 'temperatura' perguntando num prompt "Qual a temperatura na praça agora?".</span>
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">27</div>
+        <h3>Sorvete ou Caldo?</h3>
+        <p>As decisões em Muqui dependem muito se o sol já se pôs e esfriou.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO:<br>if (temp < 0) { alert("Congelando!"); }<br>else { alert("Aceitável"); }</span>
+            <span class="action-line">AGORA VOCÊ: SE 'temperatura' for MENOR que 20, dê alert "O clima pede um caldinho quente!". SENÃO, alert "Perfeito para um sorvete na praça!".</span>
+        </div>
+    </div>
+
+    <div class="page-number">Página 6</div>
+</div>
+
+<div class="page" id="page7">
+    
+    <div class="step-container">
+        <div class="step-number">28</div>
+        <h3>Preparando o Relatório de Viagem</h3>
+        <p>Para não fazer um "alert" gigante e feio, vamos guardar todos os dados numa String longa.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: var resumo = "Nome: " + nome + " | HP: " + hp;</span>
+            <span class="action-line">AGORA VOCÊ: Crie a var 'relatorio' e junte: "Turista: " + turista + " | Cidade: " + cidade + " | Energia Final: " + energia.</span>
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">29</div>
+        <h3>Inserindo a Mochila no Relatório</h3>
+        <p>Para adicionar mais coisas ao mesmo texto sem apagar o anterior, usamos a própria variável + a novidade!</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: resumo = resumo + " | FIM";</span>
+            <span class="action-line">AGORA VOCÊ: Atualize 'relatorio' sendo ele mesmo + " | Mochila: " + mochila.</span>
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number" style="background: var(--accent); color: white;">30</div>
+        <h3>O Grande Álbum de Recordações!</h3>
+        <p>Apenas dispare a mensagem que você preparou. Use o <strong>\n</strong> se quiser quebrar a linha.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: alert("== RELATÓRIO ==\n" + resumo);</span>
+            <span class="action-line">AGORA VOCÊ: Dê um último alert juntando o texto "=== DIÁRIO DE VIAGEM ===\n" com a sua variável 'relatorio'!</span>
+        </div>
+    </div>
+
+    <div class="step-container" style="background: var(--dark); color: white; border: 3px solid var(--secondary); text-align: center; margin-top: 30px;">
+        <h3 style="color: #ffffff; justify-content: center; font-size: 24px;"><i class="fa-solid fa-play"></i> Testar a Viagem!</h3>
+        
+        <p style="font-size: 16px; margin-top: 15px; color: #ffffff;">Você codificou 30 passos completos! Essa é a base de um software real.</p>
+        
+        <p style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: left; margin: 15px 0; color: #ffffff;">
+            1. No Laboratório Virtual, clique no botão azul <strong>RUN</strong> e responda a todos os <em>prompts</em> (perguntas) até o Diário de Viagem aparecer.
+        </p>
+        <p style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: left; margin-bottom: 15px; color: #ffffff;">
+            2. Deu algum Erro (Tela Vermelha)? Leia a linha do erro, ache o "Bug" (talvez tenha esquecido uma aspa ou uma chave de fechamento) e tente rodar de novo.
+        </p>
+        <p style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: left; margin-bottom: 0; color: #ffffff;">
+            3. Quando funcionar perfeitamente, copie todo o seu código mágico e envie para o Professor na área da atividade!
+        </p>
+    </div>
+
+    <div class="page-number">Página 7</div>
+</div>
+
+<script>
     document.addEventListener('contextmenu', function(event) {
         event.preventDefault();
-        alert('Terminal Bloqueado: O uso do botão direito não é permitido no campo de treinamento. Digite o código!');
+        alert('Acesso Negado: O verdadeiro programador cria memória muscular digitando o código linha por linha!');
     });
 
     document.addEventListener('copy', function(event) {
         event.preventDefault();
-        alert('Operação Negada: Cópias não geram memória muscular. Digite o seu código linha a linha no Laboratório Virtual!');
+        alert('Cópia bloqueada! Entenda a lógica e digite-a no seu Laboratório Virtual.');
     });
 
     document.addEventListener('keydown', function(event) {
-        // Bloqueia Ctrl+C, Ctrl+A, Ctrl+S
         if (event.ctrlKey && (event.key === 'a' || event.key === 'c' || event.key === 's')) {
             event.preventDefault();
-            alert('Atalhos de texto desativados. Mantenha o foco e construa o seu código do zero.');
+            alert('Atalhos de cópia desativados para garantir o seu treino prático integral.');
         }
     });
 
-    // ==========================================
-    // DOWNLOAD DE HTML E PDF
-    // ==========================================
     function downloadHTML() {
         const htmlContent = document.documentElement.outerHTML;
         const blob = new Blob([htmlContent], { type: 'text/html' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'treinamento_pratico_variaveis.html';
+        a.download = 'aventura_muqui_30_passos.html';
         document.body.appendChild(a);
         a.click();
         setTimeout(() => { document.body.removeChild(a); window.URL.revokeObjectURL(url); }, 100);
@@ -480,7 +584,7 @@
     async function downloadPDF() {
         const btn = document.querySelector('.btn-control.pdf');
         const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando Protocolo...';
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando Diário...';
         btn.disabled = true;
 
         try {
@@ -504,7 +608,7 @@
 
             const opt = {
                 margin: 0,
-                filename: 'treinamento_pratico_variaveis.pdf',
+                filename: 'aventura_muqui_30_passos.pdf',
                 image: { type: 'jpeg', quality: 1 },
                 html2canvas: { scale: 2, useCORS: true, width: 850, windowWidth: 850 },
                 jsPDF: { unit: 'px', format: [850, 1150], orientation: 'portrait' }
@@ -515,7 +619,7 @@
             document.body.removeChild(wrapper);
         } catch (error) {
             console.error(error);
-            alert("Erro ao gerar o PDF. Verifique a internet e tente novamente!");
+            alert("Erro ao gerar o PDF. Verifique a internet e tente novamente.");
         } finally {
             btn.innerHTML = originalText;
             btn.disabled = false;
