@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<title>Trilha do Código 2 — Revisão de Lógica de Programação</title>
+<title>Trilha do Código 3 — Revisão de Lógica de Programação</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -259,7 +259,7 @@ table.teacher-table tr:last-child td{border-bottom:none;}
     <div class="brand">
       <div class="brand-badge">🚀</div>
       <div>
-        <h1>Trilha do Código 2</h1>
+        <h1>Trilha do Código 3</h1>
         <p>Revisão rápida · 40 minutos</p>
       </div>
     </div>
@@ -338,8 +338,8 @@ table.teacher-table tr:last-child td{border-bottom:none;}
     </div>
     <div class="danger-zone">
       <h3>⚠️ Zona de reset</h3>
-      <p style="font-size:13.5px;color:var(--muted);margin:0 0 14px;">Isso apaga o andamento salvo da <b>Trilha 2</b> de todos os alunos (pontuação, progresso e dicas). O progresso da Trilha 1 não é afetado. Use apenas ao iniciar uma nova aplicação desta revisão.</p>
-      <button class="btn btn-danger" onclick="resetTrail()">Resetar Trilha 2 de todos os alunos</button>
+      <p style="font-size:13.5px;color:var(--muted);margin:0 0 14px;">Isso apaga o andamento salvo da <b>Trilha 3</b> de todos os alunos (pontuação, progresso e dicas). O progresso das Trilhas 1 e 2 não é afetado. Use apenas ao iniciar uma nova aplicação desta revisão.</p>
+      <button class="btn btn-danger" onclick="resetTrail()">Resetar Trilha 3 de todos os alunos</button>
     </div>
   </div>
 </div>
@@ -433,140 +433,152 @@ const MODULES = [
 function cb(codeHtml){ return codeHtml; } // helper apenas para legibilidade
 
 const CHALLENGES = [
-/* ---------------- MÓDULO 0 — FUNDAMENTOS (revisão 2) ---------------- */
+/* ---------------- MÓDULO 0 — FUNDAMENTOS (revisão 3) ---------------- */
 {id:1, module:0, type:"quiz", points:10,
-  teach:"<span class='lead'>Saída de dados</span>Para exibir uma informação para quem está usando o programa (ou para conferir um valor durante os testes), usamos o comando <code>console.log()</code>.",
-  question:"Qual comando exibe uma informação no console?",
-  options:["console.log()","prompt()","let","typeof"],
+  teach:"<span class='lead'>Tipos numéricos</span>Em JavaScript, tanto números inteiros (como 3) quanto números com casas decimais (como 3.5) são do mesmo tipo: <code>Number</code>.",
+  question:"Qual é o tipo de dado correto para armazenar o valor 3.5?",
+  options:["Number","String","Boolean","Undefined"],
   correct:0,
-  hint:["É o comando que usamos toda vez que queremos 'ver' um valor.","Começa com console e termina com .log()."]},
+  hint:["Não importa se o número tem casas decimais ou não — o tipo é o mesmo.","Number é o tipo usado para qualquer valor numérico."]},
 
-{id:2, module:0, type:"truefalse", points:10,
-  teach:"<span class='lead'>O que prompt() retorna</span>O comando <code>prompt()</code> pede uma informação ao usuário, mas o valor que ele devolve é <b>sempre um texto (string)</b> — mesmo que a pessoa digite números.",
-  statement:"O comando prompt() sempre retorna um valor do tipo texto (string), mesmo quando o usuário digita apenas números.",
-  correct:true,
-  hint:["Digitar '15' no prompt não vira automaticamente o número 15 — vira o texto \"15\"."]},
-
-{id:3, module:0, type:"predict", points:10,
-  teach:"<span class='lead'>typeof</span>O operador <code>typeof</code> mostra qual é o tipo de uma variável.",
-  code:'let x = "10";\nconsole.log(typeof x);',
-  options:["string","number","boolean","undefined"],
-  correct:0,
-  hint:["x foi criado com aspas ao redor do 10.","Aspas ao redor de um valor sempre indicam uma string."]},
-
-{id:4, module:0, type:"match", points:15,
-  teach:"<span class='lead'>Tipos de dados (revisão)</span>Associe cada tipo ao exemplo correspondente.",
+{id:2, module:0, type:"match", points:15,
+  teach:"<span class='lead'>Comandos e palavras-chave (revisão)</span>Associe cada comando ao que ele faz.",
   pairs:[
-    {left:"Number", right:"3.14"},
-    {left:"String", right:"'JavaScript'"},
-    {left:"Boolean", right:"false"}
+    {left:"let", right:"Cria uma variável que pode mudar de valor"},
+    {left:"const", right:"Cria uma variável que não muda de valor"},
+    {left:"prompt()", right:"Pede uma informação ao usuário"}
   ],
-  hint:["Number é qualquer valor numérico, com ou sem casas decimais.","Boolean só existe em duas formas: true ou false."]},
+  hint:["const vem de 'constante' — algo que não muda.","let vem de 'deixe' — deixa o valor variar depois."]},
 
-{id:5, module:0, type:"wordsearch", points:15,
-  teach:"<span class='lead'>Vocabulário — Entrada e saída</span>Encontre os termos relacionados à comunicação entre o programa e o usuário.",
-  words:["ENTRADA","SAIDA","DADO","TEXTO"],
-  size:9,
-  hint:["ENTRADA é a informação que o usuário fornece ao programa.","SAIDA é a informação que o programa mostra para o usuário."]},
+{id:3, module:0, type:"fill", points:10,
+  teach:"<span class='lead'>Concatenando texto e variável</span>Para juntar um texto fixo com o valor de uma variável, usamos o operador de soma entre eles.",
+  fillLine:'let nome = prompt("Qual seu nome?");\nconsole.log("Oi, " ___ nome);',
+  blanks:[{id:"b1", answers:["+"]}],
+  hint:["É o mesmo sinal usado para somar números.","Quando usado com texto, ele junta (concatena) em vez de somar."]},
 
-{id:6, module:0, type:"order", points:15, final:true,
-  teach:"<span class='lead'>Desafio final do módulo</span>Ordene as linhas para criar um programa que pergunta onde a pessoa mora e depois exibe a resposta.",
-  lines:[
-    'let cidade = prompt("Onde você mora?");',
-    'console.log("Você mora em " + cidade);'
+{id:4, module:0, type:"wordsearch", points:15,
+  teach:"<span class='lead'>Vocabulário — Fundamentos (revisão)</span>Encontre os termos no caça-palavras.",
+  words:["CONST","ALERTA","MEMORIA","VALOR"],
+  size:10,
+  hint:["MEMORIA é onde as variáveis guardam seus valores.","VALOR é o conteúdo guardado dentro de uma variável."]},
+
+{id:5, module:0, type:"truefalse", points:10,
+  teach:"<span class='lead'>const</span>Diferente de <code>let</code>, uma variável criada com <code>const</code> não pode ter seu valor alterado depois de definida.",
+  statement:"Em JavaScript, uma variável criada com const permite alterar o valor dela depois de criada.",
+  correct:false,
+  hint:["const significa 'constante' — pense em algo que nunca muda.","Se você tentar mudar o valor de um const, o JavaScript dá erro."]},
+
+{id:6, module:0, type:"build", points:25, final:true,
+  teach:"<span class='lead'>Desafio final do módulo</span>Vamos montar um programa que soma dois números digitados pelo usuário. Atenção: o prompt() sempre devolve texto, então é preciso transformar o valor em número antes de somar, usando <code>Number()</code>.",
+  steps:[
+    {q:"Qual comando pega o primeiro número digitado pelo usuário?", options:["prompt()","console.log()","typeof"], correct:0},
+    {q:"Como transformamos o texto do prompt em um número de verdade, antes de somar?", options:["Number(valor)","texto(valor)","string(valor)"], correct:0},
+    {q:"Qual comando mostra o resultado da soma na tela?", options:["console.log()","prompt()","let"], correct:0}
   ],
-  hint:["Primeiro é preciso guardar a resposta do usuário em uma variável.","Só depois de ter a informação guardada é possível exibi-la."]},
+  hint:["Sem o Number(), o + juntaria os textos em vez de somar os valores (ex: '2'+'3' vira '23', não 5).","A ordem é: pegar o texto, converter para número, somar, e só depois mostrar o resultado."]},
 
-/* ---------------- MÓDULO 1 — OPERADORES (revisão 2) ---------------- */
+/* ---------------- MÓDULO 1 — OPERADORES (revisão 3) ---------------- */
 {id:7, module:1, type:"quiz", points:10,
-  teach:"<span class='lead'>Diferente de</span>O operador <code>!==</code> verifica se dois valores <b>não</b> são iguais (considerando também o tipo).",
-  question:"Qual operador retorna true se dois valores forem diferentes?",
-  options:["!==","==","+","%"],
+  teach:"<span class='lead'>Módulo (revisão)</span>Lembrando: o operador <code>%</code> devolve o resto de uma divisão.",
+  question:"Qual o resultado de 15 % 4 em JavaScript?",
+  options:["3","4","11","60"],
   correct:0,
-  hint:["Pense no ! como uma negação — 'não igual'.","É parecido com ===, mas com uma exclamação na frente."]},
+  hint:["15 dividido por 4 dá 3, e sobra...","3 vezes 4 é 12. 15 - 12 = ?"]},
 
-{id:8, module:1, type:"fill", points:10,
-  teach:"<span class='lead'>Testando números pares</span>Um número é par quando o resto da divisão por 2 é igual a zero. Usamos o operador de módulo para isso.",
-  fillLine:"let par = numero ___ 2 === 0;",
-  blanks:[{id:"b1", answers:["%"]}],
-  hint:["É o mesmo operador usado para achar o 'resto' de uma divisão.","No teclado é o sinal de porcentagem: %."]},
-
-{id:9, module:1, type:"predict", points:10,
-  teach:"<span class='lead'>Ordem das operações</span>Assim como na matemática, multiplicação e divisão são calculadas <b>antes</b> de soma e subtração.",
-  code:"let a = 8, b = 3;\nconsole.log(a - b * 2);",
-  options:["2","10","22","1"],
+{id:8, module:1, type:"predict", points:10,
+  teach:"<span class='lead'>Diferente de (!==)</span>O operador <code>!==</code> verifica se dois valores são diferentes, considerando também o tipo.",
+  code:"let x = 4;\nlet y = 9;\nconsole.log(x !== y);",
+  options:["true","false","Erro","undefined"],
   correct:0,
-  hint:["Primeiro calcule b * 2.","Depois subtraia esse resultado de a: 8 - 6."]},
+  hint:["x vale 4 e y vale 9 — eles são diferentes.","Como são diferentes, !== (diferente de) resulta em true."]},
 
-{id:10, module:1, type:"truefalse", points:10,
-  teach:"<span class='lead'>O operador ||</span>O <code>||</code> (OU lógico) é mais 'flexível' que o &&: basta <b>uma</b> das condições ser verdadeira para o resultado todo ser verdadeiro.",
-  statement:"O operador || (OU lógico) retorna verdadeiro se pelo menos uma das condições envolvidas for verdadeira.",
+{id:9, module:1, type:"fill", points:10,
+  teach:"<span class='lead'>Maioridade</span>Para verificar se alguém já é adulto (18 anos ou mais), usamos o operador 'maior ou igual'.",
+  fillLine:"let adulto = idade ___ 18;",
+  blanks:[{id:"b1", answers:[">="]}],
+  hint:["'Maior ou igual' é o sinal de maior seguido de igual.",">= "]},
+
+{id:10, module:1, type:"hangman", points:15,
+  teach:"<span class='lead'>Forca — Operadores (revisão)</span>Adivinhe a palavra a partir da dica.",
+  word:"ARITMETICO",
+  tip:"Tipo de operador usado para fazer contas, como soma, subtração e multiplicação.",
+  hint:["Tem 10 letras.","Vem da palavra 'aritmética', que é a parte da matemática que trata dos números."]},
+
+{id:11, module:1, type:"truefalse", points:10,
+  teach:"<span class='lead'>== vs ===</span>O <code>===</code> compara valor <b>e</b> tipo ao mesmo tempo; o <code>==</code> compara apenas o valor, ignorando o tipo.",
+  statement:"O operador === compara valor e tipo ao mesmo tempo, enquanto o == compara apenas o valor.",
   correct:true,
-  hint:["Pense em || como 'A OU B, não precisa das duas'."]},
-
-{id:11, module:1, type:"hangman", points:15,
-  teach:"<span class='lead'>Forca — Operadores</span>Adivinhe a palavra a partir da dica.",
-  word:"RELACIONAL",
-  tip:"Tipo de operador usado para comparar dois valores, como > , < e ==.",
-  hint:["Tem 10 letras.","Está relacionado à palavra 'relação', pois compara (relaciona) dois valores."]},
+  hint:["Por isso 10 === '10' é falso, mas 10 == '10' é verdadeiro."]},
 
 {id:12, module:1, type:"maze", points:20, final:true,
-  teach:"<span class='lead'>Desafio final do módulo — Labirinto</span>Avance pelas salas resolvendo cada expressão com operadores.",
+  teach:"<span class='lead'>Desafio final do módulo — Labirinto</span>Avance pelas salas resolvendo cada expressão.",
   rooms:[
-    {q:"9 % 2", options:["0","1","4.5"], correct:1},
-    {q:"'5' == 5", options:["Verdadeiro","Falso"], correct:0},
-    {q:"!(5 > 10)", options:["Verdadeiro","Falso"], correct:0}
+    {q:"6 % 4", options:["1","2","1.5"], correct:1},
+    {q:"(3 < 5) && (5 < 3)", options:["Verdadeiro","Falso"], correct:1},
+    {q:"(3 < 5) || (5 < 3)", options:["Verdadeiro","Falso"], correct:0},
+    {q:"8 !== '8'", options:["Verdadeiro","Falso"], correct:0}
   ],
-  hint:["Na sala 2, == compara só o valor (não o tipo) — é diferente do ===.","Na sala 3, o ! inverte o resultado: se 5 > 10 é falso, o ! torna verdadeiro."]},
+  hint:["Na sala 1, pense em quantas vezes 4 cabe em 6 e quanto sobra.","Na sala 4, lembre que !== também compara o tipo: número não é igual a texto."]},
 
-/* ---------------- MÓDULO 2 — CONDICIONAIS (revisão 2) ---------------- */
+/* ---------------- MÓDULO 2 — CONDICIONAIS (revisão 3) ---------------- */
 {id:13, module:2, type:"quiz", points:10,
-  teach:"<span class='lead'>else if</span>Quando precisamos testar mais de duas possibilidades, usamos <code>else if</code> para verificar uma nova condição caso a anterior seja falsa.",
-  question:"O que faz o else if em uma estrutura condicional?",
-  options:["Testa uma nova condição, caso a anterior tenha sido falsa","Repete um bloco de código várias vezes","Declara uma nova variável","Sempre executa, não importa a condição"],
+  teach:"<span class='lead'>Quando nenhuma condição é verdadeira</span>Se um programa só tem if e else if (sem else) e nenhuma condição for verdadeira, simplesmente nenhum bloco é executado.",
+  question:"O que acontece se nenhuma condição de um if/else if for verdadeira e não houver else?",
+  options:["Nada é executado","O programa trava","O primeiro bloco é executado mesmo assim","Dá erro de sintaxe"],
   correct:0,
-  hint:["Ele só é avaliado se o if anterior não foi verdadeiro.","Pode haver vários else if em sequência, um testando depois do outro."]},
+  hint:["O else é o único bloco que roda 'de qualquer jeito' quando nada mais bateu.","Sem ele, se nenhuma condição for verdadeira, o programa simplesmente segue em frente sem executar nada daquele trecho."]},
 
-{id:14, module:2, type:"fill", points:10,
-  teach:"<span class='lead'>Encadeando condições</span>Para classificar uma idade em criança, adolescente ou adulto, encadeamos if, else if e else.",
-  fillLine:'if (idade < 12) { console.log("Criança"); } ___ if (idade < 18) { console.log("Adolescente"); } else { console.log("Adulto"); }',
-  blanks:[{id:"b1", answers:["else"]}],
-  hint:["A palavra que liga o primeiro if a um novo teste é a mesma que representa 'senão'.","Junto com if, forma o else if."]},
-
-{id:15, module:2, type:"predict", points:10,
-  teach:"<span class='lead'>Seguindo o fluxo do if/else if/else</span>O programa testa as condições na ordem em que aparecem e para no primeiro bloco verdadeiro.",
-  code:'let cor = "verde";\nif (cor === "vermelho") {\n  console.log("Pare");\n} else if (cor === "verde") {\n  console.log("Siga");\n} else {\n  console.log("Atenção");\n}',
-  options:["Pare","Siga","Atenção","Nenhuma saída"],
-  correct:1,
-  hint:["cor vale 'verde'. Primeiro testa se é 'vermelho' — não é.","Depois testa se é 'verde' — é! Então esse bloco é executado."]},
-
-{id:16, module:2, type:"memory", points:15,
-  teach:"<span class='lead'>Condição e resultado (revisão)</span>Encontre os pares entre a situação e o resultado esperado.",
-  pairs:[
-    {a:"nota = 10 (nota >= 9)", b:"Excelente"},
-    {a:"idade = 10 (idade < 12)", b:"Criança"},
-    {a:"senha digitada errada", b:"Acesso negado"}
+{id:14, module:2, type:"order", points:15,
+  teach:"<span class='lead'>Programa: positivo, negativo ou zero</span>Ordene as linhas para criar um programa que classifica um número digitado pelo usuário.",
+  lines:[
+    'let numero = prompt("Digite um número:");',
+    "numero = Number(numero);",
+    "if (numero > 0) {",
+    '  console.log("Positivo");',
+    "} else if (numero < 0) {",
+    '  console.log("Negativo");',
+    "} else {",
+    '  console.log("Zero");',
+    "}"
   ],
-  hint:["Compare cada valor com a condição escrita entre parênteses."]},
+  hint:["Primeiro pegamos o texto digitado, depois convertemos para número — só então dá para comparar com > e <.","O else (sem condição) sempre fica por último, cobrindo o caso que sobrou: zero."]},
 
-{id:17, module:2, type:"crossword", points:20,
+{id:15, module:2, type:"match", points:15,
+  teach:"<span class='lead'>Escolhendo o operador certo</span>Associe cada situação ao operador relacional mais adequado.",
+  pairs:[
+    {left:"Verificar se x é exatamente igual a 10", right:"x === 10"},
+    {left:"Verificar se x é diferente de 10", right:"x !== 10"},
+    {left:"Verificar se x é no mínimo 10", right:"x >= 10"}
+  ],
+  hint:["'No mínimo' quer dizer que 10 também serve — por isso usamos >= e não apenas >."]},
+
+{id:16, module:2, type:"crossword", points:20,
   teach:"<span class='lead'>Cruzadinha — Condicionais (revisão)</span>Complete as palavras a partir das dicas.",
   clues:[
-    {clue:"Bloco executado quando a condição do if é falsa", answer:"ELSE"},
-    {clue:"Resultado de uma comparação: só pode ser verdadeiro ou falso", answer:"BOOLEANO"},
-    {clue:"O que fica escrito dentro dos parênteses do if", answer:"CONDICAO"}
+    {clue:"Estrutura que permite ao programa tomar decisões", answer:"CONDICIONAL"},
+    {clue:"Valor lógico que representa 'sim' em programação", answer:"VERDADEIRO"},
+    {clue:"Bloco que executa quando nenhuma condição anterior foi atendida", answer:"SENAO"}
   ],
-  hint:["ELSE é uma palavra curta em inglês.","BOOLEANO vem da mesma família de 'boolean'."]},
+  hint:["CONDICIONAL é uma palavra bem parecida com 'condição'.","SENAO é a tradução direta de else."]},
+
+{id:17, module:2, type:"memory", points:15,
+  teach:"<span class='lead'>Classificando números (revisão)</span>Encontre os pares entre a situação e o resultado esperado.",
+  pairs:[
+    {a:"numero = -5 (numero < 0)", b:"Negativo"},
+    {a:"numero = 0", b:"Zero"},
+    {a:"idade = 15 (idade >= 18)", b:"Falso"}
+  ],
+  hint:["Compare sempre o valor real da variável com a condição escrita entre parênteses."]},
 
 {id:18, module:2, type:"build", points:25, final:true,
-  teach:"<span class='lead'>Desafio final da Trilha 2</span>Vamos montar um programa que classifica a idade da pessoa em criança, adolescente ou adulto.",
+  teach:"<span class='lead'>Desafio final da Trilha 3</span>Vamos montar um sistema de desconto: se o valor da compra for maior que R$100, aplicamos 10% de desconto.",
   steps:[
-    {q:"Qual comando pega a idade digitada pelo usuário?", options:["prompt()","console.log()","if()"], correct:0},
-    {q:"Quantas estruturas de decisão encadeadas precisamos para 3 categorias (criança / adolescente / adulto)?", options:["if, else if e else","apenas if","apenas else"], correct:0},
-    {q:"Para checar se a idade é menor que 12, qual operador usamos?", options:["<","<=","!="], correct:0},
-    {q:"Qual comando exibe a categoria final na tela?", options:["console.log()","prompt()","typeof"], correct:0}
+    {q:"Qual comando pega o valor da compra digitado pelo usuário?", options:["prompt()","console.log()","if()"], correct:0},
+    {q:"Qual operador verifica se o valor é maior que 100?", options:[">","<","==" ], correct:0},
+    {q:"Qual estrutura decide entre aplicar ou não o desconto?", options:["if / else","apenas variáveis","apenas operadores"], correct:0},
+    {q:"Qual comando exibe o valor final (com ou sem desconto) na tela?", options:["console.log()","prompt()","typeof"], correct:0}
   ],
-  hint:["Pense no fluxo: entrada → várias decisões em sequência → saída.","Três categorias exigem duas comparações encadeadas: uma no if, outra no else if, e o else cobre o resto."]}
+  hint:["Pense no fluxo completo: entrada → conversão para número → decisão → saída.","Só entra no bloco do desconto quem tiver valor > 100; os demais caem no else."]}
 ];
 const TOTAL_CHALLENGES = CHALLENGES.length;
 const TOTAL_POSSIBLE_POINTS = CHALLENGES.reduce((s,c)=>s+c.points,0);
@@ -649,8 +661,8 @@ function logout(){
 /* =========================================================
    PERSISTÊNCIA (Firebase + fallback local)
 ========================================================= */
-function localKey(id){ return "trilha2_progress_" + id; }
-const FIREBASE_PROGRESS_NODE = "progress_trilha2"; // mantém a Trilha 1 intacta em "progress"
+function localKey(id){ return "trilha3_progress_" + id; }
+const FIREBASE_PROGRESS_NODE = "progress_trilha3"; // mantém a Trilha 1 e a Trilha 2 intactas
 
 function loadProgressAndStart(){
   const defaultProgress = {completed:{}, score:0, hintsUsed:{}, startTime:Date.now(), attempts:{}};
@@ -901,7 +913,7 @@ function selectTF(v){
 
 /* ---- FILL ---- */
 function renderFill(c, area){
-  let line = c.fillLine;
+  let line = c.fillLine.replace(/\n/g, "<br>");
   c.blanks.forEach(b=>{
     line = line.replace("___", `<input type="text" class="blank-input" id="blank-${b.id}" autocomplete="off">`);
   });
@@ -1447,7 +1459,7 @@ function refreshTeacherData(){
 }
 
 function resetTrail(){
-  if(!confirm("Tem certeza que deseja apagar o andamento da TRILHA 2 de TODOS os alunos? O progresso da Trilha 1 não será afetado. Essa ação não pode ser desfeita.")) return;
+  if(!confirm("Tem certeza que deseja apagar o andamento da TRILHA 3 de TODOS os alunos? O progresso das Trilhas 1 e 2 não será afetado. Essa ação não pode ser desfeita.")) return;
   const typed = prompt("Para confirmar, digite RESETAR em maiúsculas:");
   if(typed !== "RESETAR"){ alert("Operação cancelada."); return; }
   STUDENTS.forEach(s=> localStorage.removeItem(localKey(s.id)));
