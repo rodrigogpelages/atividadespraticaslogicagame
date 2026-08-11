@@ -1,1479 +1,563 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<title>Trilha do Código 3 — Revisão de Lógica de Programação</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#0F1330;
-  --bg-2:#151a3a;
-  --surface:#1B2147;
-  --surface-2:#232B55;
-  --line: rgba(255,255,255,0.09);
-  --primary:#2DD4BF;
-  --primary-dark:#189184;
-  --accent:#FFB020;
-  --accent-2:#8B7CF6;
-  --danger:#FF5D6C;
-  --text:#EDEFF7;
-  --muted:#9AA3C7;
-  --muted-2:#6b7295;
-  --r-sm:10px;
-  --r-md:16px;
-  --r-lg:24px;
-}
-*{box-sizing:border-box;}
-html,body{margin:0;padding:0;}
-body{
-  background:
-    radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,.5), transparent),
-    radial-gradient(1px 1px at 120px 90px, rgba(255,255,255,.4), transparent),
-    radial-gradient(1.5px 1.5px at 200px 40px, rgba(255,255,255,.35), transparent),
-    radial-gradient(1px 1px at 60px 160px, rgba(255,255,255,.4), transparent),
-    radial-gradient(1.5px 1.5px at 260px 200px, rgba(255,255,255,.3), transparent),
-    linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
-  background-attachment:fixed;
-  background-size: 300px 300px, 300px 300px, 300px 300px, 300px 300px, 300px 300px, cover;
-  color:var(--text);
-  font-family:'Inter',sans-serif;
-  min-height:100vh;
-}
-code, .mono{font-family:'JetBrains Mono', monospace;}
-h1,h2,h3,.display{font-family:'Baloo 2', sans-serif;}
-::-webkit-scrollbar{width:10px;height:10px;}
-::-webkit-scrollbar-thumb{background:var(--surface-2);border-radius:10px;}
-::-webkit-scrollbar-track{background:transparent;}
-a{color:var(--primary);}
-button{font-family:inherit;cursor:pointer;}
-.hidden{display:none !important;}
-.btn{
-  border:none;border-radius:var(--r-sm);padding:12px 22px;font-weight:700;font-size:15px;
-  transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
-  display:inline-flex;align-items:center;gap:8px;
-}
-.btn:active{transform:scale(.97);}
-.btn-primary{background:var(--primary);color:#052623;box-shadow:0 4px 0 var(--primary-dark);}
-.btn-primary:hover{background:#3ee0ca;}
-.btn-primary:active{box-shadow:0 1px 0 var(--primary-dark);transform:translateY(3px) scale(.99);}
-.btn-ghost{background:transparent;color:var(--text);border:2px solid var(--line);}
-.btn-ghost:hover{border-color:var(--primary);color:var(--primary);}
-.btn-accent{background:var(--accent);color:#3a2400;box-shadow:0 4px 0 #a97300;}
-.btn-danger{background:var(--danger);color:#3a0006;box-shadow:0 4px 0 #a3242f;}
-.btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:none;transform:none;}
-.center-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:32px;}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratório Prático: Google Maps em Muqui</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* SETUP E RESET - TEMA GOOGLE */
+        :root {
+            --g-blue: #4285F4;
+            --g-red: #EA4335;
+            --g-yellow: #FBBC05;
+            --g-green: #34A853;
+            --dark: #202124; /* Google Dark */
+            --light: #f8f9fa;
+            --text: #3c4043;
+            --code-bg: #282c34;
+            --border: #dadce0;
+        }
 
-/* ---------- LOGIN ---------- */
-.login-card{width:100%;max-width:440px;position:relative;overflow:hidden;}
-.login-card::before{
-  content:"</>";
-  position:absolute;top:-40px;right:-20px;font-family:'JetBrains Mono';font-size:140px;
-  color:rgba(45,212,191,.06);font-weight:700;pointer-events:none;
-}
-.brand{display:flex;align-items:center;gap:12px;margin-bottom:6px;}
-.brand-badge{
-  width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,var(--primary),var(--accent-2));
-  display:flex;align-items:center;justify-content:center;font-size:26px;flex:none;
-  box-shadow:0 6px 18px rgba(45,212,191,.35);
-}
-.brand h1{font-size:24px;margin:0;line-height:1.1;}
-.brand p{margin:2px 0 0;color:var(--muted);font-size:13px;}
-.field{margin-top:20px;}
-.field label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px;}
-.field select, .field input{
-  width:100%;padding:13px 14px;border-radius:var(--r-sm);border:2px solid var(--line);
-  background:var(--surface-2);color:var(--text);font-size:15px;font-family:inherit;
-}
-.field select:focus, .field input:focus{outline:none;border-color:var(--primary);}
-.login-actions{margin-top:26px;display:flex;flex-direction:column;gap:10px;}
-.login-error{margin-top:14px;background:rgba(255,93,108,.12);border:1px solid var(--danger);color:#ffc7cc;
-  padding:10px 14px;border-radius:var(--r-sm);font-size:14px;display:none;}
-.teacher-link{margin-top:18px;text-align:center;}
-.teacher-link button{background:none;border:none;color:var(--muted);font-size:13px;text-decoration:underline;cursor:pointer;}
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            background-color: #e8eaed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            padding: 40px 0 100px 0;
+            font-family: 'Inter', sans-serif;
+            
+            /* BLOQUEIO DE CÓPIA DE TEXTO */
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
 
-/* ---------- TOPBAR ---------- */
-.topbar{
-  position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:16px;
-  padding:12px 20px;background:rgba(15,19,48,.85);backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--line);flex-wrap:wrap;
-}
-.topbar .who{display:flex;align-items:center;gap:10px;font-weight:700;flex:1;min-width:160px;}
-.avatar-chip{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent-2),var(--primary));
-  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#0b0e22;flex:none;}
-.stat-pill{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 14px;
-  font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;white-space:nowrap;}
-.timer-pill{border-color:var(--accent);color:var(--accent);}
-.timer-pill.low{border-color:var(--danger);color:var(--danger);animation:pulse 1s infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
-.progress-track{flex:2;min-width:140px;height:10px;background:var(--surface-2);border-radius:999px;overflow:hidden;}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));width:0%;transition:width .5s ease;}
+        /* ESTRUTURA VERTICAL TIPO FOLHA A4 */
+        .page {
+            width: 850px; 
+            min-height: 1150px; 
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 60px 70px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+        }
 
-/* ---------- TRILHA ---------- */
-.trail-wrap{max-width:760px;margin:0 auto;padding:36px 20px 90px;position:relative;}
-.module-header{text-align:center;margin:38px 0 26px;position:relative;}
-.module-header .eyebrow{color:var(--primary);font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;}
-.module-header h2{margin:4px 0 6px;font-size:26px;}
-.module-header p{color:var(--muted);font-size:14px;max-width:480px;margin:0 auto;}
-.node-row{display:flex;justify-content:center;margin:6px 0;position:relative;}
-.node-row.left{justify-content:flex-start;padding-left:8%;}
-.node-row.right{justify-content:flex-end;padding-right:8%;}
-.trail-node{
-  width:84px;height:84px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;
-  font-size:28px;font-weight:800;border:none;flex-direction:column;
-  background:var(--surface-2);color:var(--muted-2);box-shadow:0 6px 0 rgba(0,0,0,.25);
-  transition:transform .15s ease;
-}
-.trail-node .num{font-family:'Baloo 2';font-size:26px;}
-.trail-node.locked{cursor:not-allowed;}
-.trail-node.locked::after{content:"🔒";position:absolute;font-size:16px;bottom:-2px;right:-2px;background:var(--bg);border-radius:50%;padding:3px;}
-.trail-node.available{background:linear-gradient(160deg,var(--primary),var(--primary-dark));color:#04231f;cursor:pointer;box-shadow:0 6px 0 var(--primary-dark), 0 0 0 6px rgba(45,212,191,.15);}
-.trail-node.available:hover{transform:translateY(-3px);}
-.trail-node.done{background:linear-gradient(160deg,var(--accent),#c97e00);color:#3a2400;cursor:pointer;box-shadow:0 6px 0 #8a5e00;}
-.trail-node.done::after{content:"★";position:absolute;top:-8px;right:-4px;font-size:18px;color:#fff;text-shadow:0 0 6px var(--accent);}
-.node-connector{width:5px;height:34px;background:repeating-linear-gradient(180deg,var(--line) 0 6px, transparent 6px 12px);margin:0 auto;}
-.rocket{position:absolute;font-size:30px;transform:translate(-50%,-140%);pointer-events:none;filter:drop-shadow(0 0 10px rgba(45,212,191,.6));transition:top .6s ease, left .6s ease;}
+        /* TIPOGRAFIA */
+        h1 { font-family: 'Poppins', sans-serif; font-size: 38px; font-weight: 800; color: var(--dark); line-height: 1.2; text-align: center; margin-bottom: 10px; text-transform: uppercase;}
+        h2 { font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 700; color: var(--g-blue); margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 10px; display: flex; align-items: center; gap: 10px;}
+        h3 { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 600; color: var(--dark); margin-bottom: 5px; display: flex; align-items: center; gap: 10px;}
+        
+        p, li { font-size: 16px; line-height: 1.6; color: var(--text); margin-bottom: 15px; }
+        
+        /* AVISOS */
+        .alert-box {
+            background-color: #fce8e6;
+            border: 2px dashed var(--g-red);
+            color: #b31412;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
 
-/* ---------- MODAL ---------- */
-.modal-backdrop{position:fixed;inset:0;background:rgba(6,8,22,.72);backdrop-filter:blur(4px);
-  display:flex;align-items:flex-start;justify-content:center;padding:26px 14px;z-index:50;overflow-y:auto;}
-.modal{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);max-width:720px;width:100%;
-  padding:0;overflow:hidden;animation:pop .25s ease;margin-bottom:40px;}
-@keyframes pop{from{opacity:0;transform:scale(.94) translateY(10px);}to{opacity:1;transform:scale(1) translateY(0);}}
-.modal-head{padding:22px 26px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;background:var(--surface-2);}
-.modal-head .tag{background:rgba(45,212,191,.15);color:var(--primary);font-size:11px;font-weight:800;letter-spacing:1px;
-  padding:4px 10px;border-radius:999px;text-transform:uppercase;}
-.modal-head h3{margin:0;font-size:19px;flex:1;}
-.modal-close{background:none;border:none;color:var(--muted);font-size:22px;line-height:1;padding:4px 8px;border-radius:8px;}
-.modal-close:hover{background:var(--surface);color:var(--text);}
-.modal-body{padding:26px;}
-.teach-box{background:rgba(139,124,246,.1);border:1px solid rgba(139,124,246,.35);border-radius:var(--r-md);
-  padding:16px 18px;margin-bottom:22px;font-size:14.5px;line-height:1.6;}
-.teach-box b{color:var(--accent-2);}
-.teach-box .lead{font-weight:800;color:var(--accent-2);display:block;margin-bottom:6px;font-size:13px;letter-spacing:.5px;text-transform:uppercase;}
-pre.code-block{background:#0b0e22;border:1px solid var(--line);border-radius:var(--r-md);padding:16px 18px;
-  font-size:14px;line-height:1.7;overflow-x:auto;color:#c9d1f5;}
-.code-block .kw{color:#ff9e64;} .code-block .str{color:#9ece6a;} .code-block .fn{color:#7dcfff;} .code-block .cm{color:#565f89;}
-.options-list{display:flex;flex-direction:column;gap:10px;margin-top:16px;}
-.opt-btn{text-align:left;padding:14px 16px;border-radius:var(--r-sm);border:2px solid var(--line);background:var(--surface-2);
-  color:var(--text);font-size:14.5px;font-weight:600;transition:.15s;}
-.opt-btn:hover{border-color:var(--primary);}
-.opt-btn.selected{border-color:var(--primary);background:rgba(45,212,191,.12);}
-.opt-btn.correct{border-color:#5adf8f;background:rgba(90,223,143,.15);color:#c9ffe0;}
-.opt-btn.wrong{border-color:var(--danger);background:rgba(255,93,108,.15);color:#ffd0d5;}
-.tf-row{display:flex;gap:14px;margin-top:16px;}
-.tf-row .opt-btn{flex:1;text-align:center;font-size:16px;}
-.fill-line{margin:16px 0;font-size:15px;display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
-.blank-input{width:110px;padding:8px 10px;border-radius:8px;border:2px solid var(--primary);background:#0b0e22;
-  color:var(--accent);font-family:'JetBrains Mono';font-weight:700;text-align:center;}
-.blank-input:focus{outline:none;box-shadow:0 0 0 3px rgba(45,212,191,.25);}
-.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:16px;}
-.match-col{display:flex;flex-direction:column;gap:10px;}
-.match-item{padding:12px 14px;border-radius:var(--r-sm);border:2px solid var(--line);background:var(--surface-2);
-  font-size:14px;font-weight:600;text-align:center;transition:.15s;}
-.match-item.sel{border-color:var(--primary);background:rgba(45,212,191,.15);}
-.match-item.matched{border-color:#5adf8f;background:rgba(90,223,143,.15);opacity:.7;cursor:default;}
-.match-item.shake{animation:shake .35s;}
-@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
-.order-list{display:flex;flex-direction:column;gap:8px;margin-top:16px;}
-.order-item{display:flex;align-items:center;gap:10px;background:#0b0e22;border:1px solid var(--line);border-radius:var(--r-sm);
-  padding:10px 12px;font-family:'JetBrains Mono';font-size:13.5px;}
-.order-item .arrows{display:flex;flex-direction:column;gap:2px;margin-left:auto;}
-.order-item .arrows button{background:var(--surface-2);border:none;color:var(--text);border-radius:4px;padding:2px 6px;font-size:11px;}
-.order-item .idx{background:var(--surface-2);color:var(--primary);width:22px;height:22px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex:none;font-family:'Inter';}
-.ws-grid{display:grid;gap:3px;margin:16px auto;width:max-content;}
-.ws-cell{width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:var(--surface-2);
-  border-radius:6px;font-family:'JetBrains Mono';font-weight:700;font-size:14px;user-select:none;cursor:pointer;color:var(--muted);}
-.ws-cell.sel{background:rgba(139,124,246,.4);color:#fff;}
-.ws-cell.found{background:rgba(90,223,143,.35);color:#fff;}
-.ws-words{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:10px;}
-.ws-word-tag{padding:5px 12px;border-radius:999px;background:var(--surface-2);font-size:12.5px;font-weight:700;color:var(--muted);border:1px solid var(--line);}
-.ws-word-tag.found{background:rgba(90,223,143,.2);color:#8fffc0;border-color:#5adf8f;text-decoration:line-through;}
-.memory-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px;}
-.mem-card{aspect-ratio:1;border-radius:var(--r-sm);background:linear-gradient(160deg,var(--accent-2),var(--primary));
-  display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;color:#fff;text-align:center;padding:6px;font-size:11px;font-weight:700;}
-.mem-card.back{background:var(--surface-2);font-size:22px;color:var(--primary);}
-.mem-card.matched{opacity:.25;cursor:default;}
-.cw-row{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
-.cw-clue{width:230px;font-size:13px;color:var(--muted);flex:none;}
-.cw-boxes{display:flex;gap:4px;}
-.cw-box{width:30px;height:36px;text-align:center;border-radius:6px;border:2px solid var(--line);background:#0b0e22;
-  color:var(--text);font-family:'JetBrains Mono';font-weight:700;font-size:15px;text-transform:uppercase;}
-.cw-box:focus{outline:none;border-color:var(--primary);}
-.maze-rooms{display:flex;align-items:center;gap:6px;margin:20px 0;flex-wrap:wrap;justify-content:center;}
-.maze-room{width:56px;height:56px;border-radius:14px;background:var(--surface-2);border:2px solid var(--line);
-  display:flex;align-items:center;justify-content:center;font-size:24px;position:relative;}
-.maze-room.done{background:rgba(90,223,143,.2);border-color:#5adf8f;}
-.maze-room.current{border-color:var(--accent);box-shadow:0 0 0 4px rgba(255,176,32,.2);}
-.maze-arrow{color:var(--muted-2);font-size:18px;}
-.hangman-fig{display:flex;justify-content:center;margin-bottom:6px;}
-.hangman-word{display:flex;justify-content:center;gap:8px;font-family:'JetBrains Mono';font-size:26px;font-weight:700;letter-spacing:2px;margin:14px 0;}
-.hangman-word span{border-bottom:3px solid var(--muted-2);min-width:22px;text-align:center;}
-.hangman-kb{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:480px;margin:0 auto;}
-.hk-btn{width:32px;height:36px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--text);font-weight:700;}
-.hk-btn.used-good{background:rgba(90,223,143,.25);border-color:#5adf8f;}
-.hk-btn.used-bad{background:rgba(255,93,108,.25);border-color:var(--danger);color:#666;}
-.hint-box{margin-top:16px;background:rgba(255,176,32,.1);border:1px dashed var(--accent);border-radius:var(--r-sm);
-  padding:10px 14px;font-size:13.5px;color:#ffdca0;display:none;}
-.feedback-msg{margin-top:16px;padding:12px 16px;border-radius:var(--r-sm);font-weight:700;font-size:14px;display:none;}
-.feedback-msg.ok{background:rgba(90,223,143,.15);color:#8fffc0;display:block;}
-.feedback-msg.bad{background:rgba(255,93,108,.15);color:#ffc7cc;display:block;}
-.modal-actions{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;}
-.build-step{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--line);}
-.build-step:last-child{border:none;}
-.build-step .step-label{font-size:12px;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+        .lab-link-box {
+            background: white;
+            border: 2px solid var(--border);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .lab-link-box p { color: var(--text); }
+        .lab-link-box a {
+            color: var(--g-blue);
+            font-size: 22px;
+            font-weight: 800;
+            text-decoration: none;
+            pointer-events: auto; /* Permite clique */
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
+        }
+        .lab-link-box a:hover { color: #174ea6; text-decoration: underline; }
 
-/* ---------- TEACHER ---------- */
-.teacher-wrap{max-width:980px;margin:0 auto;padding:30px 20px 60px;}
-.teacher-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px;}
-table.teacher-table{width:100%;border-collapse:collapse;background:var(--surface);border-radius:var(--r-md);overflow:hidden;}
-table.teacher-table th, table.teacher-table td{padding:12px 16px;text-align:left;font-size:14px;border-bottom:1px solid var(--line);}
-table.teacher-table th{background:var(--surface-2);color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.5px;}
-table.teacher-table tr:last-child td{border-bottom:none;}
-.mini-bar{background:var(--surface-2);height:8px;border-radius:99px;width:120px;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:8px;}
-.mini-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));}
-.danger-zone{margin-top:34px;border:1px dashed var(--danger);border-radius:var(--r-md);padding:20px;background:rgba(255,93,108,.05);}
-.danger-zone h3{margin:0 0 6px;color:#ff9aa4;}
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--surface-2);border:1px solid var(--line);
-  padding:10px 20px;border-radius:999px;font-size:13px;font-weight:700;z-index:100;opacity:0;transition:opacity .3s;pointer-events:none;}
-.toast.show{opacity:1;}
-.save-indicator{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px;}
-.confetti-piece{position:fixed;width:8px;height:8px;top:-10px;z-index:200;pointer-events:none;border-radius:2px;}
-@media (max-width:600px){
-  .trail-node{width:70px;height:70px;font-size:22px;}
-  .match-grid{grid-template-columns:1fr;}
-  .memory-grid{grid-template-columns:repeat(3,1fr);}
-  .cw-clue{width:150px;font-size:12px;}
-  .modal-body{padding:18px;}
-}
-</style>
+        /* ESTILOS DOS PASSOS (STEPS) */
+        .step-container {
+            background: var(--light);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 18px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .bg-blue { background-color: var(--g-blue); }
+        .bg-red { background-color: var(--g-red); }
+        .bg-yellow { background-color: var(--g-yellow); color: var(--dark); }
+        .bg-green { background-color: var(--g-green); }
+
+        .step-explanation {
+            background: white;
+            border-left: 4px solid var(--border);
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        /* BLOCOS DE CÓDIGO JS */
+        .code-block {
+            font-family: 'Fira Code', monospace;
+            background-color: var(--code-bg);
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 15px;
+            margin-top: 10px;
+            pointer-events: none; /* Impede cópia */
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            border-left: 4px solid #5f6368;
+        }
+        .keyword { color: #c678dd; } 
+        .string { color: #98c379; } 
+        .function { color: #61afef; } 
+        .operator { color: #e5c07b; } 
+        .number { color: #d19a66; }
+        .boolean { color: #d19a66; }
+        .comment { color: #5c6370; font-style: italic; }
+
+        /* CONTROLES FLUTUANTES */
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .btn-control {
+            background: white;
+            color: var(--g-blue);
+            border: 1px solid var(--border);
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+
+        .btn-control:hover { background: #f1f3f4; }
+        
+        /* CABEÇALHO DA PÁGINA */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 4px solid var(--g-blue);
+            padding-bottom: 15px;
+        }
+        .page-header-info { text-align: right; color: var(--text); font-size: 14px;}
+        
+        .page-number {
+            position: absolute;
+            bottom: 30px;
+            right: 70px;
+            font-size: 14px;
+            color: #80868b;
+            font-weight: bold;
+        }
+
+        /* LOGO GOOGLE MOCK */
+        .g-logo {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 32px;
+            letter-spacing: -1px;
+        }
+        .g-logo span:nth-child(1) { color: var(--g-blue); }
+        .g-logo span:nth-child(2) { color: var(--g-red); }
+        .g-logo span:nth-child(3) { color: var(--g-yellow); }
+        .g-logo span:nth-child(4) { color: var(--g-blue); }
+        .g-logo span:nth-child(5) { color: var(--g-green); }
+        .g-logo span:nth-child(6) { color: var(--g-red); }
+
+    </style>
 </head>
 <body>
 
-<!-- ===================== LOGIN ALUNO ===================== -->
-<div id="screen-login" class="center-screen">
-  <div class="card login-card">
-    <div class="brand">
-      <div class="brand-badge">🚀</div>
-      <div>
-        <h1>Trilha do Código 3</h1>
-        <p>Revisão rápida · 40 minutos</p>
-      </div>
-    </div>
-    <div class="field">
-      <label for="sel-student">Selecione seu nome</label>
-      <select id="sel-student"></select>
-    </div>
-    <div class="field">
-      <label for="inp-pass">Senha (sua data de nascimento, sem barras — ex: 15022011)</label>
-      <input type="password" id="inp-pass" inputmode="numeric" maxlength="8" placeholder="DDMMAAAA">
-    </div>
-    <div class="login-actions">
-      <button class="btn btn-primary" style="justify-content:center" onclick="handleStudentLogin()">Entrar na trilha 🚀</button>
-    </div>
-    <div id="login-error" class="login-error"></div>
-    <div class="teacher-link"><button onclick="showProfessorLogin()">Sou professor(a)</button></div>
-  </div>
+<!-- CONTROLES -->
+<div class="controls">
+    <button class="btn-control" onclick="downloadHTML()"><i class="fa-solid fa-download"></i> Baixar HTML</button>
 </div>
 
-<!-- ===================== LOGIN PROFESSOR ===================== -->
-<div id="screen-prof-login" class="center-screen hidden">
-  <div class="card login-card">
-    <div class="brand">
-      <div class="brand-badge" style="background:linear-gradient(135deg,var(--accent),var(--accent-2));">🧑‍🏫</div>
-      <div><h1 style="font-size:22px;">Modo Professor</h1><p>Acompanhamento da turma</p></div>
+<!-- ==========================================
+     PÁGINA 1
+     ========================================== -->
+<div class="page" id="page1">
+    <div class="page-header">
+        <div class="g-logo">
+            <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
+        </div>
+        <div class="page-header-info">
+            <strong>Prof. Rodrigo G. Pelages</strong><br>
+            Tecnologia & Inovação
+        </div>
     </div>
-    <div class="field">
-      <label for="inp-prof-pass">Senha de acesso</label>
-      <input type="password" id="inp-prof-pass" placeholder="••••••••">
+
+    <h1>Missão: Street View</h1>
+    <p style="text-align: center; color: var(--text); margin-bottom: 20px;">Mapeando o Sítio Histórico de Muqui</p>
+
+    <div class="alert-box">
+        <i class="fa-solid fa-car-side"></i>
+        <span><strong>Modo Desenvolvedor:</strong> Atalhos de cópia estão bloqueados. Digite a lógica linha por linha e desenvolva o cérebro da máquina!</span>
     </div>
-    <div class="login-actions">
-      <button class="btn btn-accent" style="justify-content:center" onclick="handleProfLogin()">Acessar painel</button>
-      <button class="btn btn-ghost" style="justify-content:center" onclick="showStudentLogin()">Voltar</button>
+
+    <div class="lab-link-box">
+        <p style="margin-bottom: 5px;">Mantenha a API de Desenvolvimento (Laboratório) aberta em outra aba:</p>
+        <a href="https://rodrigogpelages.github.io/laboratoriovirtual/" target="_blank">
+            <i class="fa-solid fa-code"></i> Acessar Laboratório Virtual
+        </a>
     </div>
-    <div id="prof-login-error" class="login-error"></div>
-  </div>
+
+    <h2><i class="fa-solid fa-location-dot" style="color: var(--g-red);"></i> Fase 1: Calibrando o GPS</h2>
+
+    <div class="step-container">
+        <div class="step-number bg-blue">1</div>
+        <h3><i class="fa-solid fa-id-badge" style="color: var(--g-blue);"></i> O Motorista do Google</h3>
+        <div class="step-explanation" style="border-left-color: var(--g-blue);">
+            O sistema precisa registrar quem vai dirigir o carro do Street View. Use o comando <code>prompt</code> para perguntar.
+        </div>
+        <div class="code-block" style="border-left-color: var(--g-blue);">
+            <span class="comment">// 1. Identificação do Funcionário</span><br>
+            <span class="keyword">var</span> motorista <span class="operator">=</span> <span class="function">prompt</span>(<span class="string">"Acesso Google Maps. Qual o nome do motorista?"</span>);
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number bg-red">2</div>
+        <h3><i class="fa-solid fa-city" style="color: var(--g-red);"></i> Definindo o Alvo (String)</h3>
+        <div class="step-explanation" style="border-left-color: var(--g-red);">
+            Variáveis de texto devem ficar entre aspas. Defina a nossa cidade-alvo capixaba.
+        </div>
+        <div class="code-block" style="border-left-color: var(--g-red);">
+            <span class="comment">// 2. Cidade Alvo</span><br>
+            <span class="keyword">var</span> local <span class="operator">=</span> <span class="string">"Sítio Histórico de Muqui"</span>;
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number bg-yellow">3</div>
+        <h3><i class="fa-solid fa-battery-full" style="color: var(--g-yellow);"></i> Bateria das Câmeras (Number)</h3>
+        <div class="step-explanation" style="border-left-color: var(--g-yellow);">
+            Números não levam aspas. A bateria da câmera 360 graus do teto do carro começa em 100%.
+        </div>
+        <div class="code-block" style="border-left-color: var(--g-yellow);">
+            <span class="comment">// 3. Energia do Equipamento</span><br>
+            <span class="keyword">var</span> bateria <span class="operator">=</span> <span class="number">100</span>;
+        </div>
+    </div>
+
+    <div class="page-number">Página 1</div>
 </div>
 
-<!-- ===================== TRILHA ===================== -->
-<div id="screen-trail" class="hidden">
-  <div class="topbar">
-    <div class="who">
-      <div class="avatar-chip" id="topbar-avatar">?</div>
-      <div>
-        <div id="topbar-name" style="font-size:14px;">—</div>
-        <div class="save-indicator" id="save-indicator">💾 sincronizado</div>
-      </div>
+<!-- ==========================================
+     PÁGINA 2
+     ========================================== -->
+<div class="page" id="page2">
+    
+    <h2><i class="fa-solid fa-camera-retro" style="color: var(--g-green);"></i> Fase 2: O Mapeamento Inicial</h2>
+
+    <div class="step-container">
+        <div class="step-number bg-green">4</div>
+        <h3><i class="fa-solid fa-list-ul" style="color: var(--g-green);"></i> Rota Turística (Array)</h3>
+        <div class="step-explanation" style="border-left-color: var(--g-green);">
+            Para guardar vários lugares mapeados em uma variável só, usamos uma Lista (Array) com colchetes <code>[ ]</code>.
+        </div>
+        <p style="font-size: 14px;">Você acabou de tirar fotos em alta resolução da Estação e da Igreja Matriz. Registre:</p>
+        <div class="code-block" style="border-left-color: var(--g-green);">
+            <span class="comment">// 4. Locais Fotogrados Inicialmente</span><br>
+            <span class="keyword">var</span> mapeado <span class="operator">=</span> [<span class="string">"Estação Ferroviária"</span>, <span class="string">"Igreja Matriz São João Batista"</span>];
+        </div>
     </div>
-    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
-    <div class="stat-pill">⭐ <span id="stat-score">0</span> pts</div>
-    <div class="stat-pill">🧩 <span id="stat-count">0</span>/30</div>
-    <div class="stat-pill timer-pill" id="timer-pill">⏱ 70:00</div>
-    <button class="btn btn-ghost" style="padding:8px 14px;font-size:13px;" onclick="logout()">Sair</button>
-  </div>
-  <div class="trail-wrap" id="trail-wrap"></div>
+
+    <div class="step-container">
+        <div class="step-number bg-blue">5</div>
+        <h3><i class="fa-solid fa-masks-theater" style="color: var(--g-blue);"></i> O Folclore (Push)</h3>
+        <div class="step-explanation" style="border-left-color: var(--g-blue);">
+            O carro do Google achou a rota do Carnaval! Use o comando <code>.push()</code> para injetar esse dado na lista.
+        </div>
+        <p style="font-size: 14px;">Mande a Praça do Boi Pintadinho direto para o banco de dados da lista:</p>
+        <div class="code-block" style="border-left-color: var(--g-blue);">
+            <span class="comment">// 5. Adicionando ao Array</span><br>
+            mapeado.<span class="function">push</span>(<span class="string">"Praça do Boi Pintadinho"</span>);
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number bg-red">6</div>
+        <h3><i class="fa-solid fa-plug-circle-minus" style="color: var(--g-red);"></i> Desgaste da Câmera (Matemática)</h3>
+        <div class="step-explanation" style="border-left-color: var(--g-red);">
+            Fotografar centenas de casarões históricos gasta energia. O computador resolve a subtração e atualiza a variável.
+        </div>
+        <div class="code-block" style="border-left-color: var(--g-red);">
+            <span class="comment">// 6. Gasto de Bateria</span><br>
+            bateria <span class="operator">=</span> bateria <span class="operator">-</span> <span class="number">20</span>;
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number bg-yellow">7</div>
+        <h3><i class="fa-solid fa-satellite-dish" style="color: var(--g-yellow);"></i> Painel do Carro (Saída de Dados)</h3>
+        <div class="step-explanation" style="border-left-color: var(--g-yellow);">
+            Vamos usar o <code>alert</code> com o sinal de <code>+</code> para juntar a nossa mensagem com os dados das variáveis!
+        </div>
+        <div class="code-block" style="border-left-color: var(--g-yellow);">
+            <span class="comment">// 7. Status em Tempo Real</span><br>
+            <span class="function">alert</span>(<span class="string">"Mapeamento inicial em "</span> <span class="operator">+</span> local <span class="operator">+</span> <span class="string">" fluindo bem. Bateria em: "</span> <span class="operator">+</span> bateria <span class="operator">+</span> <span class="string">"%"</span>);
+        </div>
+    </div>
+
+    <div class="page-number">Página 2</div>
 </div>
 
-<!-- ===================== PAINEL PROFESSOR ===================== -->
-<div id="screen-teacher" class="hidden">
-  <div class="topbar">
-    <div class="who"><div class="avatar-chip">🧑‍🏫</div><div style="font-weight:800;">Painel do Professor</div></div>
-    <button class="btn btn-ghost" style="padding:8px 14px;font-size:13px;" onclick="refreshTeacherData()">🔄 Atualizar</button>
-    <button class="btn btn-ghost" style="padding:8px 14px;font-size:13px;" onclick="openTeacherTrailView()">👁️ Ver trilha</button>
-    <button class="btn btn-ghost" style="padding:8px 14px;font-size:13px;" onclick="logout()">Sair</button>
-  </div>
-  <div class="teacher-wrap">
-    <div class="teacher-head">
-      <h2 style="margin:0;">Andamento da turma</h2>
-      <div class="stat-pill">👥 <span id="tt-total">0</span> alunos iniciaram</div>
+<!-- ==========================================
+     PÁGINA 3
+     ========================================== -->
+<div class="page" id="page3">
+    
+    <h2><i class="fa-solid fa-mug-hot" style="color: var(--g-green);"></i> Fase 3: Parada Estratégica</h2>
+
+    <div class="step-container">
+        <div class="step-number bg-green">8</div>
+        <h3><i class="fa-solid fa-store" style="color: var(--g-green);"></i> O Mercado Regional (Push)</h3>
+        <div class="step-explanation" style="border-left-color: var(--g-green);">
+            O motorista parou para mapear o Mercado Regional dos Vales e Café.
+        </div>
+        <p style="font-size: 14px;">Adicione este ponto turístico importante à nossa lista:</p>
+        <div class="code-block" style="border-left-color: var(--g-green);">
+            <span class="comment">// 8. Mapeando o Mercado</span><br>
+            mapeado.<span class="function">push</span>(<span class="string">"Mercado Regional dos Vales e Café"</span>);
+        </div>
     </div>
-    <div style="overflow-x:auto;">
-      <table class="teacher-table">
-        <thead><tr><th>Aluno</th><th>Progresso</th><th>Pontuação</th><th>Dicas usadas</th><th>Última atividade</th></tr></thead>
-        <tbody id="teacher-tbody"><tr><td colspan="5" style="color:var(--muted);">Carregando dados...</td></tr></tbody>
-      </table>
+
+    <div class="step-container">
+        <div class="step-number bg-blue">9</div>
+        <h3><i class="fa-solid fa-battery-three-quarters" style="color: var(--g-blue);"></i> Recarga Rápida (Soma)</h3>
+        <div class="step-explanation" style="border-left-color: var(--g-blue);">
+            Enquanto o carro mapeava o Solar do Lagarto, aproveitamos para recarregar as baterias.
+        </div>
+        <p style="font-size: 14px;">Some 15% à bateria atual do equipamento:</p>
+        <div class="code-block" style="border-left-color: var(--g-blue);">
+            <span class="comment">// 9. Recarregando</span><br>
+            bateria <span class="operator">=</span> bateria <span class="operator">+</span> <span class="number">15</span>;
+        </div>
     </div>
-    <div class="danger-zone">
-      <h3>⚠️ Zona de reset</h3>
-      <p style="font-size:13.5px;color:var(--muted);margin:0 0 14px;">Isso apaga o andamento salvo da <b>Trilha 3</b> de todos os alunos (pontuação, progresso e dicas). O progresso das Trilhas 1 e 2 não é afetado. Use apenas ao iniciar uma nova aplicação desta revisão.</p>
-      <button class="btn btn-danger" onclick="resetTrail()">Resetar Trilha 3 de todos os alunos</button>
+
+    <div class="step-container">
+        <div class="step-number bg-red">10</div>
+        <h3><i class="fa-solid fa-clipboard-check" style="color: var(--g-red);"></i> Verificando a Lista (Console)</h3>
+        <div class="step-explanation" style="border-left-color: var(--g-red);">
+            Vamos usar o <code>console.log</code> para verificar silenciosamente, na área de desenvolvedor, se a lista está sendo alimentada corretamente.
+        </div>
+        <div class="code-block" style="border-left-color: var(--g-red);">
+            <span class="comment">// 10. Verificação do Array</span><br>
+            <span class="function">console.log</span>(<span class="string">"Locais já mapeados: "</span>, mapeado);
+        </div>
     </div>
-  </div>
+
+    <div class="page-number">Página 3</div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- ==========================================
+     PÁGINA 4
+     ========================================== -->
+<div class="page" id="page4">
+    
+    <h2><i class="fa-solid fa-code-branch" style="color: var(--g-blue);"></i> Fase 4: Raciocínio Espacial</h2>
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <div class="step-container">
+        <div class="step-number bg-yellow">11</div>
+        <h3><i class="fa-solid fa-road-barrier" style="color: var(--g-yellow);"></i> Rua Estreita (Prompt)</h3>
+        <div class="step-explanation" style="border-left-color: var(--g-yellow);">
+            A inteligência do sistema pergunta ao motorista se ele encontrou um obstáculo histórico pela frente, como as calçadas de pedra do Sítio Histórico.
+        </div>
+        <p style="font-size: 14px;">Faça a pergunta e peça para responder "sim" ou "nao":</p>
+        <div class="code-block" style="border-left-color: var(--g-yellow);">
+            <span class="comment">// 11. O Obstáculo</span><br>
+            <span class="keyword">var</span> ruaEstreita <span class="operator">=</span> <span class="function">prompt</span>(<span class="string">"A rua dos casarões está muito estreita para o carro? (sim/nao)"</span>);
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number bg-green">12</div>
+        <h3><i class="fa-solid fa-person-hiking" style="color: var(--g-green);"></i> A Decisão Lógica (If / Else)</h3>
+        <div class="step-explanation" style="border-left-color: var(--g-green);">
+            O Google possui mochilas com câmeras chamadas "Trekker" para ruas que carros não entram. Teste a variável com duplo igual (<code>==</code>).
+        </div>
+        <p style="font-size: 14px;">Preste muita atenção nas chaves e parênteses do código abaixo:</p>
+        <div class="code-block" style="border-left-color: var(--g-green);">
+            <span class="comment">// 12. Condição de Rota</span><br>
+            <span class="keyword">if</span> (ruaEstreita <span class="operator">==</span> <span class="string">"sim"</span>) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"O Carro parou. Modo câmera de mochila (Trekker) ativado!"</span>);<br>
+            } <span class="keyword">else</span> {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"Perfeito. O carro avançou pelo calçamento de pedra!"</span>);<br>
+            }
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number bg-blue">13</div>
+        <h3><i class="fa-solid fa-battery-quarter" style="color: var(--g-blue);"></i> Gasto Final (Subtração)</h3>
+        <div class="step-explanation" style="border-left-color: var(--g-blue);">
+            Mapear todo o restante do casario consumiu grande parte da energia.
+        </div>
+        <div class="code-block" style="border-left-color: var(--g-blue);">
+            <span class="comment">// 13. Gasto Final de Bateria</span><br>
+            bateria <span class="operator">=</span> bateria <span class="operator">-</span> <span class="number">60</span>;
+        </div>
+    </div>
+
+    <div class="page-number">Página 4</div>
+</div>
+
+<!-- ==========================================
+     PÁGINA 5
+     ========================================== -->
+<div class="page" id="page5">
+
+    <div class="step-container">
+        <div class="step-number bg-red">14</div>
+        <h3><i class="fa-solid fa-triangle-exclamation" style="color: var(--g-red);"></i> Verificação de Segurança (If / Else)</h3>
+        <div class="step-explanation" style="border-left-color: var(--g-red);">
+            Antes de fazer o upload, precisamos checar se a bateria não zerou ou ficou negativa durante a operação.
+        </div>
+        <p style="font-size: 14px;">Verifique se a bateria é maior que 0:</p>
+        <div class="code-block" style="border-left-color: var(--g-red);">
+            <span class="comment">// 14. Checagem de Sistema</span><br>
+            <span class="keyword">if</span> (bateria <span class="operator">&gt;</span> <span class="number">0</span>) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"Bateria ok. Preparando para enviar arquivos."</span>);<br>
+            } <span class="keyword">else</span> {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">alert</span>(<span class="string">"Atenção: Sistema desligou por falta de energia!"</span>);<br>
+            }
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number bg-yellow">15</div>
+        <h3><i class="fa-brands fa-google-drive" style="color: var(--g-yellow);"></i> Enviando para os Servidores</h3>
+        <div class="step-explanation" style="border-left-color: var(--g-yellow);">
+            A última etapa do seu código. Usamos o <code>\n</code> dentro do texto para criar uma quebra de linha visualmente bonita.
+        </div>
+        <p style="font-size: 14px;">Junte todas as variáveis para criar a janela de sincronização final:</p>
+        <div class="code-block" style="border-left-color: var(--g-yellow);">
+            <span class="comment">// 15. Conclusão da Missão</span><br>
+            <span class="function">alert</span>(<span class="string">"=== UPLOAD CONCLUÍDO ===\nMotorista: "</span> <span class="operator">+</span> motorista <span class="operator">+</span> <span class="string">"\nImagens Salvas: "</span> <span class="operator">+</span> mapeado <span class="operator">+</span> <span class="string">"\nBateria Restante: "</span> <span class="operator">+</span> bateria <span class="operator">+</span> <span class="string">"%\nSincronizando com o Google Maps..."</span>);
+        </div>
+    </div>
+
+    <div class="step-container" style="background: var(--dark); color: white; border: none; text-align: center; margin-top: 40px; padding: 40px;">
+        <i class="fa-solid fa-play" style="font-size: 60px; color: var(--g-blue); margin-bottom: 20px;"></i>
+        <h3 style="color: white; font-size: 30px; justify-content: center;">Upload do Código</h3>
+        
+        <p style="font-size: 18px; margin-top: 20px; text-align: left; color: #cbd5e1;">
+            O servidor do carro está pronto. Agora, no <strong>Laboratório Virtual</strong>:
+        </p>
+
+        <ul style="font-size: 18px; text-align: left; color: #ffffff; margin-left: 20px; line-height: 1.8; margin-top: 15px;">
+            <li>Clique no botão azul <strong>"Run" (Executar)</strong>.</li>
+            <li>Responda aos Prompts. Teste o caminho respondendo "sim" para a rua estreita!</li>
+            <li>Abra o Console do navegador (F12) para ver o <code>console.log</code> funcionando!</li>
+            <li>Verificou o alerta final com seus dados do Array e da Bateria corretos?</li>
+            <li style="color: var(--g-yellow); font-weight: bold;">Copie TODO o código do laboratório (Ctrl+A / Ctrl+C) e envie no PDA! O mundo precisa ver Muqui no Street View.</li>
+        </ul>
+    </div>
+
+    <div class="page-number">Página 5</div>
+</div>
 
 <script>
-/* =========================================================
-   CONFIGURAÇÃO FIREBASE
-========================================================= */
-const firebaseConfig = {
-  apiKey: "AIzaSyApx9vGYQeIzuIF_wPw0iJcMGgDkUvB1CM",
-  authDomain: "portal-alunos-tech.firebaseapp.com",
-  databaseURL: "https://portal-alunos-tech-default-rtdb.firebaseio.com",
-  projectId: "portal-alunos-tech",
-  storageBucket: "portal-alunos-tech.firebasestorage.app",
-  messagingSenderId: "526230859323",
-  appId: "1:526230859323:web:17220652e5c85e40b1361e",
-  measurementId: "G-8FGSBG1SMF"
-};
-let fbReady = false;
-let db = null;
-try{
-  firebase.initializeApp(firebaseConfig);
-  db = firebase.database();
-  fbReady = true;
-}catch(e){ console.warn("Firebase indisponível, usando apenas armazenamento local.", e); }
+    // ==========================================
+    // SCRIPTS DE BLOQUEIO ANTI-CÓPIA / SEGURANÇA
+    // ==========================================
 
-const PROF_PASSWORD = "prof2026";
-const TRAIL_DURATION_MIN = 40;
-
-/* =========================================================
-   ALUNOS
-========================================================= */
-const STUDENTS = [
-  {id:"s01", name:"ALLICIA P. F. F.", dob:"15022011"},
-  {id:"s02", name:"BEATRIZ M. S.", dob:"21122009"},
-  {id:"s03", name:"DIENIFFER P. D. S.", dob:"20022011"},
-  {id:"s04", name:"ELOA H. D. M.", dob:"16122010"},
-  {id:"s05", name:"GABRIEL D. D. S.", dob:"28092010", adapted:true},
-  {id:"s06", name:"GABRIELLE M. D. Q.", dob:"04032011"},
-  {id:"s07", name:"IARA P. D. S.", dob:"15052010"},
-  {id:"s08", name:"IARA R. R.", dob:"14122010"},
-  {id:"s09", name:"JULIA A. M. D. S. X.", dob:"26012011"},
-  {id:"s10", name:"JULIANA B. P. D. S.", dob:"13062010"},
-  {id:"s11", name:"JULIANA N. A.", dob:"19022011"},
-  {id:"s12", name:"KAMILLY V. E. Z.", dob:"16072010"},
-  {id:"s13", name:"KAUAN P. M.", dob:"11062010"},
-  {id:"s14", name:"LARISSA M. G.", dob:"08062010"},
-  {id:"s15", name:"LETICIA S. D. M.", dob:"09092009"},
-  {id:"s16", name:"LUIZ P. R. C.", dob:"29042008"},
-  {id:"s17", name:"MANUELA F. D. S.", dob:"05102010"},
-  {id:"s18", name:"MARCELLY L. M.", dob:"30122009"},
-  {id:"s19", name:"MARIA C. F. B.", dob:"10032011"},
-  {id:"s20", name:"MARIA C. H. R.", dob:"03032011"},
-  {id:"s21", name:"MARIA F. X. P.", dob:"04092009"},
-  {id:"s22", name:"MARIA V. S. D. S. C.", dob:"31122010"},
-  {id:"s23", name:"MARIANA A. D. S.", dob:"30032011"},
-  {id:"s24", name:"MATEUS B. F.", dob:"05102010"},
-  {id:"s25", name:"MAYARA P. G.", dob:"17122010"},
-  {id:"s26", name:"MAYRA M. A.", dob:"27062010"},
-  {id:"s27", name:"MAYRON V. V. N. R.", dob:"18102010"},
-  {id:"s28", name:"NATHALIA E. C.", dob:"23042010"},
-  {id:"s29", name:"PEDRO H. D. S. C.", dob:"07012011", adapted:true},
-  {id:"s30", name:"PEDRO L. L. D. S.", dob:"06032011"},
-  {id:"s31", name:"RAFAEL D. A. S.", dob:"13072009"},
-  {id:"s32", name:"RAFAELA B. F.", dob:"14042010"},
-  {id:"s33", name:"RAFAELLA S. L.", dob:"07042010"},
-  {id:"s34", name:"RAFAELLI S. A.", dob:"24012011"},
-  {id:"s35", name:"THALLIS D. S. L.", dob:"17092010"},
-  {id:"s36", name:"THAYANE B. L.", dob:"22022011"},
-  {id:"s37", name:"VALENTINNA D. A. C.", dob:"02012011"},
-  {id:"s38", name:"YASMIN C. D. O.", dob:"26052010"},
-  {id:"s39", name:"YUD C. R. M. P.", dob:"06022011"},
-  {id:"s40", name:"LUCAS C. V.", dob:"22102010"}
-];
-
-/* =========================================================
-   DESAFIOS (30) — 3 módulos de 10
-========================================================= */
-const MODULES = [
-  {key:0, name:"Fundamentos", subtitle:"Variáveis, tipos de dados, entrada e saída", icon:"📦"},
-  {key:1, name:"Operadores", subtitle:"Aritméticos, relacionais e lógicos", icon:"⚙️"},
-  {key:2, name:"Condicionais", subtitle:"if / else e programas que decidem", icon:"🧭"}
-];
-
-function cb(codeHtml){ return codeHtml; } // helper apenas para legibilidade
-
-const CHALLENGES = [
-/* ---------------- MÓDULO 0 — FUNDAMENTOS (revisão 3) ---------------- */
-{id:1, module:0, type:"quiz", points:10,
-  teach:"<span class='lead'>Tipos numéricos</span>Em JavaScript, tanto números inteiros (como 3) quanto números com casas decimais (como 3.5) são do mesmo tipo: <code>Number</code>.",
-  question:"Qual é o tipo de dado correto para armazenar o valor 3.5?",
-  options:["Number","String","Boolean","Undefined"],
-  correct:0,
-  hint:["Não importa se o número tem casas decimais ou não — o tipo é o mesmo.","Number é o tipo usado para qualquer valor numérico."]},
-
-{id:2, module:0, type:"match", points:15,
-  teach:"<span class='lead'>Comandos e palavras-chave (revisão)</span>Associe cada comando ao que ele faz.",
-  pairs:[
-    {left:"let", right:"Cria uma variável que pode mudar de valor"},
-    {left:"const", right:"Cria uma variável que não muda de valor"},
-    {left:"prompt()", right:"Pede uma informação ao usuário"}
-  ],
-  hint:["const vem de 'constante' — algo que não muda.","let vem de 'deixe' — deixa o valor variar depois."]},
-
-{id:3, module:0, type:"fill", points:10,
-  teach:"<span class='lead'>Concatenando texto e variável</span>Para juntar um texto fixo com o valor de uma variável, usamos o operador de soma entre eles.",
-  fillLine:'let nome = prompt("Qual seu nome?");\nconsole.log("Oi, " ___ nome);',
-  blanks:[{id:"b1", answers:["+"]}],
-  hint:["É o mesmo sinal usado para somar números.","Quando usado com texto, ele junta (concatena) em vez de somar."]},
-
-{id:4, module:0, type:"wordsearch", points:15,
-  teach:"<span class='lead'>Vocabulário — Fundamentos (revisão)</span>Encontre os termos no caça-palavras.",
-  words:["CONST","ALERTA","MEMORIA","VALOR"],
-  size:10,
-  hint:["MEMORIA é onde as variáveis guardam seus valores.","VALOR é o conteúdo guardado dentro de uma variável."]},
-
-{id:5, module:0, type:"truefalse", points:10,
-  teach:"<span class='lead'>const</span>Diferente de <code>let</code>, uma variável criada com <code>const</code> não pode ter seu valor alterado depois de definida.",
-  statement:"Em JavaScript, uma variável criada com const permite alterar o valor dela depois de criada.",
-  correct:false,
-  hint:["const significa 'constante' — pense em algo que nunca muda.","Se você tentar mudar o valor de um const, o JavaScript dá erro."]},
-
-{id:6, module:0, type:"build", points:25, final:true,
-  teach:"<span class='lead'>Desafio final do módulo</span>Vamos montar um programa que soma dois números digitados pelo usuário. Atenção: o prompt() sempre devolve texto, então é preciso transformar o valor em número antes de somar, usando <code>Number()</code>.",
-  steps:[
-    {q:"Qual comando pega o primeiro número digitado pelo usuário?", options:["prompt()","console.log()","typeof"], correct:0},
-    {q:"Como transformamos o texto do prompt em um número de verdade, antes de somar?", options:["Number(valor)","texto(valor)","string(valor)"], correct:0},
-    {q:"Qual comando mostra o resultado da soma na tela?", options:["console.log()","prompt()","let"], correct:0}
-  ],
-  hint:["Sem o Number(), o + juntaria os textos em vez de somar os valores (ex: '2'+'3' vira '23', não 5).","A ordem é: pegar o texto, converter para número, somar, e só depois mostrar o resultado."]},
-
-/* ---------------- MÓDULO 1 — OPERADORES (revisão 3) ---------------- */
-{id:7, module:1, type:"quiz", points:10,
-  teach:"<span class='lead'>Módulo (revisão)</span>Lembrando: o operador <code>%</code> devolve o resto de uma divisão.",
-  question:"Qual o resultado de 15 % 4 em JavaScript?",
-  options:["3","4","11","60"],
-  correct:0,
-  hint:["15 dividido por 4 dá 3, e sobra...","3 vezes 4 é 12. 15 - 12 = ?"]},
-
-{id:8, module:1, type:"predict", points:10,
-  teach:"<span class='lead'>Diferente de (!==)</span>O operador <code>!==</code> verifica se dois valores são diferentes, considerando também o tipo.",
-  code:"let x = 4;\nlet y = 9;\nconsole.log(x !== y);",
-  options:["true","false","Erro","undefined"],
-  correct:0,
-  hint:["x vale 4 e y vale 9 — eles são diferentes.","Como são diferentes, !== (diferente de) resulta em true."]},
-
-{id:9, module:1, type:"fill", points:10,
-  teach:"<span class='lead'>Maioridade</span>Para verificar se alguém já é adulto (18 anos ou mais), usamos o operador 'maior ou igual'.",
-  fillLine:"let adulto = idade ___ 18;",
-  blanks:[{id:"b1", answers:[">="]}],
-  hint:["'Maior ou igual' é o sinal de maior seguido de igual.",">= "]},
-
-{id:10, module:1, type:"hangman", points:15,
-  teach:"<span class='lead'>Forca — Operadores (revisão)</span>Adivinhe a palavra a partir da dica.",
-  word:"ARITMETICO",
-  tip:"Tipo de operador usado para fazer contas, como soma, subtração e multiplicação.",
-  hint:["Tem 10 letras.","Vem da palavra 'aritmética', que é a parte da matemática que trata dos números."]},
-
-{id:11, module:1, type:"truefalse", points:10,
-  teach:"<span class='lead'>== vs ===</span>O <code>===</code> compara valor <b>e</b> tipo ao mesmo tempo; o <code>==</code> compara apenas o valor, ignorando o tipo.",
-  statement:"O operador === compara valor e tipo ao mesmo tempo, enquanto o == compara apenas o valor.",
-  correct:true,
-  hint:["Por isso 10 === '10' é falso, mas 10 == '10' é verdadeiro."]},
-
-{id:12, module:1, type:"maze", points:20, final:true,
-  teach:"<span class='lead'>Desafio final do módulo — Labirinto</span>Avance pelas salas resolvendo cada expressão.",
-  rooms:[
-    {q:"6 % 4", options:["1","2","1.5"], correct:1},
-    {q:"(3 < 5) && (5 < 3)", options:["Verdadeiro","Falso"], correct:1},
-    {q:"(3 < 5) || (5 < 3)", options:["Verdadeiro","Falso"], correct:0},
-    {q:"8 !== '8'", options:["Verdadeiro","Falso"], correct:0}
-  ],
-  hint:["Na sala 1, pense em quantas vezes 4 cabe em 6 e quanto sobra.","Na sala 4, lembre que !== também compara o tipo: número não é igual a texto."]},
-
-/* ---------------- MÓDULO 2 — CONDICIONAIS (revisão 3) ---------------- */
-{id:13, module:2, type:"quiz", points:10,
-  teach:"<span class='lead'>Quando nenhuma condição é verdadeira</span>Se um programa só tem if e else if (sem else) e nenhuma condição for verdadeira, simplesmente nenhum bloco é executado.",
-  question:"O que acontece se nenhuma condição de um if/else if for verdadeira e não houver else?",
-  options:["Nada é executado","O programa trava","O primeiro bloco é executado mesmo assim","Dá erro de sintaxe"],
-  correct:0,
-  hint:["O else é o único bloco que roda 'de qualquer jeito' quando nada mais bateu.","Sem ele, se nenhuma condição for verdadeira, o programa simplesmente segue em frente sem executar nada daquele trecho."]},
-
-{id:14, module:2, type:"order", points:15,
-  teach:"<span class='lead'>Programa: positivo, negativo ou zero</span>Ordene as linhas para criar um programa que classifica um número digitado pelo usuário.",
-  lines:[
-    'let numero = prompt("Digite um número:");',
-    "numero = Number(numero);",
-    "if (numero > 0) {",
-    '  console.log("Positivo");',
-    "} else if (numero < 0) {",
-    '  console.log("Negativo");',
-    "} else {",
-    '  console.log("Zero");',
-    "}"
-  ],
-  hint:["Primeiro pegamos o texto digitado, depois convertemos para número — só então dá para comparar com > e <.","O else (sem condição) sempre fica por último, cobrindo o caso que sobrou: zero."]},
-
-{id:15, module:2, type:"match", points:15,
-  teach:"<span class='lead'>Escolhendo o operador certo</span>Associe cada situação ao operador relacional mais adequado.",
-  pairs:[
-    {left:"Verificar se x é exatamente igual a 10", right:"x === 10"},
-    {left:"Verificar se x é diferente de 10", right:"x !== 10"},
-    {left:"Verificar se x é no mínimo 10", right:"x >= 10"}
-  ],
-  hint:["'No mínimo' quer dizer que 10 também serve — por isso usamos >= e não apenas >."]},
-
-{id:16, module:2, type:"crossword", points:20,
-  teach:"<span class='lead'>Cruzadinha — Condicionais (revisão)</span>Complete as palavras a partir das dicas.",
-  clues:[
-    {clue:"Estrutura que permite ao programa tomar decisões", answer:"CONDICIONAL"},
-    {clue:"Valor lógico que representa 'sim' em programação", answer:"VERDADEIRO"},
-    {clue:"Bloco que executa quando nenhuma condição anterior foi atendida", answer:"SENAO"}
-  ],
-  hint:["CONDICIONAL é uma palavra bem parecida com 'condição'.","SENAO é a tradução direta de else."]},
-
-{id:17, module:2, type:"memory", points:15,
-  teach:"<span class='lead'>Classificando números (revisão)</span>Encontre os pares entre a situação e o resultado esperado.",
-  pairs:[
-    {a:"numero = -5 (numero < 0)", b:"Negativo"},
-    {a:"numero = 0", b:"Zero"},
-    {a:"idade = 15 (idade >= 18)", b:"Falso"}
-  ],
-  hint:["Compare sempre o valor real da variável com a condição escrita entre parênteses."]},
-
-{id:18, module:2, type:"build", points:25, final:true,
-  teach:"<span class='lead'>Desafio final da Trilha 3</span>Vamos montar um sistema de desconto: se o valor da compra for maior que R$100, aplicamos 10% de desconto.",
-  steps:[
-    {q:"Qual comando pega o valor da compra digitado pelo usuário?", options:["prompt()","console.log()","if()"], correct:0},
-    {q:"Qual operador verifica se o valor é maior que 100?", options:[">","<","==" ], correct:0},
-    {q:"Qual estrutura decide entre aplicar ou não o desconto?", options:["if / else","apenas variáveis","apenas operadores"], correct:0},
-    {q:"Qual comando exibe o valor final (com ou sem desconto) na tela?", options:["console.log()","prompt()","typeof"], correct:0}
-  ],
-  hint:["Pense no fluxo completo: entrada → conversão para número → decisão → saída.","Só entra no bloco do desconto quem tiver valor > 100; os demais caem no else."]}
-];
-const TOTAL_CHALLENGES = CHALLENGES.length;
-const TOTAL_POSSIBLE_POINTS = CHALLENGES.reduce((s,c)=>s+c.points,0);
-
-/* =========================================================
-   ESTADO
-========================================================= */
-let currentStudent = null;   // objeto do STUDENTS
-let isTeacherMode = false;   // painel professor
-let teacherExploring = false; // professor navegando na trilha
-let progress = {completed:{}, score:0, hintsUsed:{}, startTime:null, attempts:{}};
-let timerInterval = null;
-let activeChallenge = null;
-let challengeRuntime = {}; // estado temporário de cada tipo de desafio aberto
-
-function isAdapted(){ return !!(currentStudent && currentStudent.adapted) && !teacherExploring; }
-
-/* =========================================================
-   INIT / LOGIN
-========================================================= */
-function populateStudentSelect(){
-  const sel = document.getElementById("sel-student");
-  sel.innerHTML = '<option value="">— escolha seu nome —</option>' +
-    STUDENTS.map(s=>`<option value="${s.id}">${s.name}</option>`).join("");
-}
-populateStudentSelect();
-
-function showStudentLogin(){
-  document.getElementById("screen-prof-login").classList.add("hidden");
-  document.getElementById("screen-login").classList.remove("hidden");
-}
-function showProfessorLogin(){
-  document.getElementById("screen-login").classList.add("hidden");
-  document.getElementById("screen-prof-login").classList.remove("hidden");
-}
-
-function handleStudentLogin(){
-  const id = document.getElementById("sel-student").value;
-  const pass = document.getElementById("inp-pass").value.trim();
-  const errBox = document.getElementById("login-error");
-  errBox.style.display = "none";
-  if(!id){ errBox.textContent = "Selecione seu nome na lista."; errBox.style.display="block"; return; }
-  const student = STUDENTS.find(s=>s.id===id);
-  if(!student || pass !== student.dob){
-    errBox.textContent = "Senha incorreta. Use sua data de nascimento sem barras (ex: 15022011).";
-    errBox.style.display = "block";
-    return;
-  }
-  currentStudent = student;
-  isTeacherMode = false;
-  teacherExploring = false;
-  loadProgressAndStart();
-}
-
-function handleProfLogin(){
-  const pass = document.getElementById("inp-prof-pass").value;
-  const errBox = document.getElementById("prof-login-error");
-  errBox.style.display = "none";
-  if(pass !== PROF_PASSWORD){
-    errBox.textContent = "Senha incorreta.";
-    errBox.style.display = "block";
-    return;
-  }
-  isTeacherMode = true;
-  document.getElementById("screen-prof-login").classList.add("hidden");
-  document.getElementById("screen-teacher").classList.remove("hidden");
-  refreshTeacherData();
-}
-
-function logout(){
-  if(timerInterval) clearInterval(timerInterval);
-  currentStudent = null; isTeacherMode = false; teacherExploring = false;
-  document.getElementById("screen-trail").classList.add("hidden");
-  document.getElementById("screen-teacher").classList.add("hidden");
-  document.getElementById("screen-prof-login").classList.add("hidden");
-  document.getElementById("screen-login").classList.remove("hidden");
-  document.getElementById("inp-pass").value = "";
-}
-
-/* =========================================================
-   PERSISTÊNCIA (Firebase + fallback local)
-========================================================= */
-function localKey(id){ return "trilha3_progress_" + id; }
-const FIREBASE_PROGRESS_NODE = "progress_trilha3"; // mantém a Trilha 1 e a Trilha 2 intactas
-
-function loadProgressAndStart(){
-  const defaultProgress = {completed:{}, score:0, hintsUsed:{}, startTime:Date.now(), attempts:{}};
-  const finish = (data)=>{
-    progress = data || defaultProgress;
-    if(!progress.startTime) progress.startTime = Date.now();
-    if(!progress.completed) progress.completed = {};
-    if(!progress.hintsUsed) progress.hintsUsed = {};
-    if(!progress.attempts) progress.attempts = {};
-    if(typeof progress.score !== "number") progress.score = 0;
-    enterTrail();
-    saveProgress(); // garante criação do registro / startTime
-  };
-  if(fbReady){
-    db.ref("students/"+currentStudent.id+"/"+FIREBASE_PROGRESS_NODE).once("value")
-      .then(snap=> finish(snap.val()))
-      .catch(()=>{
-        const local = localStorage.getItem(localKey(currentStudent.id));
-        finish(local ? JSON.parse(local) : null);
-      });
-  } else {
-    const local = localStorage.getItem(localKey(currentStudent.id));
-    finish(local ? JSON.parse(local) : null);
-  }
-}
-
-let saveTimeout = null;
-function saveProgress(){
-  const indicator = document.getElementById("save-indicator");
-  if(indicator) indicator.textContent = "💾 salvando...";
-  localStorage.setItem(localKey(currentStudent.id), JSON.stringify(progress));
-  const payload = Object.assign({}, progress, {
-    studentName: currentStudent.name,
-    lastActivity: Date.now()
-  });
-  if(fbReady){
-    db.ref("students/"+currentStudent.id+"/"+FIREBASE_PROGRESS_NODE).set(payload)
-      .then(()=>{ if(indicator) indicator.textContent = "💾 sincronizado"; })
-      .catch(()=>{ if(indicator) indicator.textContent = "⚠️ salvo só localmente"; });
-  } else {
-    if(indicator) indicator.textContent = "⚠️ salvo só localmente";
-  }
-}
-
-/* =========================================================
-   TRILHA — RENDERIZAÇÃO
-========================================================= */
-function enterTrail(){
-  document.getElementById("screen-login").classList.add("hidden");
-  document.getElementById("screen-prof-login").classList.add("hidden");
-  document.getElementById("screen-teacher").classList.add("hidden");
-  document.getElementById("screen-trail").classList.remove("hidden");
-  document.getElementById("topbar-name").textContent = currentStudent.name;
-  document.getElementById("topbar-avatar").textContent = currentStudent.name.trim().charAt(0);
-  renderTrail();
-  startTimer();
-}
-
-function openTeacherTrailView(){
-  currentStudent = {id:"__teacher__", name:"Professor(a) — modo revisão", adapted:false};
-  teacherExploring = true;
-  progress = {completed:{}, score:0, hintsUsed:{}, startTime:Date.now(), attempts:{}};
-  // marca tudo como concluído apenas visualmente para navegação livre, sem contar pontos reais
-  document.getElementById("screen-teacher").classList.add("hidden");
-  document.getElementById("screen-trail").classList.remove("hidden");
-  document.getElementById("topbar-name").textContent = "Modo Professor — trilha desbloqueada";
-  document.getElementById("topbar-avatar").textContent = "P";
-  renderTrail();
-  document.getElementById("timer-pill").style.display = "none";
-}
-
-function isUnlocked(challengeId){
-  if(teacherExploring) return true;
-  if(challengeId === 1) return true;
-  return !!progress.completed[challengeId-1];
-}
-function isDone(challengeId){ return !!progress.completed[challengeId]; }
-
-function renderTrail(){
-  const wrap = document.getElementById("trail-wrap");
-  wrap.innerHTML = "";
-  let firstAvailableEl = null;
-  MODULES.forEach(mod=>{
-    const header = document.createElement("div");
-    header.className = "module-header";
-    header.innerHTML = `<div class="eyebrow">Módulo ${mod.key+1}</div><h2>${mod.icon} ${mod.name}</h2><p>${mod.subtitle}</p>`;
-    wrap.appendChild(header);
-    const chs = CHALLENGES.filter(c=>c.module===mod.key);
-    chs.forEach((c, i)=>{
-      const row = document.createElement("div");
-      row.className = "node-row " + (i%2===0 ? "left" : "right");
-      const btn = document.createElement("button");
-      const done = isDone(c.id);
-      const unlocked = isUnlocked(c.id);
-      btn.className = "trail-node " + (done ? "done" : (unlocked ? "available" : "locked"));
-      btn.innerHTML = `<span class="num">${c.id}</span>`;
-      btn.title = c.final ? "Desafio final do módulo" : "Desafio " + c.id;
-      if(unlocked) btn.onclick = ()=>openChallenge(c.id);
-      row.appendChild(btn);
-      wrap.appendChild(row);
-      if(unlocked && !done && !firstAvailableEl) firstAvailableEl = btn;
-      if(i < chs.length-1){
-        const conn = document.createElement("div");
-        conn.className = "node-connector";
-        wrap.appendChild(conn);
-      }
+    document.addEventListener('contextmenu', function(event) {
+        event.preventDefault();
+        alert('Google Security: O uso do botão direito não é permitido. Digite o código no console da API!');
     });
-  });
-  updateStatsBar();
-}
 
-function updateStatsBar(){
-  const doneCount = Object.keys(progress.completed).length;
-  document.getElementById("stat-score").textContent = progress.score;
-  document.getElementById("stat-count").textContent = doneCount;
-  document.getElementById("progress-fill").style.width = (doneCount/TOTAL_CHALLENGES*100).toFixed(0)+"%";
-}
-
-/* =========================================================
-   TIMER
-========================================================= */
-function startTimer(){
-  if(timerInterval) clearInterval(timerInterval);
-  if(teacherExploring){ document.getElementById("timer-pill").style.display="none"; return; }
-  updateTimerDisplay();
-  timerInterval = setInterval(updateTimerDisplay, 1000);
-}
-function updateTimerDisplay(){
-  const pill = document.getElementById("timer-pill");
-  const elapsedMs = Date.now() - progress.startTime;
-  const totalMs = TRAIL_DURATION_MIN*60*1000;
-  const remaining = Math.max(0, totalMs - elapsedMs);
-  const mins = Math.floor(remaining/60000);
-  const secs = Math.floor((remaining%60000)/1000);
-  pill.textContent = "⏱ " + String(mins).padStart(2,"0") + ":" + String(secs).padStart(2,"0");
-  pill.classList.toggle("low", remaining <= 5*60*1000);
-  if(remaining<=0 && !progress.timeUpNotified){
-    progress.timeUpNotified = true;
-    showToast("⏰ Tempo de revisão encerrado! Você pode continuar praticando à vontade.");
-  }
-}
-
-/* =========================================================
-   MODAL DE DESAFIO — ABERTURA
-========================================================= */
-function openChallenge(id){
-  const c = CHALLENGES.find(x=>x.id===id);
-  if(!c) return;
-  activeChallenge = c;
-  challengeRuntime = {solved:false, wrongAttempts:0, hintsShown:0};
-  const modName = MODULES[c.module].name;
-  const backdrop = document.createElement("div");
-  backdrop.className = "modal-backdrop";
-  backdrop.id = "challenge-backdrop";
-  backdrop.innerHTML = `
-    <div class="modal">
-      <div class="modal-head">
-        <span class="tag">${modName} · #${c.id}${c.final?" · Final":""}</span>
-        <h3>${challengeTitle(c)}</h3>
-        <button class="modal-close" onclick="closeChallenge()">✕</button>
-      </div>
-      <div class="modal-body" id="challenge-body"></div>
-    </div>`;
-  document.body.appendChild(backdrop);
-  renderChallengeBody(c);
-}
-function challengeTitle(c){
-  const titles = {quiz:"Quiz relâmpago", match:"Associação", fill:"Complete o código", wordsearch:"Caça-palavras",
-    memory:"Jogo da memória", predict:"Qual é a saída?", order:"Ordene o código", truefalse:"Verdadeiro ou falso",
-    crossword:"Cruzadinha", maze:"Labirinto de decisões", hangman:"Jogo da forca", build:"Desafio integrador"};
-  return titles[c.type] || "Desafio";
-}
-function closeChallenge(){
-  const el = document.getElementById("challenge-backdrop");
-  if(el) el.remove();
-  activeChallenge = null;
-}
-
-function renderChallengeBody(c){
-  const body = document.getElementById("challenge-body");
-  let html = `<div class="teach-box">${c.teach}</div>`;
-  html += `<div id="activity-area"></div>`;
-  html += `<div class="hint-box" id="hint-box"></div>`;
-  html += `<div class="feedback-msg" id="feedback-msg"></div>`;
-  html += `<div class="modal-actions">
-      <button class="btn btn-ghost" onclick="showHint()">💡 Dica</button>
-      <button class="btn btn-primary" id="btn-check" onclick="checkChallenge()">Verificar resposta</button>
-      <button class="btn btn-accent hidden" id="btn-continue" onclick="closeChallenge()">Continuar na trilha ✓</button>
-    </div>`;
-  body.innerHTML = html;
-  renderActivity(c);
-}
-
-/* =========================================================
-   RENDER POR TIPO DE ATIVIDADE
-========================================================= */
-function renderActivity(c){
-  const area = document.getElementById("activity-area");
-  switch(c.type){
-    case "quiz": return renderQuiz(c, area);
-    case "truefalse": return renderTrueFalse(c, area);
-    case "fill": return renderFill(c, area);
-    case "match": return renderMatch(c, area);
-    case "memory": return renderMemory(c, area);
-    case "predict": return renderPredict(c, area);
-    case "order": return renderOrder(c, area);
-    case "wordsearch": return renderWordsearch(c, area);
-    case "crossword": return renderCrossword(c, area);
-    case "maze": return renderMaze(c, area);
-    case "hangman": return renderHangman(c, area);
-    case "build": return renderBuild(c, area);
-  }
-}
-
-function escapeCode(s){ return s.replace(/</g,"&lt;"); }
-function codeToHtml(code){
-  return `<pre class="code-block">${escapeCode(code)}</pre>`;
-}
-
-/* ---- QUIZ ---- */
-function renderQuiz(c, area){
-  area.innerHTML = `<p style="font-weight:700;font-size:15.5px;">${c.question}</p>
-    <div class="options-list" id="opt-list">
-      ${c.options.map((o,i)=>`<button class="opt-btn" data-i="${i}" onclick="selectOption(${i})">${o}</button>`).join("")}
-    </div>`;
-  challengeRuntime.selected = null;
-}
-function selectOption(i){
-  challengeRuntime.selected = i;
-  document.querySelectorAll("#opt-list .opt-btn").forEach(b=>b.classList.remove("selected"));
-  document.querySelector(`#opt-list [data-i="${i}"]`).classList.add("selected");
-}
-
-/* ---- TRUE/FALSE ---- */
-function renderTrueFalse(c, area){
-  area.innerHTML = `<p style="font-weight:700;font-size:15.5px;">${c.statement}</p>
-    <div class="tf-row">
-      <button class="opt-btn" data-v="true" onclick="selectTF(true)">✅ Verdadeiro</button>
-      <button class="opt-btn" data-v="false" onclick="selectTF(false)">❌ Falso</button>
-    </div>`;
-  challengeRuntime.selected = null;
-}
-function selectTF(v){
-  challengeRuntime.selected = v;
-  document.querySelectorAll(".tf-row .opt-btn").forEach(b=>b.classList.remove("selected"));
-  document.querySelector(`.tf-row [data-v="${v}"]`).classList.add("selected");
-}
-
-/* ---- FILL ---- */
-function renderFill(c, area){
-  let line = c.fillLine.replace(/\n/g, "<br>");
-  c.blanks.forEach(b=>{
-    line = line.replace("___", `<input type="text" class="blank-input" id="blank-${b.id}" autocomplete="off">`);
-  });
-  area.innerHTML = `<div class="fill-line mono">${line}</div>`;
-}
-
-/* ---- MATCH ---- */
-function renderMatch(c, area){
-  const lefts = c.pairs.map((p,i)=>({...p, idx:i, side:"L"}));
-  const rights = shuffleArray(c.pairs.map((p,i)=>({...p, idx:i, side:"R"})));
-  challengeRuntime.matched = new Set();
-  challengeRuntime.selLeft = null;
-  area.innerHTML = `<div class="match-grid">
-      <div class="match-col" id="match-left">${lefts.map(p=>`<div class="match-item" data-idx="${p.idx}" onclick="selectMatchLeft(${p.idx})">${p.left}</div>`).join("")}</div>
-      <div class="match-col" id="match-right">${rights.map(p=>`<div class="match-item" data-idx="${p.idx}" onclick="selectMatchRight(${p.idx})">${p.right}</div>`).join("")}</div>
-    </div>`;
-}
-function selectMatchLeft(idx){
-  if(challengeRuntime.matched.has(idx)) return;
-  challengeRuntime.selLeft = idx;
-  document.querySelectorAll("#match-left .match-item").forEach(el=>el.classList.remove("sel"));
-  document.querySelector(`#match-left [data-idx="${idx}"]`).classList.add("sel");
-}
-function selectMatchRight(idx){
-  if(challengeRuntime.matched.has(idx) || challengeRuntime.selLeft===null) return;
-  const leftEl = document.querySelector(`#match-left [data-idx="${challengeRuntime.selLeft}"]`);
-  const rightEl = document.querySelector(`#match-right [data-idx="${idx}"]`);
-  if(challengeRuntime.selLeft === idx){
-    challengeRuntime.matched.add(idx);
-    leftEl.classList.remove("sel"); leftEl.classList.add("matched");
-    rightEl.classList.add("matched");
-    challengeRuntime.selLeft = null;
-    if(challengeRuntime.matched.size === activeChallenge.pairs.length){
-      autoCompleteFeedback(true, "Todos os pares corretos! 🎉");
-    }
-  } else {
-    rightEl.classList.add("shake");
-    registerWrongAttempt();
-    setTimeout(()=>rightEl.classList.remove("shake"), 350);
-  }
-}
-
-/* ---- MEMORY ---- */
-function renderMemory(c, area){
-  let cards = [];
-  c.pairs.forEach((p,i)=>{ cards.push({text:p.a, pairId:i}); cards.push({text:p.b, pairId:i}); });
-  cards = shuffleArray(cards).map((cd,i)=>({...cd, cardId:i}));
-  challengeRuntime.cards = cards;
-  challengeRuntime.flipped = [];
-  challengeRuntime.matched = new Set();
-  area.innerHTML = `<div class="memory-grid" id="mem-grid">
-      ${cards.map(cd=>`<div class="mem-card back" data-id="${cd.cardId}" onclick="flipMemCard(${cd.cardId})">?</div>`).join("")}
-    </div>`;
-}
-function flipMemCard(cardId){
-  if(challengeRuntime.flipped.length>=2) return;
-  const card = challengeRuntime.cards.find(c=>c.cardId===cardId);
-  const el = document.querySelector(`#mem-grid [data-id="${cardId}"]`);
-  if(challengeRuntime.matched.has(cardId) || challengeRuntime.flipped.some(f=>f.cardId===cardId)) return;
-  el.classList.remove("back"); el.textContent = card.text;
-  challengeRuntime.flipped.push(card);
-  if(challengeRuntime.flipped.length===2){
-    const [a,b] = challengeRuntime.flipped;
-    if(a.pairId===b.pairId && a.cardId!==b.cardId){
-      challengeRuntime.matched.add(a.cardId); challengeRuntime.matched.add(b.cardId);
-      document.querySelector(`#mem-grid [data-id="${a.cardId}"]`).classList.add("matched");
-      document.querySelector(`#mem-grid [data-id="${b.cardId}"]`).classList.add("matched");
-      challengeRuntime.flipped = [];
-      if(challengeRuntime.matched.size === challengeRuntime.cards.length){
-        autoCompleteFeedback(true, "Memória de programador! Todos os pares encontrados. 🧠");
-      }
-    } else {
-      registerWrongAttempt();
-      setTimeout(()=>{
-        challengeRuntime.flipped.forEach(f=>{
-          const fe = document.querySelector(`#mem-grid [data-id="${f.cardId}"]`);
-          fe.classList.add("back"); fe.textContent = "?";
-        });
-        challengeRuntime.flipped = [];
-      }, 700);
-    }
-  }
-}
-
-/* ---- PREDICT ---- */
-function renderPredict(c, area){
-  area.innerHTML = `${codeToHtml(c.code)}<p style="font-weight:700;margin-top:14px;">O que será exibido no console?</p>
-    <div class="options-list" id="opt-list">
-      ${c.options.map((o,i)=>`<button class="opt-btn mono" data-i="${i}" onclick="selectOption(${i})">${o}</button>`).join("")}
-    </div>`;
-  challengeRuntime.selected = null;
-}
-
-/* ---- ORDER ---- */
-function renderOrder(c, area){
-  challengeRuntime.order = shuffleArray(c.lines.map((l,i)=>({line:l, orig:i})));
-  renderOrderList();
-}
-function renderOrderList(){
-  const area = document.getElementById("activity-area");
-  area.innerHTML = `<div class="order-list" id="order-list">
-    ${challengeRuntime.order.map((item,pos)=>`
-      <div class="order-item">
-        <span class="idx">${pos+1}</span><span>${escapeCode(item.line)||"&nbsp;"}</span>
-        <div class="arrows">
-          <button onclick="moveOrder(${pos},-1)">▲</button>
-          <button onclick="moveOrder(${pos},1)">▼</button>
-        </div>
-      </div>`).join("")}
-    </div>`;
-}
-function moveOrder(pos, dir){
-  const newPos = pos+dir;
-  if(newPos<0 || newPos>=challengeRuntime.order.length) return;
-  const arr = challengeRuntime.order;
-  [arr[pos], arr[newPos]] = [arr[newPos], arr[pos]];
-  renderOrderList();
-}
-
-/* ---- WORDSEARCH ---- */
-function generateWordSearch(words, size){
-  const grid = Array.from({length:size}, ()=>Array(size).fill(null));
-  const dirs = [[0,1],[1,0]];
-  const placements = [];
-  words.forEach(word=>{
-    let placed = false, tries=0;
-    while(!placed && tries<200){
-      tries++;
-      const dir = dirs[Math.floor(Math.random()*dirs.length)];
-      const maxRow = dir[0]? size-word.length : size-1;
-      const maxCol = dir[1]? size-word.length : size-1;
-      if(maxRow<0||maxCol<0) continue;
-      const row = Math.floor(Math.random()*(maxRow+1));
-      const col = Math.floor(Math.random()*(maxCol+1));
-      let ok = true;
-      for(let i=0;i<word.length;i++){
-        const r=row+dir[0]*i, cc=col+dir[1]*i;
-        if(grid[r][cc]!==null && grid[r][cc]!==word[i]){ ok=false; break; }
-      }
-      if(ok){
-        for(let i=0;i<word.length;i++){
-          const r=row+dir[0]*i, cc=col+dir[1]*i;
-          grid[r][cc]=word[i];
-        }
-        placements.push({word, row, col, dir});
-        placed = true;
-      }
-    }
-  });
-  const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  for(let r=0;r<size;r++) for(let cc=0;cc<size;cc++) if(grid[r][cc]===null) grid[r][cc]=alpha[Math.floor(Math.random()*alpha.length)];
-  return {grid, placements};
-}
-function renderWordsearch(c, area){
-  const {grid} = generateWordSearch(c.words, c.size);
-  challengeRuntime.grid = grid;
-  challengeRuntime.size = c.size;
-  challengeRuntime.found = new Set();
-  challengeRuntime.selecting = null;
-  let html = `<div class="ws-grid" style="grid-template-columns:repeat(${c.size},30px);">`;
-  for(let r=0;r<c.size;r++) for(let cc=0;cc<c.size;cc++)
-    html += `<div class="ws-cell" data-r="${r}" data-c="${cc}" onclick="wsCellClick(${r},${cc})">${grid[r][cc]}</div>`;
-  html += `</div><div class="ws-words" id="ws-words">${c.words.map(w=>`<span class="ws-word-tag" data-w="${w}">${w}</span>`).join("")}</div>`;
-  area.innerHTML = html;
-}
-function wsCellClick(r,c){
-  if(!challengeRuntime.selecting){
-    challengeRuntime.selecting = {r,c};
-    document.querySelector(`.ws-cell[data-r="${r}"][data-c="${c}"]`).classList.add("sel");
-    return;
-  }
-  const start = challengeRuntime.selecting;
-  const cells = [];
-  if(start.r===r){ // horizontal
-    const [c1,c2] = [start.c,c].sort((a,b)=>a-b);
-    for(let cc=c1;cc<=c2;cc++) cells.push({r,c:cc});
-  } else if(start.c===c){ // vertical
-    const [r1,r2] = [start.r,r].sort((a,b)=>a-b);
-    for(let rr=r1;rr<=r2;rr++) cells.push({r:rr,c});
-  } else {
-    clearWsSelection(); return;
-  }
-  const word = cells.map(p=>challengeRuntime.grid[p.r][p.c]).join("");
-  const wordRev = word.split("").reverse().join("");
-  const target = activeChallenge.words.find(w=> (w===word || w===wordRev) && !challengeRuntime.found.has(w));
-  clearWsSelection();
-  if(target){
-    challengeRuntime.found.add(target);
-    cells.forEach(p=>document.querySelector(`.ws-cell[data-r="${p.r}"][data-c="${p.c}"]`).classList.add("found"));
-    document.querySelector(`.ws-word-tag[data-w="${target}"]`).classList.add("found");
-    if(challengeRuntime.found.size === activeChallenge.words.length){
-      autoCompleteFeedback(true, "Você encontrou todas as palavras! 🔍");
-    }
-  } else {
-    registerWrongAttempt();
-  }
-}
-function clearWsSelection(){
-  document.querySelectorAll(".ws-cell.sel").forEach(el=>el.classList.remove("sel"));
-  challengeRuntime.selecting = null;
-}
-
-/* ---- CROSSWORD (simplificada por linhas) ---- */
-function renderCrossword(c, area){
-  let html = "";
-  c.clues.forEach((cl, ci)=>{
-    html += `<div class="cw-row"><div class="cw-clue">${ci+1}. ${cl.clue}</div><div class="cw-boxes">`;
-    for(let i=0;i<cl.answer.length;i++){
-      html += `<input maxlength="1" class="cw-box" data-row="${ci}" data-i="${i}" oninput="cwAdvance(this,${ci},${i})">`;
-    }
-    html += `</div></div>`;
-  });
-  area.innerHTML = html;
-}
-function cwAdvance(el, row, i){
-  el.value = el.value.toUpperCase().replace(/[^A-Z]/g,"");
-  if(el.value){
-    const next = document.querySelector(`.cw-box[data-row="${row}"][data-i="${i+1}"]`);
-    if(next) next.focus();
-  }
-}
-
-/* ---- MAZE ---- */
-function renderMaze(c, area){
-  challengeRuntime.roomIndex = 0;
-  challengeRuntime.roomsSolved = 0;
-  renderMazeState(c, area);
-}
-function renderMazeState(c, area){
-  let html = `<div class="maze-rooms">`;
-  c.rooms.forEach((room,i)=>{
-    const state = i < challengeRuntime.roomsSolved ? "done" : (i===challengeRuntime.roomsSolved ? "current" : "");
-    html += `<div class="maze-room ${state}">${i<challengeRuntime.roomsSolved ? "✅" : (i===challengeRuntime.roomsSolved ? "🧑‍💻" : "🔒")}</div>`;
-    if(i<c.rooms.length-1) html += `<div class="maze-arrow">→</div>`;
-  });
-  html += `</div>`;
-  if(challengeRuntime.roomsSolved < c.rooms.length){
-    const room = c.rooms[challengeRuntime.roomsSolved];
-    html += `<p style="font-weight:700;text-align:center;font-family:'JetBrains Mono';">${escapeCode(room.q)}</p>
-      <div class="options-list" style="max-width:340px;margin:12px auto 0;">
-        ${room.options.map((o,i)=>`<button class="opt-btn" onclick="answerMazeRoom(${i})">${o}</button>`).join("")}
-      </div>`;
-  } else {
-    html += `<p style="text-align:center;font-weight:800;color:#8fffc0;">Labirinto concluído! 🏁</p>`;
-  }
-  area.innerHTML = html;
-}
-function answerMazeRoom(i){
-  const c = activeChallenge;
-  const room = c.rooms[challengeRuntime.roomsSolved];
-  if(i === room.correct){
-    challengeRuntime.roomsSolved++;
-    renderMazeState(c, document.getElementById("activity-area"));
-    if(challengeRuntime.roomsSolved === c.rooms.length){
-      autoCompleteFeedback(true, "Labirinto totalmente percorrido! 🏁");
-    }
-  } else {
-    registerWrongAttempt();
-    renderMazeState(c, document.getElementById("activity-area"));
-    document.getElementById("feedback-msg").className = "feedback-msg bad";
-    document.getElementById("feedback-msg").textContent = "Essa não é a saída certa dessa sala. Tente de novo!";
-  }
-}
-
-/* ---- HANGMAN ---- */
-function renderHangman(c, area){
-  challengeRuntime.guessed = new Set();
-  challengeRuntime.wrong = 0;
-  challengeRuntime.maxWrong = isAdapted() ? 8 : 6;
-  renderHangmanState(c, area);
-}
-const HANGMAN_STAGES = ["🙂","😐 (cabeça)","😐➖ (tronco)","😐➖🦾 (braços)","😐➖🦵 (pernas)","😵 quase lá...","💀 (fim das tentativas)","💀"];
-function renderHangmanState(c, area){
-  const word = c.word;
-  const display = word.split("").map(ch=>challengeRuntime.guessed.has(ch)?ch:"_").join(" ");
-  const stageIdx = Math.min(challengeRuntime.wrong, HANGMAN_STAGES.length-1);
-  area.innerHTML = `<p style="text-align:center;color:var(--muted);font-size:13.5px;">Dica: ${c.tip}</p>
-    <div class="hangman-fig" style="font-size:34px;">${HANGMAN_STAGES[stageIdx]}</div>
-    <div class="hangman-word">${word.split("").map(ch=>`<span>${challengeRuntime.guessed.has(ch)?ch:""}</span>`).join("")}</div>
-    <div class="hangman-kb" id="hk">
-      ${"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(l=>`<button class="hk-btn" id="hk-${l}" onclick="guessHangmanLetter('${l}')">${l}</button>`).join("")}
-    </div>
-    <p style="text-align:center;font-size:12.5px;color:var(--muted);margin-top:10px;">Tentativas erradas: ${challengeRuntime.wrong}/${challengeRuntime.maxWrong}</p>`;
-  ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"].forEach(l=>{
-    if(challengeRuntime.guessed.has(l)){
-      const btn = document.getElementById("hk-"+l);
-      if(btn) btn.classList.add(word.includes(l)?"used-good":"used-bad");
-    }
-  });
-}
-function guessHangmanLetter(letter){
-  if(challengeRuntime.guessed.has(letter)) return;
-  challengeRuntime.guessed.add(letter);
-  const c = activeChallenge;
-  if(!c.word.includes(letter)){
-    challengeRuntime.wrong++;
-    registerWrongAttempt();
-  }
-  renderHangmanState(c, document.getElementById("activity-area"));
-  const wordSolved = c.word.split("").every(ch=>challengeRuntime.guessed.has(ch));
-  if(wordSolved){
-    autoCompleteFeedback(true, "Você descobriu a palavra: "+c.word+"! 🎉");
-  } else if(challengeRuntime.wrong >= challengeRuntime.maxWrong){
-    document.getElementById("feedback-msg").className = "feedback-msg bad";
-    document.getElementById("feedback-msg").textContent = "Suas tentativas acabaram. A palavra era: "+c.word+". Você ainda pode continuar!";
-    autoCompleteFeedback(true, "A palavra era: "+c.word+". Vamos para o próximo desafio!");
-  }
-}
-
-/* ---- BUILD (final integrador, multi-etapas) ---- */
-function renderBuild(c, area){
-  challengeRuntime.answers = new Array(c.steps.length).fill(null);
-  let html = "";
-  c.steps.forEach((step,si)=>{
-    html += `<div class="build-step"><div class="step-label">Etapa ${si+1}</div>
-      <p style="font-weight:700;">${step.q}</p>
-      <div class="options-list">
-      ${step.options.map((o,oi)=>`<button class="opt-btn" data-step="${si}" data-i="${oi}" onclick="selectBuildOption(${si},${oi})">${o}</button>`).join("")}
-      </div></div>`;
-  });
-  area.innerHTML = html;
-}
-function selectBuildOption(si, oi){
-  challengeRuntime.answers[si] = oi;
-  document.querySelectorAll(`[data-step="${si}"]`).forEach(b=>b.classList.remove("selected"));
-  document.querySelector(`[data-step="${si}"][data-i="${oi}"]`).classList.add("selected");
-}
-
-/* =========================================================
-   VERIFICAÇÃO
-========================================================= */
-function registerWrongAttempt(){
-  challengeRuntime.wrongAttempts = (challengeRuntime.wrongAttempts||0)+1;
-  const threshold = isAdapted() ? 2 : 3;
-  if(challengeRuntime.wrongAttempts >= threshold){
-    showHint(true);
-  }
-}
-
-function checkChallenge(){
-  const c = activeChallenge;
-  const fb = document.getElementById("feedback-msg");
-  let correct = false;
-  switch(c.type){
-    case "quiz":
-    case "predict":
-      if(challengeRuntime.selected===null){ flashNeedAnswer(); return; }
-      correct = challengeRuntime.selected === c.correct;
-      document.querySelectorAll("#opt-list .opt-btn").forEach((b,i)=>{
-        if(i===c.correct) b.classList.add("correct");
-        else if(i===challengeRuntime.selected) b.classList.add("wrong");
-      });
-      break;
-    case "truefalse":
-      if(challengeRuntime.selected===null){ flashNeedAnswer(); return; }
-      correct = challengeRuntime.selected === c.correct;
-      document.querySelectorAll(".tf-row .opt-btn").forEach(b=>{
-        const v = b.getAttribute("data-v")==="true";
-        if(v===c.correct) b.classList.add("correct");
-        else if(v===challengeRuntime.selected) b.classList.add("wrong");
-      });
-      break;
-    case "fill": {
-      correct = c.blanks.every(b=>{
-        const el = document.getElementById("blank-"+b.id);
-        const val = (el.value||"").trim().toLowerCase();
-        return b.answers.some(a=>a.toLowerCase()===val);
-      });
-      break;
-    }
-    case "order": {
-      correct = challengeRuntime.order.every((item,pos)=>item.orig===pos);
-      break;
-    }
-    case "crossword": {
-      correct = c.clues.every((cl,ci)=>{
-        let word = "";
-        for(let i=0;i<cl.answer.length;i++){
-          const el = document.querySelector(`.cw-box[data-row="${ci}"][data-i="${i}"]`);
-          word += (el.value||"").toUpperCase();
-        }
-        return word === cl.answer;
-      });
-      // pinta certos/errados
-      c.clues.forEach((cl,ci)=>{
-        let word = "";
-        for(let i=0;i<cl.answer.length;i++){
-          const el = document.querySelector(`.cw-box[data-row="${ci}"][data-i="${i}"]`);
-          word += (el.value||"").toUpperCase();
-          el.style.borderColor = (el.value||"").toUpperCase()===cl.answer[i] ? "#5adf8f" : "var(--danger)";
-        }
-      });
-      break;
-    }
-    case "build": {
-      correct = c.steps.every((step,si)=> challengeRuntime.answers[si]===step.correct);
-      c.steps.forEach((step,si)=>{
-        document.querySelectorAll(`[data-step="${si}"]`).forEach((b,oi)=>{
-          if(oi===step.correct) b.classList.add("correct");
-          else if(oi===challengeRuntime.answers[si]) b.classList.add("wrong");
-        });
-      });
-      break;
-    }
-    /* match, memory, wordsearch, maze e hangman se autocompletam via autoCompleteFeedback */
-    default: return;
-  }
-  if(correct){
-    completeChallenge(true);
-  } else {
-    registerWrongAttempt();
-    fb.className = "feedback-msg bad";
-    fb.textContent = pickEncouragement(false);
-  }
-}
-function flashNeedAnswer(){
-  const fb = document.getElementById("feedback-msg");
-  fb.className = "feedback-msg bad";
-  fb.textContent = "Escolha uma opção antes de verificar. 🙂";
-}
-function autoCompleteFeedback(success, msg){
-  const fb = document.getElementById("feedback-msg");
-  if(success){
-    fb.className = "feedback-msg ok";
-    fb.textContent = msg;
-    completeChallenge(true);
-  }
-}
-function pickEncouragement(success){
-  const okMsgs = ["Mandou muito bem! 🎉","Isso aí! Você entendeu o conceito. ✅","Perfeito, seguindo em frente! 🚀"];
-  const noMsgs = ["Quase lá! Reveja a explicação acima e tente de novo.","Não foi dessa vez, sem problema — tente outra vez!","Vamos revisar juntos: use a dica se precisar. 💡"];
-  return success ? okMsgs[Math.floor(Math.random()*okMsgs.length)] : noMsgs[Math.floor(Math.random()*noMsgs.length)];
-}
-
-function showHint(auto){
-  const c = activeChallenge;
-  const box = document.getElementById("hint-box");
-  if(!c.hint || !c.hint.length) return;
-  challengeRuntime.hintsShown = challengeRuntime.hintsShown || 0;
-  if(challengeRuntime.hintsShown < c.hint.length){
-    challengeRuntime.hintsShown++;
-    if(!isAdapted()){
-      progress.hintsUsed[c.id] = (progress.hintsUsed[c.id]||0)+1;
-    }
-  }
-  box.style.display = "block";
-  box.innerHTML = c.hint.slice(0, challengeRuntime.hintsShown).map(h=>"💡 "+h).join("<br><br>");
-  if(!auto) saveProgress();
-}
-
-function completeChallenge(success){
-  const c = activeChallenge;
-  document.getElementById("btn-check").classList.add("hidden");
-  document.getElementById("btn-continue").classList.remove("hidden");
-  const fb = document.getElementById("feedback-msg");
-  fb.className = "feedback-msg ok";
-  fb.textContent = pickEncouragement(true);
-  if(!teacherExploring && !progress.completed[c.id]){
-    let pts = c.points;
-    const hintsUsedHere = progress.hintsUsed[c.id]||0;
-    if(!isAdapted() && hintsUsedHere>0){
-      pts = Math.max(Math.round(pts*0.7), Math.round(pts*0.5)); // pequena redução por uso de dica
-    }
-    progress.completed[c.id] = true;
-    progress.score += pts;
-    saveProgress();
-    renderTrail();
-    launchConfetti();
-    if(c.final) showToast("🏆 Módulo concluído! Ótimo trabalho.");
-  } else if(teacherExploring){
-    // não grava nada — apenas navegação
-  }
-}
-
-/* =========================================================
-   UTILITÁRIOS
-========================================================= */
-function shuffleArray(arr){
-  const a = arr.slice();
-  for(let i=a.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]]=[a[j],a[i]];
-  }
-  return a;
-}
-function showToast(msg){
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"), 3200);
-}
-function launchConfetti(){
-  const colors = ["#2DD4BF","#FFB020","#8B7CF6","#5adf8f"];
-  for(let i=0;i<26;i++){
-    const p = document.createElement("div");
-    p.className = "confetti-piece";
-    p.style.left = (Math.random()*100)+"vw";
-    p.style.background = colors[Math.floor(Math.random()*colors.length)];
-    p.style.transform = `rotate(${Math.random()*360}deg)`;
-    document.body.appendChild(p);
-    const duration = 1400 + Math.random()*900;
-    p.animate([
-      {transform:`translateY(0) rotate(0deg)`, opacity:1},
-      {transform:`translateY(${window.innerHeight+40}px) rotate(${360+Math.random()*360}deg)`, opacity:0.9}
-    ], {duration, easing:"ease-in"});
-    setTimeout(()=>p.remove(), duration);
-  }
-}
-
-/* =========================================================
-   PAINEL DO PROFESSOR
-========================================================= */
-function refreshTeacherData(){
-  const tbody = document.getElementById("teacher-tbody");
-  tbody.innerHTML = `<tr><td colspan="5" style="color:var(--muted);">Carregando dados...</td></tr>`;
-  if(!fbReady){
-    tbody.innerHTML = `<tr><td colspan="5" style="color:var(--muted);">Firebase indisponível neste ambiente. Dados salvos apenas localmente no dispositivo de cada aluno não podem ser listados aqui.</td></tr>`;
-    return;
-  }
-  db.ref("students").once("value").then(snap=>{
-    const data = snap.val() || {};
-    const rows = STUDENTS.map(s=>{
-      const p = data[s.id] && data[s.id][FIREBASE_PROGRESS_NODE] ? data[s.id][FIREBASE_PROGRESS_NODE] : null;
-      const doneCount = p && p.completed ? Object.keys(p.completed).length : 0;
-      const score = p ? (p.score||0) : 0;
-      const hints = p && p.hintsUsed ? Object.values(p.hintsUsed).reduce((a,b)=>a+b,0) : 0;
-      const last = p && p.lastActivity ? new Date(p.lastActivity).toLocaleString("pt-BR") : "—";
-      return {name:s.name, doneCount, score, hints, last, started: !!p};
+    document.addEventListener('copy', function(event) {
+        event.preventDefault();
+        alert('Acesso Negado: Engenheiros do Google não fazem Cópia e Cola. Digite sua sintaxe!');
     });
-    rows.sort((a,b)=> b.score-a.score);
-    document.getElementById("tt-total").textContent = rows.filter(r=>r.started).length;
-    tbody.innerHTML = rows.map(r=>`
-      <tr>
-        <td>${r.name}</td>
-        <td><span class="mini-bar"><span style="width:${(r.doneCount/TOTAL_CHALLENGES*100).toFixed(0)}%"></span></span>${r.doneCount}/${TOTAL_CHALLENGES}</td>
-        <td>⭐ ${r.score} / ${TOTAL_POSSIBLE_POINTS}</td>
-        <td>${r.hints}</td>
-        <td>${r.last}</td>
-      </tr>`).join("");
-  }).catch(()=>{
-    tbody.innerHTML = `<tr><td colspan="5" style="color:var(--danger);">Erro ao carregar dados do Firebase.</td></tr>`;
-  });
-}
 
-function resetTrail(){
-  if(!confirm("Tem certeza que deseja apagar o andamento da TRILHA 3 de TODOS os alunos? O progresso das Trilhas 1 e 2 não será afetado. Essa ação não pode ser desfeita.")) return;
-  const typed = prompt("Para confirmar, digite RESETAR em maiúsculas:");
-  if(typed !== "RESETAR"){ alert("Operação cancelada."); return; }
-  STUDENTS.forEach(s=> localStorage.removeItem(localKey(s.id)));
-  if(fbReady){
-    const updates = {};
-    STUDENTS.forEach(s=>{ updates["students/"+s.id+"/"+FIREBASE_PROGRESS_NODE] = null; });
-    db.ref().update(updates).then(()=>{
-      showToast("✅ Trilha 2 resetada para todos os alunos.");
-      refreshTeacherData();
-    }).catch(()=> alert("Erro ao resetar no Firebase. Tente novamente."));
-  } else {
-    showToast("✅ Andamento local apagado (Firebase indisponível neste ambiente).");
-  }
-}
+    document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey && (event.key === 'a' || event.key === 'c' || event.key === 's')) {
+            event.preventDefault();
+            alert('Atalhos de sistema bloqueados. Desenvolva sua linha de código.');
+        }
+    });
+
+    // ==========================================
+    // DOWNLOAD DE HTML (Sem PDF, conforme exigência)
+    // ==========================================
+    function downloadHTML() {
+        const htmlContent = document.documentElement.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'lab_google_muqui_15_passos.html';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => { document.body.removeChild(a); window.URL.revokeObjectURL(url); }, 100);
+    }
 </script>
+
 </body>
 </html>
