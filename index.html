@@ -1,997 +1,594 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plataforma IPI - Prof. Rodrigo</title>
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: { extend: {} }
-    }
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio Prático: O Algoritmo da Aprovação</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;500;700&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        /* TEMA: ESCOLA / SISTEMA ACADÊMICO */
+        :root {
+            --primary: #2563eb; /* Azul Royal / Educação */
+            --primary-light: #dbeafe;
+            --secondary: #eab308; /* Amarelo / Destaque */
+            --accent: #22c55e; /* Verde / Aprovado */
+            --danger: #ef4444; /* Vermelho / Reprovado */
+            --dark: #0f172a; /* Slate 900 */
+            --light: #f8fafc;
+            --text: #334155;
+            --code-bg: #1e293b; /* Fundo do código */
+            --border: #cbd5e1;
+        }
 
-  <!-- SQL.js WebAssembly Engine -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            background-color: #94a3b8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            padding: 40px 0 100px 0;
+            font-family: 'Inter', sans-serif;
+            
+            /* BLOQUEIO DE CÓPIA DE TEXTO */
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
 
-  <!-- CodeMirror: Sintaxe Colorida e Linhas -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/sql/sql.min.js"></script>
+        .page {
+            width: 850px; 
+            min-height: 1150px; 
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            padding: 50px 60px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+        }
 
-  <style>
-    /* Variáveis de Cor de Destaque */
-    :root { --c-main: #4f46e5; --c-hover: #4338ca; } /* Indigo (Padrão) */
-    body.theme-blue { --c-main: #2563eb; --c-hover: #1d4ed8; }
-    body.theme-green { --c-main: #16a34a; --c-hover: #15803d; }
-    body.theme-orange { --c-main: #ea580c; --c-hover: #c2410c; }
-    body.theme-purple { --c-main: #9333ea; --c-hover: #7e22ce; }
+        h1 { font-family: 'Poppins', sans-serif; font-size: 36px; font-weight: 800; color: var(--dark); line-height: 1.2; text-align: center; margin-bottom: 10px; text-transform: uppercase;}
+        h2 { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 700; color: var(--primary); margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 8px; display: flex; align-items: center; gap: 10px; margin-top: 20px;}
+        h3 { font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 600; color: var(--dark); margin-bottom: 5px; display: flex; align-items: center; gap: 10px;}
+        
+        p, li { font-size: 15px; line-height: 1.5; color: var(--text); margin-bottom: 10px; }
+        
+        .alert-box {
+            background-color: #fef2f2;
+            border: 2px dashed var(--danger);
+            color: #991b1b;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
 
-    .btn-accent { background-color: var(--c-main); color: white; border-color: var(--c-main); }
-    .btn-accent:hover { background-color: var(--c-hover); }
-    .text-accent { color: var(--c-main); }
-    .border-accent { border-color: var(--c-main); }
-    .bg-accent-light { background-color: var(--c-main); opacity: 0.1; }
+        .lab-link-box {
+            background: var(--dark);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 4px solid var(--primary);
+        }
+        .lab-link-box a {
+            color: #60a5fa;
+            font-size: 18px;
+            font-weight: 800;
+            text-decoration: none;
+            pointer-events: auto;
+        }
 
-    /* Estilização suave das barras de rolagem */
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+        .step-container {
+            background: var(--light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px 15px 15px 35px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .step-number {
+            position: absolute;
+            top: 15px;
+            left: -15px;
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fira Code', monospace;
+            font-weight: 800;
+            font-size: 14px;
+            box-shadow: 2px 2px 0px var(--dark);
+        }
 
-    /* Layout sincronizado para Numeração de Linhas e Textarea */
-    .editor-wrapper {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      font-size: inherit;
-    }
-    .CodeMirror {
-      flex: 1;
-      height: auto !important;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
-      font-size: inherit !important;
-      background: transparent !important;
-    }
-    /* Esconder bordas nativas do CodeMirror */
-    .CodeMirror-gutters {
-      border-right: 1px solid rgba(150, 150, 150, 0.2) !important;
-      background-color: transparent !important;
-    }
-    /* Estilo Aba Ativa */
-    .tab-active { border-bottom: 2px solid var(--c-main); color: var(--c-main); font-weight: bold; }
-    .tab-inactive { color: #6b7280; }
-    .dark .tab-inactive { color: #9ca3af; }
-  </style>
+        .code-block {
+            font-family: 'Fira Code', monospace;
+            background-color: var(--code-bg);
+            color: #e2e8f0;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-top: 8px;
+            border-left: 4px solid var(--secondary);
+            pointer-events: none;
+        }
+        
+        /* COR BRANCA NO EXEMPLO PARA VISIBILIDADE MAXIMA */
+        .example-line { 
+            color: #ffffff; 
+            font-weight: bold; 
+            background: rgba(255,255,255,0.1); 
+            display: block; 
+            border-bottom: 1px dashed #64748b; 
+            padding: 6px 10px; 
+            border-radius: 4px;
+            margin-bottom: 8px; 
+        }
+        
+        /* COR VERDE NEON PARA INSTRUÇÃO DO ALUNO */
+        .action-line { color: #a3e635; font-weight: bold; padding-left: 10px; display: block; }
+        
+        .controls { position: fixed; bottom: 30px; right: 30px; display: flex; gap: 15px; z-index: 1000; }
+        .btn-control { background: var(--dark); color: white; border: none; padding: 12px 20px; border-radius: 5px; font-family: 'Fira Code', monospace; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 3px 3px 0px #000; transition: all 0.1s ease; }
+        .btn-control:hover { transform: translate(2px, 2px); box-shadow: 1px 1px 0px #000; }
+        .btn-control.pdf { background: #ef4444; color: white; }
+        .btn-control.html { background: var(--primary); color: white;}
+        
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 3px solid var(--dark); padding-bottom: 10px; }
+        .page-number { position: absolute; bottom: 20px; right: 50px; font-size: 12px; color: #94a3b8; font-weight: bold; }
+    </style>
 </head>
-<body class="bg-gray-50 text-gray-800 dark:bg-gray-950 dark:text-gray-200 font-sans h-[100dvh] flex flex-col overflow-hidden transition-colors duration-300 theme-blue">
+<body>
 
-  <!-- ========================================== -->
-  <!-- TELA DE LOGIN / SELEÇÃO -->
-  <!-- ========================================== -->
-  <div id="login-screen" class="flex flex-col items-center justify-center h-full w-full p-4 absolute inset-0 z-50 bg-gray-50 dark:bg-gray-950 transition-colors duration-300 overflow-y-auto">
+<div class="controls">
+    <button class="btn-control html" onclick="downloadHTML()"><i class="fa-solid fa-download"></i> Baixar HTML</button>
+    <button class="btn-control pdf" onclick="downloadPDF()"><i class="fa-solid fa-file-pdf"></i> Baixar PDF</button>
+</div>
+
+<!-- ==========================================
+     PÁGINA 1
+     ========================================== -->
+<div class="page" id="page1">
+    <div class="page-header">
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <i class="fa-solid fa-graduation-cap" style="font-size: 30px; color: var(--primary);"></i>
+            <i class="fa-solid fa-laptop-code" style="font-size: 24px; color: var(--dark);"></i>
+        </div>
+        <div style="text-align: right; color: var(--text); font-size: 12px;">
+            <strong>Prof. Rodrigo G. Pelages</strong><br>Tecnologia & Inovação
+        </div>
+    </div>
+
+    <h1>O Algoritmo da Aprovação</h1>
+    <p style="text-align: center; color: var(--text); margin-bottom: 15px; font-weight: bold;">Missão: Desenvolva o sistema de notas e boletins da escola!</p>
+
+    <div class="alert-box">
+        <i class="fa-solid fa-brain"></i>
+        <span><strong>Modo Desenvolvedor:</strong> O código pronto não será entregue. Leia o EXEMPLO BRANCO com atenção, deduza a lógica e digite o SEU CÓDIGO VERDE no Laboratório!</span>
+    </div>
+
+    <div class="lab-link-box">
+        <p style="margin-bottom: 5px; font-size: 14px;">Mantenha o laboratório aberto em outra aba e construa o código passo a passo:</p>
+        <a href="https://rodrigogpelages.github.io/laboratoriovirtual/" target="_blank">Acessar Laboratório Virtual</a>
+    </div>
+
+    <h2><i class="fa-solid fa-address-card"></i> Fase 1: Identificação (Variáveis)</h2>
+
+    <div class="step-container">
+        <div class="step-number">1</div>
+        <h3>Registrando o Aluno</h3>
+        <p>A primeira etapa é perguntar o nome do estudante. Vamos usar o comando de entrada de dados <strong>prompt</strong>.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: var cliente = prompt("Nome do cliente?");</span>
+            <span class="action-line">AGORA VOCÊ: Crie a variável 'aluno' e use o prompt para perguntar "Qual o nome do aluno?".</span>
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">2</div>
+        <h3>Disciplina (Strings)</h3>
+        <p>Textos puros precisam sempre de aspas! Registre qual é a matéria que estamos avaliando.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: var curso = "Matemática";</span>
+            <span class="action-line">AGORA VOCÊ: Crie a variável 'disciplina' e guarde o texto "Lógica de Programação".</span>
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">3</div>
+        <h3>O Ano Letivo</h3>
+        <p>Vamos guardar a série do aluno. Também é um texto (String).</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: var periodo = "Manhã";</span>
+            <span class="action-line">AGORA VOCÊ: Crie a variável 'turma' recebendo o texto "1º Ano do Ensino Médio".</span>
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">4</div>
+        <h3>Mensagem de Abertura</h3>
+        <p>Use o comando <strong>alert</strong> e o sinal de <strong>+</strong> para juntar o seu texto com a variável disciplina.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: alert("Bem-vindo ao curso de " + curso);</span>
+            <span class="action-line">AGORA VOCÊ: Faça um alert dizendo "Sistema de Notas da disciplina de " + disciplina.</span>
+        </div>
+    </div>
+
+    <div class="page-number">Página 1</div>
+</div>
+
+<!-- ==========================================
+     PÁGINA 2
+     ========================================== -->
+<div class="page" id="page2">
     
-    <!-- Botão de Tema (Login) -->
-    <button id="theme-toggle-login" class="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-full text-gray-500 hover:bg-gray-200 text-accent dark:text-gray-400 dark:hover:bg-gray-800 transition-colors">
-      <svg id="icon-sun-login" class="w-6 h-6 hidden dark:block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" /></svg>
-      <svg id="icon-moon-login" class="w-6 h-6 block dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" /></svg>
-    </button>
+    <h2><i class="fa-solid fa-pen-to-square"></i> Fase 2: Registro de Notas (Numbers)</h2>
 
-    <div class="w-full max-w-md bg-white border border-gray-200 shadow-xl dark:bg-gray-900 dark:border-gray-800 dark:shadow-2xl rounded-2xl p-6 sm:p-8 transition-all duration-300 my-auto overflow-y-auto max-h-[95vh]">
-      <div class="text-center mb-6">
-        <h1 class="text-2xl sm:text-3xl font-bold text-accent mb-2">Plataforma IPI</h1>
-        <p class="text-sm text-gray-500 dark:text-gray-400">Acesse seu ambiente de trabalho<br><span class="font-medium text-accent">Prof. Rodrigo G. Pelages</span></p>
-      </div>
-
-      <div class="text-center mb-6 px-2">
-        <p id="motivational-quote" class="text-xs italic text-gray-500 border-l-2 border-accent pl-2 text-left">Carregando inspiração...</p>
-      </div>
-
-      <div class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium mb-1.5 text-gray-600 dark:text-gray-400">Sua Turma</label>
-          <select id="select-turma" class="w-full rounded-lg px-4 py-3 border border-gray-300 bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 border-accent dark:bg-gray-800 dark:border-gray-700 dark:text-white transition-colors">
-            <option value="1ipi">1ª IPI (JavaScript)</option>
-            <option value="2ipi">2ª IPI (SQL)</option>
-          </select>
+    <div class="step-container">
+        <div class="step-number">5</div>
+        <h3>Nota do 1º Bimestre</h3>
+        <p>Valores numéricos <strong>NUNCA levam aspas</strong>. Se colocar aspas, o computador não consegue fazer a conta depois!</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: var bimestre1 = 9;</span>
+            <span class="action-line">AGORA VOCÊ: Crie a variável 'n1' recebendo o número 7.</span>
         </div>
-
-        <div>
-          <label class="block text-sm font-medium mb-1.5 text-gray-600 dark:text-gray-400">Seu Nome</label>
-          <select id="select-nome" class="w-full rounded-lg px-4 py-3 border border-gray-300 bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 border-accent dark:bg-gray-800 dark:border-gray-700 dark:text-white transition-colors">
-            <option value="" disabled selected>Selecione seu nome da lista...</option>
-          </select>
-        </div>
-
-        <div id="div-senha" class="hidden">
-          <label class="block text-sm font-medium mb-1.5 text-gray-600 dark:text-gray-400">Data de Nascimento (Senha)</label>
-          <input type="text" id="input-senha" placeholder="DD/MM/AAAA" maxlength="10" class="w-full rounded-lg px-4 py-3 border border-gray-300 bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 border-accent dark:bg-gray-800 dark:border-gray-700 dark:text-white transition-colors">
-          <p id="error-senha" class="text-xs text-red-500 mt-1.5 hidden font-medium">⚠️ Data incorreta. Verifique e tente novamente.</p>
-        </div>
-
-        <button id="btn-entrar" disabled class="w-full mt-2 font-bold py-3 px-4 rounded-lg transition-all bg-gray-300 text-gray-500 cursor-not-allowed dark:bg-gray-700 dark:text-gray-500">
-          Entrar no Laboratório
-        </button>
-      </div>
     </div>
-  </div>
 
-  <!-- ========================================== -->
-  <!-- TELA DO EDITOR / LABORATÓRIO -->
-  <!-- ========================================== -->
-  <div id="app-screen" class="hidden flex-col h-full w-full">
+    <div class="step-container">
+        <div class="step-number">6</div>
+        <h3>Nota do 2º Bimestre</h3>
+        <p>Vamos registrar a segunda nota do ano.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: var bimestre2 = 6;</span>
+            <span class="action-line">AGORA VOCÊ: Crie a variável 'n2' recebendo o número 8.</span>
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">7</div>
+        <h3>Nota do 3º Bimestre</h3>
+        <p>O aluno foi um pouco pior neste bimestre.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: var bimestre3 = 4;</span>
+            <span class="action-line">AGORA VOCÊ: Crie a variável 'n3' recebendo o número 5.</span>
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">8</div>
+        <h3>Nota do 4º Bimestre</h3>
+        <p>Última nota regular do ano.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: var bimestre4 = 10;</span>
+            <span class="action-line">AGORA VOCÊ: Crie a variável 'n4' recebendo o número 6.</span>
+        </div>
+    </div>
+
+    <div class="step-container">
+        <div class="step-number">9</div>
+        <h3>Ponto Bônus</h3>
+        <p>O aluno participou das aulas de laboratório e ganhou um bônus. (Use <strong>ponto</strong>, não vírgula, para números quebrados).</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: var extra = 0.5;</span>
+            <span class="action-line">AGORA VOCÊ: Crie a variável 'bonus' recebendo o número 1.5.</span>
+        </div>
+    </div>
+
+    <div class="page-number">Página 2</div>
+</div>
+
+<!-- ==========================================
+     PÁGINA 3
+     ========================================== -->
+<div class="page" id="page3">
     
-    <!-- CABEÇALHO -->
-    <header class="flex flex-col md:flex-row items-start md:items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-white border-b border-gray-200 shadow-sm dark:bg-gray-900 dark:border-gray-800 shrink-0 gap-3 transition-colors z-10 relative">
-      
-      <div class="flex items-center gap-3 sm:gap-4 w-full md:w-auto flex-wrap">
-        <div>
-          <h1 class="text-lg sm:text-xl font-bold text-accent leading-tight">Plataforma IPI</h1>
-          <p class="text-[10px] sm:text-xs text-gray-500">Prof. Rodrigo G. Pelages</p>
-        </div>
-        
-        <div id="badge-turma" class="px-2 py-1 text-[10px] sm:text-xs font-bold rounded-md shadow btn-accent whitespace-nowrap"></div>
+    <h2><i class="fa-solid fa-calculator"></i> Fase 3: O Cérebro Matemático</h2>
 
-        <div class="hidden lg:flex items-center text-xs font-mono text-gray-400 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-md border border-gray-200 dark:border-gray-700">
-          <svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
-          <span id="system-clock">00/00/0000 00:00</span>
+    <div class="step-container">
+        <div class="step-number">10</div>
+        <h3>Somando as Notas</h3>
+        <p>O computador sabe fazer matemática pesada. Peça para ele somar as 4 notas e guardar na memória.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: var total = b1 + b2 + b3 + b4;</span>
+            <span class="action-line">AGORA VOCÊ: Crie a variável 'somaNotas' que recebe a soma de n1 + n2 + n3 + n4.</span>
         </div>
-      </div>
-
-      <!-- Ações -->
-      <div class="flex flex-row flex-wrap items-center justify-between md:justify-end w-full md:w-auto gap-2 sm:gap-4">
-        
-        <!-- Botões de Funcionalidades -->
-        <div class="flex items-center gap-1 sm:gap-2">
-          <button id="btn-tips" title="Dicas e Atalhos" class="p-1.5 sm:p-2 rounded-full text-gray-500 hover:bg-gray-100 text-accent dark:text-gray-400 dark:hover:bg-gray-800 transition-colors">
-            <svg class="w-5 h-5 sm:w-6 sm:h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.829 1.508-2.316a7.5 7.5 0 1 0-7.516 0c.85.487 1.508 1.333 1.508 2.316V18" /></svg>
-          </button>
-          <button id="btn-history" title="Ver Histórico" class="p-1.5 sm:p-2 rounded-full text-gray-500 hover:bg-gray-100 text-accent dark:text-gray-400 dark:hover:bg-gray-800 transition-colors">
-            <svg class="w-5 h-5 sm:w-6 sm:h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
-          </button>
-          <button id="btn-settings" title="Personalizar" class="p-1.5 sm:p-2 rounded-full text-gray-500 hover:bg-gray-100 text-accent dark:text-gray-400 dark:hover:bg-gray-800 transition-colors">
-            <svg class="w-5 h-5 sm:w-6 sm:h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" /></svg>
-          </button>
-          <button id="theme-toggle-app" class="p-1.5 sm:p-2 rounded-full text-gray-500 hover:bg-gray-100 text-accent dark:text-gray-400 dark:hover:bg-gray-800 transition-colors">
-            <svg id="icon-sun-app" class="w-5 h-5 sm:w-6 sm:h-6 hidden dark:block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" /></svg>
-            <svg id="icon-moon-app" class="w-5 h-5 sm:w-6 sm:h-6 block dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" /></svg>
-          </button>
-        </div>
-
-        <div class="flex flex-col items-end border-l border-gray-200 dark:border-gray-700 pl-2 sm:pl-3">
-          <div id="save-status-container" class="flex items-center gap-1 sm:gap-2 h-4 text-[9px] sm:text-[10px] uppercase font-bold tracking-wide opacity-0 transition-opacity">
-            <span id="text-cloud-saving" class="text-yellow-500 hidden flex items-center">Salvando<span class="animate-pulse">...</span></span>
-            <span id="text-cloud-saved" class="text-green-500 hidden flex items-center">Salvo ✓</span>
-            <span id="text-cloud-error" class="text-red-500 hidden cursor-help" title="Erro desconhecido">Erro ✗</span>
-          </div>
-          <div class="flex items-center gap-2 sm:gap-3 mt-1 flex-wrap justify-end">
-            <span id="label-nome-aluno" class="text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded border text-accent border-accent bg-transparent transition-colors max-w-[120px] sm:max-w-none truncate">
-              NOME_ALUNO
-            </span>
-            <button id="btn-manual-save" title="Fixar Versão no Histórico" class="flex items-center text-[10px] sm:text-xs font-bold text-accent hover:opacity-70 transition-colors">
-              <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" /></svg>
-              Salvar
-            </button>
-            <button id="btn-sair" class="text-[10px] sm:text-xs text-gray-500 hover:text-red-500 transition-colors underline ml-1">
-              Sair
-            </button>
-          </div>
-        </div>
-
-        <button id="btn-executar" class="w-full md:w-auto flex justify-center items-center px-5 py-2.5 mt-2 md:mt-0 rounded-lg font-bold shadow-lg transform transition active:scale-95 btn-accent">
-          <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347c-.75.412-1.667-.13-1.667-.986V5.653Z" /></svg>
-          Executar
-        </button>
-      </div>
-    </header>
-
-    <!-- MAIN EDITOR AREA -->
-    <main class="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
-      
-      <!-- Lado Esquerdo: Editor Profissional -->
-      <section class="w-full md:w-1/2 flex-none min-h-[350px] md:min-h-0 md:flex-auto md:h-full flex flex-col border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-800 transition-colors">
-        <div class="flex items-center justify-between px-4 py-2 border-b border-gray-200 bg-gray-100 dark:bg-gray-800 dark:border-gray-700 shrink-0 transition-colors">
-          <span id="label-filename" class="text-xs font-mono font-bold text-accent">script.js</span>
-          <span class="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded text-gray-500 bg-gray-200 dark:bg-gray-700 dark:text-gray-400 transition-colors">
-            Editor Profissional
-          </span>
-        </div>
-        
-        <div id="editor-wrapper" class="editor-wrapper bg-white dark:bg-[#282a36] transition-colors">
-          <textarea id="editor" spellcheck="false" placeholder="Escreva seu código aqui..."></textarea>
-        </div>
-      </section>
-
-      <!-- Lado Direito: Terminal & Feedback -->
-      <section class="w-full md:w-1/2 flex-none min-h-[300px] md:min-h-0 md:flex-auto md:h-full flex flex-col bg-gray-50 dark:bg-[#0d0d0d] transition-colors">
-        
-        <!-- Abas do Lado Direito -->
-        <div class="flex items-center justify-between px-4 pt-2 border-b border-gray-200 bg-gray-100 dark:bg-gray-800 dark:border-gray-700 shrink-0 transition-colors">
-           <div class="flex space-x-4">
-             <button id="tab-btn-terminal" class="tab-active pb-2 text-xs uppercase tracking-widest transition-colors focus:outline-none">Terminal / Saída</button>
-             <button id="tab-btn-feedback" class="tab-inactive pb-2 text-xs uppercase tracking-widest transition-colors focus:outline-none flex items-center">
-               Feedback do Prof.
-               <span class="ml-1 flex h-2 w-2 relative"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-light opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-[var(--c-main)]"></span></span>
-             </button>
-           </div>
-           <div class="flex items-center gap-2 pb-2">
-             <button id="btn-translate-error" class="hidden flex items-center text-[10px] sm:text-xs font-bold px-2 sm:px-3 py-1 rounded bg-orange-600 hover:bg-orange-500 text-white shadow-sm transition-colors">
-               <svg class="w-3.5 h-3.5 mr-1 sm:mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m10.5 21 5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 0 1 6-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 0 1-3.827-5.802" /></svg>
-               <span id="label-translate-error">Traduzir Erro</span>
-             </button>
-             <a href="https://rodrigogpelages.github.io/aulasinformatica/" target="_blank" rel="noopener noreferrer" title="Enviar atividade" class="flex items-center text-[10px] sm:text-xs font-bold px-2 sm:px-3 py-1 rounded bg-green-600 hover:bg-green-500 text-white shadow-sm transition-colors">
-               <svg class="w-3.5 h-3.5 mr-1 sm:mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" /></svg>
-               Enviar Código
-             </a>
-           </div>
-        </div>
-        
-        <!-- Conteúdo do Terminal -->
-        <div id="panel-terminal" class="flex-1 flex flex-col overflow-hidden block">
-          <div class="flex-1 p-4 overflow-y-auto">
-            <pre id="output" class="font-mono text-sm whitespace-pre-wrap text-accent dark:text-gray-300 transition-colors">A saída aparecerá aqui.</pre>
-          </div>
-          <!-- Inspetor de Tabelas SQL -->
-          <div id="panel-sql-tables" class="hidden flex-1 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1a1a1a] p-4 overflow-y-auto transition-colors">
-            <h3 class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3 flex items-center">
-              <svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" /></svg>
-              Tabelas do Banco de Dados
-            </h3>
-            <pre id="sql-tables-output" class="font-mono text-sm whitespace-pre-wrap text-indigo-600 dark:text-indigo-400 transition-colors">Execute o código para visualizar as tabelas sendo criadas.</pre>
-          </div>
-        </div>
-
-        <!-- Conteúdo do Feedback -->
-        <div id="panel-feedback" class="flex-1 flex flex-col p-4 hidden bg-yellow-50 dark:bg-yellow-900/10 transition-colors">
-          <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Área reservada para anotações ou para colar o feedback recebido pelo Professor Rodrigo.</p>
-          <textarea id="feedback-editor" placeholder="Cole ou digite o feedback aqui..." class="flex-1 w-full p-3 text-sm rounded-lg border border-yellow-200 dark:border-yellow-700/50 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 border-accent resize-none transition-colors"></textarea>
-        </div>
-      </section>
-
-    </main>
-
-    <!-- Modal de Dicas -->
-    <div id="modal-tips" class="hidden absolute inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-      <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
-        <h2 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
-          <svg class="w-6 h-6 mr-2 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.829 1.508-2.316a7.5 7.5 0 1 0-7.516 0c.85.487 1.508 1.333 1.508 2.316V18" /></svg>
-          Dicas e Atalhos Úteis
-        </h2>
-        <div class="space-y-4 text-sm text-gray-600 dark:text-gray-300">
-          <ul class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <li class="bg-gray-50 dark:bg-gray-800 p-2 rounded border border-gray-200 dark:border-gray-700"><kbd class="font-bold text-accent">Ctrl + C</kbd> : Copiar texto selecionado</li>
-            <li class="bg-gray-50 dark:bg-gray-800 p-2 rounded border border-gray-200 dark:border-gray-700"><kbd class="font-bold text-accent">Ctrl + X</kbd> : Recortar (Remove e copia)</li>
-            <li class="bg-gray-50 dark:bg-gray-800 p-2 rounded border border-gray-200 dark:border-gray-700"><kbd class="font-bold text-accent">Ctrl + Z</kbd> : Desfazer a última ação</li>
-            <li class="bg-gray-50 dark:bg-gray-800 p-2 rounded border border-gray-200 dark:border-gray-700"><kbd class="font-bold text-accent">Ctrl + Y</kbd> : Refazer ação</li>
-            <li class="bg-gray-50 dark:bg-gray-800 p-2 rounded border border-gray-200 dark:border-gray-700"><kbd class="font-bold text-accent">Ctrl + A</kbd> : Selecionar TODO o código</li>
-          </ul>
-          <p class="mt-4 border-t pt-3 dark:border-gray-700 leading-relaxed">
-            💡 <strong>Atenção:</strong> A função de colar (<kbd>Ctrl+V</kbd>) está <span class="font-bold text-red-500">desativada</span> no Editor para garantir que você pratique a digitação do código!<br><br>
-            ⚠️ Se o seu código tiver algum erro, o <strong>Compilador Profissional</strong> vai indicar exatamente a <span class="font-bold text-red-500">Linha</span> do problema no terminal. E se a mensagem for em inglês, use o botão <strong>"Traduzir Erro"</strong>!
-          </p>
-        </div>
-        <div class="mt-6 flex justify-end">
-          <button id="btn-close-tips" class="px-4 py-2 btn-accent rounded-lg font-bold transition-colors">Entendi</button>
-        </div>
-      </div>
     </div>
 
-    <!-- Modal de Configurações -->
-    <div id="modal-settings" class="hidden absolute inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-      <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl w-full max-w-sm p-6 max-h-[90vh] overflow-y-auto">
-        <h2 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
-          <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" /></svg>
-          Personalização
-        </h2>
-        <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium mb-1.5 text-gray-600 dark:text-gray-400">Cor Principal</label>
-            <select id="select-theme-color" class="w-full rounded-lg px-3 py-2 border border-gray-300 bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 border-accent dark:bg-gray-800 dark:border-gray-700 dark:text-white transition-colors">
-              <option value="blue">Azul Escuro (Padrão)</option>
-              <option value="indigo">Índigo / Anil</option>
-              <option value="green">Verde</option>
-              <option value="purple">Roxo</option>
-              <option value="orange">Laranja</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm font-medium mb-1.5 text-gray-600 dark:text-gray-400">Tamanho da Fonte</label>
-            <select id="select-font-size" class="w-full rounded-lg px-3 py-2 border border-gray-300 bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 border-accent dark:bg-gray-800 dark:border-gray-700 dark:text-white transition-colors">
-              <option value="12px">Pequena (12px)</option>
-              <option value="14px">Padrão (14px)</option>
-              <option value="16px">Média (16px)</option>
-              <option value="18px">Grande (18px)</option>
-              <option value="20px">Extra Grande (20px)</option>
-            </select>
-          </div>
+    <div class="step-container">
+        <div class="step-number">11</div>
+        <h3>Adicionando o Bônus</h3>
+        <p>Vamos pegar a soma que acabamos de fazer e <strong>adicionar</strong> o bônus nela mesma.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: total = total + extra;</span>
+            <span class="action-line">AGORA VOCÊ: Atualize 'somaNotas' (sem usar o var) dizendo que ela é igual a ela mesma + o 'bonus'.</span>
         </div>
-        <div class="mt-6 flex justify-end">
-          <button id="btn-close-settings" class="px-4 py-2 btn-accent rounded-lg font-bold transition-colors">Salvar Ajustes</button>
-        </div>
-      </div>
     </div>
 
-    <!-- Modal de Histórico -->
-    <div id="modal-history" class="hidden absolute inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-      <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-6 flex flex-col max-h-[90vh]">
-        <h2 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center shrink-0">
-          <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
-          Histórico de Salvamentos
-        </h2>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mb-4 shrink-0">Seu código é salvo automaticamente. Clique no botão "Salvar" no topo para fixar uma versão aqui.</p>
-        <div id="history-list" class="flex-1 overflow-y-auto space-y-3 pr-2"></div>
-        <div class="mt-6 flex justify-end shrink-0 border-t border-gray-200 dark:border-gray-700 pt-4">
-          <button id="btn-close-history" class="px-4 py-2 bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 rounded-lg font-bold transition-colors">Fechar</button>
+    <div class="step-container">
+        <div class="step-number">12</div>
+        <h3>O Cálculo da Média (Divisão)</h3>
+        <p>Para achar a média, precisamos dividir (usando a barra <strong>/</strong>) o total por 4.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: var mediaFinal = total / 4;</span>
+            <span class="action-line">AGORA VOCÊ: Crie a variável 'media' que recebe a 'somaNotas' dividida (/) por 4.</span>
         </div>
-      </div>
     </div>
 
-  </div>
+    <div class="step-container">
+        <div class="step-number">13</div>
+        <h3>Aviso Silencioso (Console)</h3>
+        <p>Mande o resultado para o console do desenvolvedor (F12) para verificar se o cálculo deu certo.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: console.log("A média é: " + mediaFinal);</span>
+            <span class="action-line">AGORA VOCÊ: Faça um console.log avisando "Média calculada: " + media.</span>
+        </div>
+    </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <div class="step-container">
+        <div class="step-number">14</div>
+        <h3>Mostrando a Média ao Aluno</h3>
+        <p>Use o alerta para o usuário ver o próprio desempenho!</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: alert("Sua média final foi: " + mediaFinal);</span>
+            <span class="action-line">AGORA VOCÊ: Dê um alert dizendo "A média final do aluno " + aluno + " foi " + media.</span>
+        </div>
+    </div>
 
-    const myFirebaseConfig = {
-      apiKey: "AIzaSyApx9vGYQeIzuIF_wPw0iJcMGgDkUvB1CM",
-      authDomain: "portal-alunos-tech.firebaseapp.com",
-      databaseURL: "https://portal-alunos-tech-default-rtdb.firebaseio.com",
-      projectId: "portal-alunos-tech",
-      storageBucket: "portal-alunos-tech.firebasestorage.app",
-      messagingSenderId: "526230859323",
-      appId: "1:526230859323:web:17220652e5c85e40b1361e",
-      measurementId: "G-8FGSBG1SMF"
-    };
+    <div class="page-number">Página 3</div>
+</div>
 
-    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : (myFirebaseConfig.apiKey ? myFirebaseConfig : null);
-    const app = firebaseConfig ? initializeApp(firebaseConfig) : null;
-    const auth = app ? getAuth(app) : null;
-    const db = app ? getFirestore(app) : null;
-    const appId = typeof __app_id !== 'undefined' ? __app_id : (myFirebaseConfig.projectId || 'plataforma-ipi-padrao');
+<!-- ==========================================
+     PÁGINA 4
+     ========================================== -->
+<div class="page" id="page4">
+    
+    <h2><i class="fa-solid fa-code-branch"></i> Fase 4: O Conselho de Classe (If / Else)</h2>
+    <p style="font-size: 14px; margin-bottom: 20px;">Chegou a hora da máquina tomar a decisão sozinha baseada nas regras da escola!</p>
 
-    const alunos1IPI = [
-      { nome: "ALLICIA P. F. F.", dataNascimento: "15/02/2011" }, { nome: "BEATRIZ M. S.", dataNascimento: "21/12/2009" },
-      { nome: "DIENIFFER P. D. S.", dataNascimento: "20/02/2011" }, { nome: "ELOA H. D. M.", dataNascimento: "16/12/2010" },
-      { nome: "GABRIEL D. D. S.", dataNascimento: "28/09/2010" }, { nome: "GABRIELLE M. D. Q.", dataNascimento: "04/03/2011" },
-      { nome: "IARA P. D. S.", dataNascimento: "15/05/2010" }, { nome: "IARA R. R.", dataNascimento: "14/12/2010" },
-      { nome: "JULIA A. M. D. S. X.", dataNascimento: "26/01/2011" }, { nome: "JULIANA B. P. D. S.", dataNascimento: "13/06/2010" },
-      { nome: "JULIANA N. A.", dataNascimento: "19/02/2011" }, { nome: "KAMILLY V. E. Z.", dataNascimento: "16/07/2010" },
-      { nome: "KAUAN P. M.", dataNascimento: "11/06/2010" }, { nome: "KISSYLLA G. P. O.", dataNascimento: "04/10/2009" },
-      { nome: "LARISSA M. G.", dataNascimento: "08/06/2010" }, { nome: "LETICIA S. D. M.", dataNascimento: "09/09/2009" },
-      { nome: "LUIZ P. R. C.", dataNascimento: "29/04/2008" }, { nome: "MANUELA F. D. S.", dataNascimento: "05/10/2010" },
-      { nome: "MARCELLY L. M.", dataNascimento: "30/12/2009" }, { nome: "MARIA C. F. B.", dataNascimento: "10/03/2011" },
-      { nome: "MARIA C. H. R.", dataNascimento: "03/03/2011" }, { nome: "MARIA F. X. P.", dataNascimento: "04/09/2009" },
-      { nome: "MARIA V. S. D. S. C.", dataNascimento: "31/12/2010" }, { nome: "MARIANA A. D. S.", dataNascimento: "30/03/2011" },
-      { nome: "MATEUS B. F.", dataNascimento: "05/10/2010" }, { nome: "MAYARA P. G.", dataNascimento: "17/12/2010" }, 
-      { nome: "MAYRA M. A.", dataNascimento: "27/06/2010" }, { nome: "MAYRON V. V. N. R.", dataNascimento: "18/10/2010" }, 
-      { nome: "NATHALIA E. C.", dataNascimento: "23/04/2010" }, { nome: "PEDRO H. D. S. C.", dataNascimento: "07/01/2011" }, 
-      { nome: "PEDRO L. L. D. S.", dataNascimento: "06/03/2011" }, { nome: "RAFAEL D. A. S.", dataNascimento: "13/07/2009" }, 
-      { nome: "RAFAELA B. F.", dataNascimento: "14/04/2010" }, { nome: "RAFAELLA S. L.", dataNascimento: "07/04/2010" }, 
-      { nome: "RAFAELLI S. A.", dataNascimento: "24/01/2011" }, { nome: "THALLIS D. S. L.", dataNascimento: "17/09/2010" }, 
-      { nome: "THAYANE B. L.", dataNascimento: "22/02/2011" }, { nome: "VALENTINNA D. A. C.", dataNascimento: "02/01/2011" }, 
-      { nome: "YASMIN C. D. O.", dataNascimento: "26/05/2010" }, { nome: "YUD C. R. M. P.", dataNascimento: "06/02/2011" }, 
-      { nome: "LUCAS C. V.", dataNascimento: "22/10/2010" }
-    ];
+    <div class="step-container">
+        <div class="step-number">15</div>
+        <h3>Preparando o Status</h3>
+        <p>Crie uma variável vazia. A inteligência artificial do sistema vai preenchê-la logo abaixo.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: var resultado = "";</span>
+            <span class="action-line">AGORA VOCÊ: Crie a variável 'status' recebendo aspas vazias "".</span>
+        </div>
+    </div>
 
-    const alunos2IPI = [
-      { nome: "ALLETSON P. F. D. S.", dataNascimento: "26/10/2009" }, { nome: "ALLYSTER L. D. S. N.", dataNascimento: "04/04/2009" },
-      { nome: "ANA C. C. M.", dataNascimento: "05/08/2009" }, { nome: "ANA C. V. M.", dataNascimento: "01/04/2010" },
-      { nome: "AQUILA S. D.", dataNascimento: "02/09/2009" }, { nome: "BIANCA R. S. J.", dataNascimento: "15/01/2010" },
-      { nome: "BRYAN M. B.", dataNascimento: "29/12/2008" }, { nome: "DAFNI V. D. A.", dataNascimento: "19/03/2010" },
-      { nome: "DANIELLA A. F.", dataNascimento: "10/05/2009" }, { nome: "DAVI L. A.", dataNascimento: "29/03/2010" },
-      { nome: "DELAIAS C. B.", dataNascimento: "24/08/2009" }, { nome: "EMANUELLY R. F.", dataNascimento: "18/10/2009" },
-      { nome: "EVILLYN A. T. F.", dataNascimento: "10/02/2010" }, { nome: "GIOVANNI P. P.", dataNascimento: "13/05/2009" },
-      { nome: "GUILHERME B. G. T.", dataNascimento: "02/12/2009" }, { nome: "GUILHERME F. D. A. M.", dataNascimento: "06/03/2009" },
-      { nome: "HEDER O. D. S.", dataNascimento: "16/09/2009" }, { nome: "HEITOR D. S. S.", dataNascimento: "20/05/2009" },
-      { nome: "HENRY M. D. S. L.", dataNascimento: "15/02/2009" }, { nome: "HIURY D. S. G.", dataNascimento: "30/05/2009" },
-      { nome: "HYURI V. D. S.", dataNascimento: "15/01/2008" }, { nome: "ITALO G. N.", dataNascimento: "19/01/2010" },
-      { nome: "LARISSA S. D. S.", dataNascimento: "08/06/2010" }, { nome: "LAYS L. F.", dataNascimento: "14/11/2009" },
-      { nome: "LEANDRO R. D. S. A. S. B.", dataNascimento: "18/10/2009" }, { nome: "LETICIA B. R.", dataNascimento: "23/09/2009" },
-      { nome: "LYNCON P. D. O.", dataNascimento: "07/06/2009" }, { nome: "MARCELA C. B.", dataNascimento: "27/05/2010" },
-      { nome: "MARIA E. S. F.", dataNascimento: "07/05/2009" }, { nome: "MARIANA D. S. T.", dataNascimento: "20/05/2009" },
-      { nome: "MICKELLY D. P. B.", dataNascimento: "12/03/2010" }, { nome: "NATHALYA M. L. D.", dataNascimento: "08/04/2009" },
-      { nome: "RAFAEL J. P. D. S. P.", dataNascimento: "20/01/2009" }, { nome: "RAFAEL R. M.", dataNascimento: "23/12/2009" },
-      { nome: "RAYSSA M. P. B.", dataNascimento: "02/04/2009" }, { nome: "RYAN D. S. C.", dataNascimento: "23/03/2010" },
-      { nome: "WESLEY A. C.", dataNascimento: "28/12/2009" }
-    ];
+    <div class="step-container">
+        <div class="step-number">16</div>
+        <h3>Condição 1: A Aprovação Direta</h3>
+        <p>Para passar direto, a média tem que ser <strong>Maior ou Igual (>=) a 7</strong>. Abra o caminho verdadeiro com a chave <code>{</code>.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: if (nota >= 7) {</span>
+            <span class="action-line">AGORA VOCÊ: Inicie o teste: if (media >= 7) {</span>
+        </div>
+    </div>
 
-    const turmas = { '1ipi': alunos1IPI, '2ipi': alunos2IPI };
+    <div class="step-container">
+        <div class="step-number">17</div>
+        <h3>O Sucesso!</h3>
+        <p>O que acontece se ele tiver nota 7 ou mais? Escreva os comandos e <strong>feche a chave }</strong>.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: resultado = "Passou"; alert("Parabéns!"); }</span>
+            <span class="action-line">AGORA VOCÊ: status = "APROVADO"; alert("Parabéns! Você passou direto!"); }</span>
+        </div>
+    </div>
 
-    const defaultJs = `// Olá! Bem-vindo(a) à sua aula prática de JavaScript.
-// Vamos aprender a programar! Aqui está um exemplo para você testar:
+    <div class="step-container">
+        <div class="step-number">18</div>
+        <h3>Condição 2: A Recuperação (Else If)</h3>
+        <p>E se não tirou 7? Vamos testar se a média é pelo menos <strong>Maior ou Igual (>=) a 5</strong>. Abra a chave <code>{</code> de novo.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: else if (nota >= 5) {</span>
+            <span class="action-line">AGORA VOCÊ: Continue o teste: else if (media >= 5) {</span>
+        </div>
+    </div>
 
-const jogos = [
-  { titulo: "Minecraft", categoria: "Sobrevivência", nota: 9.5 },
-  { titulo: "FIFA 23", categoria: "Esportes", nota: 7.8 },
-  { titulo: "Roblox", categoria: "Sobrevivência", nota: 9.0 },
-  { titulo: "Valorant", categoria: "Ação", nota: 8.5 }
-];
+    <div class="step-container">
+        <div class="step-number">19</div>
+        <h3>A Segunda Chance</h3>
+        <p>Alerte o aluno que ele está de recuperação e <strong>feche a chave }</strong>.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: resultado = "Quase"; alert("Faça a prova de recuperação."); }</span>
+            <span class="action-line">AGORA VOCÊ: status = "RECUPERAÇÃO"; alert("Você tem uma segunda chance!"); }</span>
+        </div>
+    </div>
 
-console.log("Total de jogos na lista:", jogos.length);
+    <div class="page-number">Página 4</div>
+</div>
 
-// Exemplo: Filtrando jogos da categoria 'Sobrevivência'
-const sobrevivencia = jogos.filter(jogo => jogo.categoria === "Sobrevivência");
+<!-- ==========================================
+     PÁGINA 5
+     ========================================== -->
+<div class="page" id="page5">
 
-console.log("Jogos de Sobrevivência:");
-console.table(sobrevivencia);`;
+    <div class="step-container">
+        <div class="step-number">20</div>
+        <h3>Condição 3: A Reprovação (Else)</h3>
+        <p>Se o aluno não tirou nem 7 e nem 5, só sobra uma opção. Não precisa testar, basta usar o <strong>else</strong>!</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: else { resultado = "Falhou"; alert("Fim da linha."); }</span>
+            <span class="action-line">AGORA VOCÊ: else { status = "REPROVADO"; alert("Infelizmente, você reprovou por nota."); }</span>
+        </div>
+    </div>
 
-    const defaultSql = `-- Olá! Bem-vindo(a) à sua aula prática de Banco de Dados.
--- Vamos criar e consultar uma tabela de exemplo:
+    <h2><i class="fa-solid fa-clipboard-user"></i> Fase 5: Frequência Escolar</h2>
 
-CREATE TABLE jogos (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  titulo TEXT NOT NULL,
-  ano_lancamento INTEGER
-);
+    <div class="step-container">
+        <div class="step-number">21</div>
+        <h3>Contabilizando Faltas</h3>
+        <p>Nem só de notas vive o aluno. Peça ao professor para digitar as faltas.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: var ausencias = prompt("Faltou quantas vezes?");</span>
+            <span class="action-line">AGORA VOCÊ: Crie a variável 'faltas' perguntando num prompt: "Total de faltas no ano:"</span>
+        </div>
+    </div>
 
-INSERT INTO jogos (titulo, ano_lancamento) VALUES 
-  ('Minecraft', 2011),
-  ('FIFA 23', 2022),
-  ('Roblox', 2006),
-  ('Valorant', 2020);
+    <div class="step-container">
+        <div class="step-number">22</div>
+        <h3>Teste de Limite</h3>
+        <p>Vamos criar um novo <strong>IF solto</strong>. Se as faltas passarem de 25, ele perde o ano instantaneamente.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: if (ausencias > 25) {</span>
+            <span class="action-line">AGORA VOCÊ: Inicie o novo teste: if (faltas > 25) {</span>
+        </div>
+    </div>
 
--- Consulta: Listar jogos lançados depois de 2015 em ordem alfabética
-SELECT titulo, ano_lancamento 
-FROM jogos 
-WHERE ano_lancamento > 2015 
-ORDER BY titulo ASC;`;
+    <div class="step-container">
+        <div class="step-number">23</div>
+        <h3>A Sentença das Faltas</h3>
+        <p>Se o teste acima for verdadeiro, nós substituímos o status antigo por Reprovado (mesmo que ele tivesse tirado nota 10!).</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: resultado = "Reprovado por Falta"; alert("Faltou demais!"); }</span>
+            <span class="action-line">AGORA VOCÊ: status = "REPROVADO POR FALTA"; alert("Atenção: Aluno reprovado por excesso de ausências."); }</span>
+        </div>
+    </div>
 
-    const motivationalQuotes = [
-      "A máquina não pensa, mas faz você pensar. 💡",
-      "Não é um erro, é uma funcionalidade não documentada! 🐛",
-      "O único código perfeito é aquele que não foi escrito. ⌨️",
-      "Programar é como pensar de forma estruturada. 🧠",
-      "Na dúvida, imprima a variável no console. 🔍",
-      "Todo especialista um dia foi um iniciante curioso. 🚀",
-      "O computador faz o que você manda, não o que você quer. 🖥️",
-      "A melhor forma de prever o futuro é inventá-lo. 🌐"
-    ];
+    <div class="page-number">Página 5</div>
+</div>
 
-    let currentUser = null;
-    let selectedStudent = null;
-    let dbSQLEngine = null;
-    let isSQLReady = false;
-    let autoSaveTimer = null;
-    let currentCode = { js: defaultJs, sql: defaultSql };
-    let currentFeedback = "";
-    let currentSettings = { fontSize: '14px', theme: 'dark', color: 'blue' };
-    let codeHistory = [];
-    let currentErrorData = null; 
-    let cmEditor = null; 
+<!-- ==========================================
+     PÁGINA 6
+     ========================================== -->
+<div class="page" id="page6">
+    
+    <h2><i class="fa-solid fa-print"></i> Fase 6: O Boletim Final</h2>
 
-    const gerarIdAluno = (nome) => nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '');
+    <div class="step-container">
+        <div class="step-number">24</div>
+        <h3>Montando o Documento</h3>
+        <p>Para não fazer um "alert" desorganizado, vamos guardar todos os dados processados numa String longa. O <strong>\n</strong> serve para pular de linha!</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: var doc = "Nome: " + nome + "\nResultado: " + resultado;</span>
+            <span class="action-line">AGORA VOCÊ: Crie a var 'boletim' e junte: "ALUNO: " + aluno + "\nMÉDIA: " + media + "\nSTATUS: " + status</span>
+        </div>
+    </div>
 
-    const DOM = {
-      html: document.documentElement, body: document.body,
-      loginScreen: document.getElementById('login-screen'), appScreen: document.getElementById('app-screen'),
-      selTurma: document.getElementById('select-turma'), selNome: document.getElementById('select-nome'),
-      divSenha: document.getElementById('div-senha'), inputSenha: document.getElementById('input-senha'),
-      errorSenha: document.getElementById('error-senha'), btnEntrar: document.getElementById('btn-entrar'),
-      btnSair: document.getElementById('btn-sair'), btnManualSave: document.getElementById('btn-manual-save'),
-      btnSettings: document.getElementById('btn-settings'), btnHistory: document.getElementById('btn-history'),
-      btnTips: document.getElementById('btn-tips'), themeToggleLogin: document.getElementById('theme-toggle-login'),
-      themeToggleApp: document.getElementById('theme-toggle-app'), badgeTurma: document.getElementById('badge-turma'),
-      labelNomeAluno: document.getElementById('label-nome-aluno'), labelFilename: document.getElementById('label-filename'),
-      
-      editorWrapper: document.getElementById('editor-wrapper'), editor: document.getElementById('editor'),
-      
-      tabTerminal: document.getElementById('tab-btn-terminal'), tabFeedback: document.getElementById('tab-btn-feedback'),
-      panelTerminal: document.getElementById('panel-terminal'), panelFeedback: document.getElementById('panel-feedback'),
-      panelSqlTables: document.getElementById('panel-sql-tables'), sqlTablesOutput: document.getElementById('sql-tables-output'),
-      feedbackEditor: document.getElementById('feedback-editor'),
+    <div class="step-container">
+        <div class="step-number" style="background: var(--secondary); color: var(--dark);">25</div>
+        <h3>A Impressão Oficial!</h3>
+        <p>Dispare a sua variável pronta num Alerta final.</p>
+        <div class="code-block">
+            <span class="example-line">EXEMPLO: alert("== DOCUMENTO ==\n" + doc);</span>
+            <span class="action-line">AGORA VOCÊ: Dê o último alert juntando o texto "=== BOLETIM OFICIAL ===\n" com a variável 'boletim'!</span>
+        </div>
+    </div>
 
-      output: document.getElementById('output'), btnExecutar: document.getElementById('btn-executar'),
-      btnTranslateError: document.getElementById('btn-translate-error'), labelTranslateError: document.getElementById('label-translate-error'),
-      quoteDisplay: document.getElementById('motivational-quote'), clockDisplay: document.getElementById('system-clock'),
-      
-      saveContainer: document.getElementById('save-status-container'), iconSaving: document.getElementById('icon-cloud-saving'),
-      textSaving: document.getElementById('text-cloud-saving'), iconSaved: document.getElementById('icon-cloud-saved'),
-      textSaved: document.getElementById('text-cloud-saved'), textError: document.getElementById('text-cloud-error'),
+    <div class="step-container" style="background: var(--dark); color: white; border: 3px solid var(--secondary); text-align: center; margin-top: 30px;">
+        <h3 style="color: #ffffff; justify-content: center; font-size: 24px;"><i class="fa-solid fa-play"></i> Testar o Sistema Acadêmico!</h3>
+        
+        <p style="font-size: 16px; margin-top: 15px; color: #ffffff;">Você construiu uma Inteligência de 25 passos capaz de aprovar ou reprovar alunos automaticamente!</p>
+        
+        <p style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: left; margin: 15px 0; color: #ffffff;">
+            1. No Laboratório Virtual, clique no botão azul <strong>RUN</strong>. Preencha o seu nome e responda sobre as faltas.
+        </p>
+        <p style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: left; margin-bottom: 15px; color: #ffffff;">
+            2. Como a sua nota calculada vai dar <strong style="color: var(--secondary);">6.875</strong> (7+8+5+6 = 26 + 1.5 = 27.5 / 4), se você colocar poucas faltas, você vai cair no bloco de <strong>RECUPERAÇÃO</strong>!
+        </p>
+        <p style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: left; margin-bottom: 0; color: #ffffff;">
+            3. Brinque alterando as notas iniciais para passar direto (Aprovado). Quando tudo funcionar, copie o código inteiro e entregue ao Professor!
+        </p>
+    </div>
 
-      modalSettings: document.getElementById('modal-settings'), selectFontSize: document.getElementById('select-font-size'),
-      selectColor: document.getElementById('select-theme-color'), btnCloseSettings: document.getElementById('btn-close-settings'),
-      
-      modalHistory: document.getElementById('modal-history'), historyList: document.getElementById('history-list'),
-      btnCloseHistory: document.getElementById('btn-close-history'), modalTips: document.getElementById('modal-tips'),
-      btnCloseTips: document.getElementById('btn-close-tips')
-    };
+    <div class="page-number">Página 6</div>
+</div>
 
-    if (DOM.quoteDisplay) {
-      DOM.quoteDisplay.innerText = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
-    }
-
-    function updateClock() {
-      const now = new Date();
-      if (DOM.clockDisplay) {
-        DOM.clockDisplay.innerText = now.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
-      }
-    }
-    setInterval(updateClock, 1000); updateClock();
-
-    function populateNomes() {
-      const turma = DOM.selTurma.value;
-      DOM.selNome.innerHTML = '<option value="" disabled selected>Selecione seu nome da lista...</option>';
-      turmas[turma].forEach(aluno => {
-        const opt = document.createElement('option');
-        opt.value = aluno.nome; opt.textContent = aluno.nome;
-        DOM.selNome.appendChild(opt);
-      });
-      DOM.inputSenha.value = '';
-      DOM.divSenha.classList.add('hidden'); DOM.errorSenha.classList.add('hidden');
-      checkLoginReady();
-    }
-
-    function checkLoginReady() {
-      const nomeSelecionado = DOM.selNome.value;
-      const senhaVal = DOM.inputSenha.value;
-      DOM.btnEntrar.disabled = !(nomeSelecionado && senhaVal.length === 10);
-      if (!DOM.btnEntrar.disabled) {
-        DOM.btnEntrar.classList.remove('bg-gray-300', 'text-gray-500', 'dark:bg-gray-700');
-        DOM.btnEntrar.classList.add('text-white', 'btn-accent');
-      } else {
-        DOM.btnEntrar.classList.replace('btn-accent', 'bg-gray-300');
-        DOM.btnEntrar.classList.remove('text-white');
-        DOM.btnEntrar.classList.add('text-gray-500', 'dark:bg-gray-700');
-      }
-    }
-
-    DOM.inputSenha.addEventListener('input', (e) => {
-      let v = e.target.value.replace(/\D/g, '');
-      if (v.length > 8) v = v.substring(0, 8);
-      if (v.length >= 5) v = v.substring(0, 2) + '/' + v.substring(2, 4) + '/' + v.substring(4, 8);
-      else if (v.length >= 3) v = v.substring(0, 2) + '/' + v.substring(2, 4);
-      e.target.value = v;
-      DOM.errorSenha.classList.add('hidden'); 
-      checkLoginReady();
+<script>
+    document.addEventListener('contextmenu', function(event) {
+        event.preventDefault();
+        alert('Acesso Negado: Engenheiros de Software não usam o botão direito! Digite sua lógica.');
     });
 
-    DOM.selTurma.addEventListener('change', populateNomes);
-    DOM.selNome.addEventListener('change', () => {
-      if (DOM.selNome.value) { DOM.divSenha.classList.remove('hidden'); DOM.inputSenha.focus(); }
-      checkLoginReady();
-    });
-    populateNomes();
-
-    function setTab(tabName) {
-      if(tabName === 'terminal') {
-        DOM.tabTerminal.classList.replace('tab-inactive', 'tab-active');
-        DOM.tabFeedback.classList.replace('tab-active', 'tab-inactive');
-        DOM.panelTerminal.classList.remove('hidden');
-        DOM.panelFeedback.classList.add('hidden');
-      } else {
-        DOM.tabFeedback.classList.replace('tab-inactive', 'tab-active');
-        DOM.tabTerminal.classList.replace('tab-active', 'tab-inactive');
-        DOM.panelFeedback.classList.remove('hidden');
-        DOM.panelTerminal.classList.add('hidden');
-      }
-    }
-    DOM.tabTerminal.addEventListener('click', () => setTab('terminal'));
-    DOM.tabFeedback.addEventListener('click', () => setTab('feedback'));
-
-    function translateErrorMsg(msg) {
-      let m = String(msg);
-      m = m.replace(/Invalid left-hand side in assignment/g, "Atribuição inválida (Você usou '=' em vez de '+' para juntar um texto? Ex: var = \"kg\" dentro de um alert)");
-      m = m.replace(/Unexpected token '(.*)'/g, "Símbolo inesperado '$1' (Verifique pontos, vírgulas, ou espaços errados como '> =')");
-      m = m.replace(/is not defined/g, "não foi definido (verifique se você digitou o nome certo)");
-      m = m.replace(/Unexpected token/g, "Símbolo inesperado (verifique pontos, vírgulas ou chaves)");
-      m = m.replace(/Unexpected identifier/g, "Palavra inesperada (esqueceu uma vírgula ou aspas?)");
-      m = m.replace(/Missing/g, "Está faltando");
-      m = m.replace(/after argument list/g, "após a lista de parênteses");
-      m = m.replace(/Unexpected end of input/g, "Fim de código inesperado (você esqueceu de fechar aspas, parênteses ou chaves?)");
-      m = m.replace(/Assignment to constant variable/g, "Tentativa de mudar o valor de uma constante (Use 'let' em vez de 'const')");
-      m = m.replace(/syntax error/g, "Erro de sintaxe (verifique a estrutura do comando)");
-      m = m.replace(/near "(.*)"/g, "próximo à palavra '$1'");
-      m = m.replace(/no such table/g, "Tabela não encontrada");
-      m = m.replace(/no such column/g, "Coluna não encontrada na tabela");
-      m = m.replace(/incomplete input/g, "Comando incompleto (você esqueceu de fechar algo?)");
-      return m;
-    }
-
-    DOM.btnTranslateError.addEventListener('click', () => {
-      if (!currentErrorData) return;
-      if (currentErrorData.isTranslated) {
-        DOM.output.innerText = currentErrorData.raw;
-        currentErrorData.isTranslated = false;
-        DOM.labelTranslateError.innerText = "Traduzir Erro";
-      } else {
-        DOM.output.innerText = currentErrorData.translated;
-        currentErrorData.isTranslated = true;
-        DOM.labelTranslateError.innerText = "Ver Original";
-      }
+    document.addEventListener('copy', function(event) {
+        event.preventDefault();
+        alert('Cópia bloqueada! A memória muscular é essencial. Digite no seu Laboratório Virtual.');
     });
 
-    function applySettings() {
-      if (currentSettings.theme === 'dark') DOM.html.classList.add('dark');
-      else DOM.html.classList.remove('dark');
-
-      DOM.editorWrapper.style.fontSize = currentSettings.fontSize;
-      DOM.output.style.fontSize = currentSettings.fontSize;
-      if(DOM.sqlTablesOutput) DOM.sqlTablesOutput.style.fontSize = currentSettings.fontSize;
-      DOM.feedbackEditor.style.fontSize = currentSettings.fontSize;
-      DOM.selectFontSize.value = currentSettings.fontSize;
-
-      DOM.body.className = DOM.body.className.replace(/\btheme-[a-z]+\b/g, ''); 
-      DOM.body.classList.add(`theme-${currentSettings.color}`);
-      DOM.selectColor.value = currentSettings.color;
-
-      if(cmEditor) {
-        cmEditor.setOption("theme", currentSettings.theme === 'dark' ? 'dracula' : 'default');
-        cmEditor.refresh();
-      }
-    }
-
-    function toggleTheme() {
-      currentSettings.theme = DOM.html.classList.contains('dark') ? 'light' : 'dark';
-      applySettings();
-      triggerAutoSave();
-    }
-    DOM.themeToggleLogin.addEventListener('click', toggleTheme);
-    DOM.themeToggleApp.addEventListener('click', toggleTheme);
-
-    DOM.btnSettings.addEventListener('click', () => DOM.modalSettings.classList.remove('hidden'));
-    DOM.btnCloseSettings.addEventListener('click', () => {
-      currentSettings.fontSize = DOM.selectFontSize.value;
-      currentSettings.color = DOM.selectColor.value;
-      applySettings();
-      triggerAutoSave();
-      DOM.modalSettings.classList.add('hidden');
+    document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey && (event.key === 'a' || event.key === 'c' || event.key === 's')) {
+            event.preventDefault();
+            alert('Atalhos de sistema bloqueados. Desenvolva o seu código manualmente.');
+        }
     });
 
-    DOM.btnTips.addEventListener('click', () => DOM.modalTips.classList.remove('hidden'));
-    DOM.btnCloseTips.addEventListener('click', () => DOM.modalTips.classList.add('hidden'));
-
-    function renderHistory() {
-      DOM.historyList.innerHTML = '';
-      if (codeHistory.length === 0) {
-        DOM.historyList.innerHTML = '<p class="text-sm text-gray-500 italic mt-2">Você ainda não possui salvamentos fixados.</p>';
-        return;
-      }
-      codeHistory.forEach((item, index) => {
-        const div = document.createElement('div');
-        div.className = 'flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg';
-        const d = new Date(item.timestamp);
-        const timeStr = d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
-
-        div.innerHTML = `<div><span class="block text-sm font-bold text-gray-700 dark:text-gray-300">Versão Fixada ${codeHistory.length - index}</span><span class="block text-xs text-gray-500">${timeStr}</span></div>`;
-        const btnRestore = document.createElement('button');
-        btnRestore.className = 'text-xs font-bold border border-accent text-accent hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-1.5 rounded transition-colors';
-        btnRestore.innerText = 'Restaurar';
-        btnRestore.onclick = () => {
-          if(confirm('Atenção: Restaurar vai apagar o código que você está escrevendo agora. Tem certeza?')) {
-            currentCode.js = item.jsCode || currentCode.js;
-            currentCode.sql = item.sqlCode || currentCode.sql;
-            if(cmEditor) cmEditor.setValue(currentCode[selectedStudent.tab]);
-            DOM.modalHistory.classList.add('hidden');
-            triggerAutoSave();
-          }
-        };
-        div.appendChild(btnRestore);
-        DOM.historyList.appendChild(div);
-      });
+    function downloadHTML() {
+        const htmlContent = document.documentElement.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'lab_boletim_25_passos.html';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => { document.body.removeChild(a); window.URL.revokeObjectURL(url); }, 100);
     }
-    DOM.btnHistory.addEventListener('click', () => { renderHistory(); DOM.modalHistory.classList.remove('hidden'); });
-    DOM.btnCloseHistory.addEventListener('click', () => DOM.modalHistory.classList.add('hidden'));
 
-    if (auth) {
-      const initAuth = async () => {
+    async function downloadPDF() {
+        const btn = document.querySelector('.btn-control.pdf');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando Diário...';
+        btn.disabled = true;
+
         try {
-          if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token);
-          else await signInAnonymously(auth);
-        } catch (error) { console.error("Erro na autenticação:", error); }
-      };
-      initAuth();
-      onAuthStateChanged(auth, (user) => { currentUser = user; });
-    }
+            const container = document.createElement('div');
+            
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                const clone = page.cloneNode(true);
+                clone.style.margin = '0';
+                clone.style.width = '850px'; 
+                clone.style.borderRadius = '0'; 
+                clone.style.boxShadow = 'none'; 
+                container.appendChild(clone);
+            });
 
-    DOM.btnEntrar.addEventListener('click', async () => {
-      const nome = DOM.selNome.value;
-      const turmaVal = DOM.selTurma.value;
-      const senha = DOM.inputSenha.value;
-      
-      const alunoEncontrado = turmas[turmaVal].find(a => a.nome === nome);
-      if (alunoEncontrado.dataNascimento !== senha) {
-        DOM.errorSenha.classList.remove('hidden');
-        return; 
-      }
-      
-      selectedStudent = {
-        id: gerarIdAluno(nome), nome: nome,
-        turma: turmaVal === '1ipi' ? '1ª IPI' : '2ª IPI',
-        tab: turmaVal === '1ipi' ? 'js' : 'sql'
-      };
+            const wrapper = document.createElement('div');
+            wrapper.style.position = 'absolute';
+            wrapper.style.top = '-9999px';
+            wrapper.appendChild(container);
+            document.body.appendChild(wrapper);
 
-      DOM.badgeTurma.textContent = `Turma: ${selectedStudent.turma}`;
-      DOM.labelNomeAluno.textContent = selectedStudent.nome;
-      DOM.labelFilename.textContent = selectedStudent.tab === 'js' ? 'script.js' : 'query.sql';
+            const opt = {
+                margin: 0,
+                filename: 'lab_boletim_25_passos.pdf',
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 2, useCORS: true, width: 850, windowWidth: 850 },
+                jsPDF: { unit: 'px', format: [850, 1150], orientation: 'portrait' }
+            };
 
-      if (db && currentUser) {
-        try {
-          DOM.output.innerText = "Carregando ambiente da nuvem...";
-          const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'projetos_ipi', selectedStudent.id);
-          const docSnap = await getDoc(docRef);
-          
-          if (docSnap.exists()) {
-            const data = docSnap.data();
-            currentCode.js = data.jsCode || defaultJs;
-            currentCode.sql = data.sqlCode || defaultSql;
-            currentFeedback = data.feedback || "";
-            if (data.settings) currentSettings = { ...currentSettings, ...data.settings };
-            if (data.history && Array.isArray(data.history)) codeHistory = data.history;
-          } else {
-            currentCode.js = defaultJs; currentCode.sql = defaultSql;
-            currentFeedback = ""; codeHistory = [];
-          }
-        } catch (error) { console.error("Erro ao recuperar projeto:", error); }
-      }
-
-      DOM.loginScreen.classList.add('hidden');
-      DOM.appScreen.classList.remove('hidden');
-      DOM.appScreen.classList.add('flex');
-      applySettings();
-      
-      if (selectedStudent.tab === 'sql') {
-        DOM.panelSqlTables.classList.remove('hidden');
-      } else {
-        DOM.panelSqlTables.classList.add('hidden');
-      }
-
-      if(!cmEditor) {
-        cmEditor = CodeMirror.fromTextArea(DOM.editor, {
-          lineNumbers: true,
-          mode: selectedStudent.tab === 'js' ? 'javascript' : 'text/x-sql',
-          theme: currentSettings.theme === 'dark' ? 'dracula' : 'default',
-          indentUnit: 2,
-          tabSize: 2
-        });
-
-        cmEditor.on('change', () => {
-          currentCode[selectedStudent.tab] = cmEditor.getValue();
-          triggerAutoSave();
-        });
-
-        cmEditor.on('paste', (cm, e) => {
-          e.preventDefault();
-          setTab('terminal');
-          DOM.output.classList.remove('text-red-500');
-          DOM.output.classList.add('text-orange-500');
-          DOM.output.innerText = "⚠️ Ação bloqueada:\nA função de COLAR código foi desativada pelo Professor. Pratique a digitação do seu código!";
-        });
-      } else {
-        cmEditor.setOption("mode", selectedStudent.tab === 'js' ? 'javascript' : 'text/x-sql');
-        cmEditor.setOption("theme", currentSettings.theme === 'dark' ? 'dracula' : 'default');
-      }
-      
-      cmEditor.setValue(currentCode[selectedStudent.tab]);
-      setTimeout(() => { cmEditor.refresh(); cmEditor.focus(); }, 150);
-
-      DOM.feedbackEditor.value = currentFeedback;
-      
-      DOM.btnTranslateError.classList.add('hidden');
-      DOM.output.classList.remove('text-red-500');
-      DOM.output.innerText = selectedStudent.tab === 'js' ? 'A saída do seu código aparecerá aqui.' : 'Os resultados do banco de dados aparecerão aqui.';
-      setTab('terminal'); 
-    });
-
-    DOM.btnSair.addEventListener('click', () => {
-      selectedStudent = null;
-      DOM.appScreen.classList.add('hidden');
-      DOM.appScreen.classList.remove('flex');
-      DOM.loginScreen.classList.remove('hidden');
-      DOM.inputSenha.value = '';
-      DOM.divSenha.classList.add('hidden');
-      checkLoginReady();
-      DOM.quoteDisplay.innerText = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
-    });
-
-    function setSaveStatus(status) {
-      DOM.saveContainer.style.opacity = '1';
-      DOM.textSaving.classList.add('hidden'); DOM.textSaved.classList.add('hidden'); DOM.textError.classList.add('hidden');
-      if(status === 'saving') DOM.textSaving.classList.remove('hidden');
-      else if (status === 'saved') { DOM.textSaved.classList.remove('hidden'); setTimeout(() => DOM.saveContainer.style.opacity = '0', 3000); }
-      else if (status === 'error') DOM.textError.classList.remove('hidden');
-    }
-
-    function triggerAutoSave() {
-      if (!currentUser || !db || !selectedStudent) return;
-      clearTimeout(autoSaveTimer);
-      setSaveStatus('saving');
-
-      autoSaveTimer = setTimeout(async () => {
-        try {
-          const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'projetos_ipi', selectedStudent.id);
-          await setDoc(docRef, {
-            jsCode: currentCode.js, sqlCode: currentCode.sql,
-            feedback: DOM.feedbackEditor.value,
-            settings: currentSettings, history: codeHistory,
-            updatedAt: new Date().toISOString(),
-            nomeAluno: selectedStudent.nome, turmaAluno: selectedStudent.turma
-          }, { merge: true });
-          setSaveStatus('saved');
+            await html2pdf().set(opt).from(container).save();
+            
+            document.body.removeChild(wrapper);
         } catch (error) {
-          DOM.textError.title = error.message; 
-          setSaveStatus('error');
+            console.error(error);
+            alert("Erro ao gerar o PDF. Verifique a internet e tente novamente.");
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
         }
-      }, 1500);
     }
+</script>
 
-    DOM.feedbackEditor.addEventListener('input', triggerAutoSave);
-
-    DOM.btnManualSave.addEventListener('click', () => {
-      if (!selectedStudent) return;
-      codeHistory.unshift({ timestamp: new Date().toISOString(), jsCode: currentCode.js, sqlCode: currentCode.sql });
-      if (codeHistory.length > 15) codeHistory.pop(); 
-      triggerAutoSave();
-      
-      const originalText = DOM.btnManualSave.innerHTML;
-      DOM.btnManualSave.innerHTML = '<svg class="w-3.5 h-3.5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg> Guardado!';
-      setTimeout(() => DOM.btnManualSave.innerHTML = originalText, 2000);
-    });
-
-    window.onload = async () => {
-      try {
-        const SQL = await window.initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}` });
-        dbSQLEngine = SQL; isSQLReady = true;
-      } catch(e) { console.error("Falha ao carregar SQL.js", e); }
-    };
-
-    async function executeJS() {
-      let logs = [];
-      const code = cmEditor.getValue();
-      
-      const originalConsoleLog = console.log;
-      const originalConsoleError = console.error;
-      const originalConsoleTable = console.table;
-      const originalAlert = window.alert;
-
-      console.log = (...args) => logs.push(args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' '));
-      console.error = (...args) => logs.push("[ERRO] " + args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' '));
-      console.table = (data) => logs.push(JSON.stringify(data, null, 2));
-      window.alert = (msg) => logs.push(`[ALERTA INTERCEPTADO]: ${msg}`);
-
-      setTab('terminal'); 
-      DOM.output.innerText = 'Executando...';
-      DOM.output.classList.remove('text-red-500', 'text-orange-500');
-      DOM.btnTranslateError.classList.add('hidden');
-
-      try {
-        const AsyncFunction = async function () {}.constructor;
-        const func = new AsyncFunction(code);
-        await func();
-        DOM.output.innerText = logs.join('\n') || '[Processo concluído sem saídas no console]';
-      } catch (error) {
-        let line = "?";
-        if (error.stack) {
-          const match = error.stack.match(/<anonymous>:(\d+):\d+/);
-          if (match) line = Math.max(1, parseInt(match[1]) - 2); 
-        }
-
-        let rawErrorText = `❌ ERRO DE COMPILAÇÃO / EXECUÇÃO\n`;
-        rawErrorText += `----------------------------------------\n`;
-        rawErrorText += `📍 Arquivo: script.js\n`;
-        if(line !== "?") rawErrorText += `📍 Linha: ${line}\n`;
-        rawErrorText += `----------------------------------------\n`;
-        
-        const saidas = logs.length > 0 ? `\n[Saídas antes do erro]:\n${logs.join('\n')}\n` : '';
-
-        const translatedErrorText = rawErrorText + `Detalhes: ${translateErrorMsg(error.message)}\n` + saidas;
-        rawErrorText += `Detalhes: ${error.message}\n` + saidas;
-
-        currentErrorData = { raw: rawErrorText, translated: translatedErrorText, isTranslated: false };
-        DOM.output.classList.add('text-red-500');
-        DOM.output.innerText = currentErrorData.raw;
-        
-        DOM.btnTranslateError.classList.remove('hidden');
-        DOM.labelTranslateError.innerText = "Traduzir Erro";
-      } finally {
-        console.log = originalConsoleLog; console.error = originalConsoleError; console.table = originalConsoleTable; window.alert = originalAlert;
-      }
-    }
-
-    function executeSQL() {
-      const code = cmEditor.getValue();
-      if (!isSQLReady || !dbSQLEngine) {
-        DOM.output.innerText = 'Carregando motor SQL, aguarde um momento...';
-        return;
-      }
-
-      setTab('terminal'); 
-      DOM.output.innerText = 'Consultando banco de dados...';
-      DOM.output.classList.remove('text-red-500', 'text-orange-500');
-      DOM.btnTranslateError.classList.add('hidden');
-
-      try {
-        const database = new dbSQLEngine.Database();
-        const initSql = `
-          CREATE TABLE jogos (id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT NOT NULL, ano_lancamento INTEGER);
-          INSERT INTO jogos (titulo, ano_lancamento) VALUES ('Minecraft', 2011), ('FIFA 23', 2022), ('Roblox', 2006), ('Valorant', 2020);
-        `;
-        database.exec(initSql);
-
-        const results = database.exec(code);
-        
-        let finalOutput = '';
-
-        if (results.length === 0) {
-          finalOutput += '▶ Comando(s) executado(s) com sucesso.\n\n';
-        } else {
-          finalOutput += '▶ RESULTADOS (SELECT):\n';
-          results.forEach((resultSet, idx) => {
-            if (idx > 0) finalOutput += '\n\n';
-            const colString = resultSet.columns.join('  |  ');
-            finalOutput += colString + '\n' + '-'.repeat(colString.length + 5) + '\n';
-            resultSet.values.forEach(row => finalOutput += row.join('  |  ') + '\n');
-          });
-          finalOutput += '\n\n';
-        }
-        
-        let tablesOutput = '';
-        const tablesQuery = database.exec("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';");
-        
-        if (tablesQuery.length > 0 && tablesQuery[0].values.length > 0) {
-          tablesQuery[0].values.forEach(row => {
-            const tableName = row[0];
-            tablesOutput += `📁 TABELA: [ ${tableName} ]\n`;
-            try {
-              const tableData = database.exec(`SELECT * FROM "${tableName}" LIMIT 20;`); 
-              if (tableData.length > 0) {
-                const cols = tableData[0].columns.join('  |  ');
-                tablesOutput += cols + '\n' + '-'.repeat(cols.length + 5) + '\n';
-                tableData[0].values.forEach(r => tablesOutput += r.join('  |  ') + '\n');
-              } else {
-                tablesOutput += '(Tabela vazia)\n';
-              }
-            } catch(e) {
-               tablesOutput += '(Erro ao ler estrutura da tabela)\n';
-            }
-            tablesOutput += '\n';
-          });
-        } else {
-          tablesOutput += 'Nenhuma tabela encontrada no banco de dados.\n';
-        }
-
-        DOM.output.innerText = finalOutput;
-        DOM.sqlTablesOutput.innerText = tablesOutput;
-        database.close();
-      } catch (error) {
-        let line = "?";
-        let match = error.message.match(/near "([^"]+)"/);
-        if (match) {
-            let token = match[1];
-            let linesArray = code.split('\n');
-            for(let i=0; i<linesArray.length; i++) {
-                if(linesArray[i].includes(token)) { line = i+1; break; }
-            }
-        }
-
-        let rawErrorText = `❌ ERRO DE COMPILAÇÃO SQL\n`;
-        rawErrorText += `----------------------------------------\n`;
-        rawErrorText += `📍 Arquivo: query.sql\n`;
-        if(line !== "?") rawErrorText += `📍 Linha (aprox.): ${line}\n`;
-        rawErrorText += `----------------------------------------\n`;
-
-        const translatedErrorText = rawErrorText + `Detalhes: ${translateErrorMsg(error.message)}`;
-        rawErrorText += `Detalhes: ${error.message}`;
-
-        currentErrorData = { raw: rawErrorText, translated: translatedErrorText, isTranslated: false };
-        DOM.output.classList.add('text-red-500');
-        DOM.output.innerText = currentErrorData.raw;
-        
-        DOM.btnTranslateError.classList.remove('hidden');
-        DOM.labelTranslateError.innerText = "Traduzir Erro";
-      }
-    }
-
-    DOM.btnExecutar.addEventListener('click', () => {
-      if (!selectedStudent || !cmEditor) return;
-      if (selectedStudent.tab === 'js') executeJS();
-      else executeSQL();
-    });
-  </script>
 </body>
 </html>
